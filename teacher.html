@@ -4,64 +4,41 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Teacher Control Panel</title>
-  <script src="customers.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: 'Segoe UI', sans-serif;
       background: linear-gradient(135deg, #e8f4f8, #f0f8ff);
-      min-height: 100vh;
-      padding: 20px;
+      min-height: 100vh; padding: 20px;
     }
     .header {
-      text-align: center;
-      padding: 20px;
+      text-align: center; padding: 20px;
       background: linear-gradient(135deg, #4a90d9, #357abd);
-      color: white;
-      border-radius: 20px;
-      margin-bottom: 20px;
+      color: white; border-radius: 20px; margin-bottom: 20px;
     }
-    .header h1 { font-size: 24px; margin-bottom: 5px; }
     .teacher-badge {
-      background: #ffc107;
-      color: #333;
-      padding: 5px 15px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: bold;
-      display: inline-block;
-      margin-top: 8px;
+      background: #ffc107; color: #333; padding: 5px 15px;
+      border-radius: 20px; font-size: 12px; font-weight: bold;
+      display: inline-block; margin-top: 8px;
     }
     .game-area { max-width: 900px; margin: 0 auto; }
     .card {
-      background: white;
-      border-radius: 20px;
-      padding: 25px;
-      margin-bottom: 20px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      background: white; border-radius: 20px; padding: 25px;
+      margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     }
-    .card h3 { color: #4a90d9; margin-bottom: 15px; font-size: 16px; }
+    .card h3 { color: #4a90d9; margin-bottom: 15px; }
     .customer-tabs { display: flex; gap: 10px; flex-wrap: wrap; }
     .customer-tab {
-      padding: 10px 20px;
-      border-radius: 15px;
-      border: 2px solid #4a90d9;
-      background: white;
-      color: #4a90d9;
-      cursor: pointer;
-      font-size: 14px;
-      transition: all 0.2s;
+      padding: 10px 20px; border-radius: 15px;
+      border: 2px solid #4a90d9; background: white;
+      color: #4a90d9; cursor: pointer; font-size: 14px;
     }
     .customer-tab.active { background: #4a90d9; color: white; }
-    .customer-tab.done { background: #28a745; border-color: #28a745; color: white; }
     .profile-header {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-      margin-bottom: 20px;
-      padding-bottom: 20px;
+      display: flex; align-items: center; gap: 20px;
+      margin-bottom: 20px; padding-bottom: 20px;
       border-bottom: 2px solid #e8f4f8;
     }
     .profile-avatar { font-size: 60px; }
@@ -72,103 +49,53 @@
     .profile-label { font-size: 12px; color: #999; text-transform: uppercase; margin-bottom: 4px; }
     .profile-value { font-size: 15px; font-weight: bold; color: #333; }
     .reveal-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 12px 15px;
-      border-radius: 12px;
-      margin-bottom: 10px;
-      background: #f8f9fa;
-      border: 2px solid transparent;
-      transition: all 0.2s;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 15px; border-radius: 12px; margin-bottom: 10px;
+      background: #f8f9fa; border: 2px solid transparent;
     }
     .reveal-item.revealed { background: #d4edda; border-color: #28a745; }
     .reveal-item-label { font-size: 12px; color: #999; margin-bottom: 2px; }
     .reveal-item-value { font-size: 15px; font-weight: bold; color: #333; }
     .reveal-btn {
-      background: #4a90d9;
-      color: white;
-      border: none;
-      border-radius: 10px;
-      padding: 8px 20px;
-      font-size: 13px;
-      cursor: pointer;
-      transition: all 0.2s;
-      min-width: 100px;
+      background: #4a90d9; color: white; border: none;
+      border-radius: 10px; padding: 8px 20px; font-size: 13px;
+      cursor: pointer; min-width: 100px;
     }
-    .reveal-btn:hover { background: #357abd; }
     .reveal-btn.done { background: #28a745; cursor: default; }
     .control-buttons { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 15px; }
     .ctrl-btn {
-      padding: 12px;
-      border-radius: 12px;
-      border: none;
-      font-size: 14px;
-      cursor: pointer;
-      font-weight: bold;
-      transition: all 0.2s;
+      padding: 12px; border-radius: 12px; border: none;
+      font-size: 14px; cursor: pointer; font-weight: bold;
     }
     .btn-yellow { background: #ffc107; color: #333; }
     .btn-blue { background: #4a90d9; color: white; }
     .btn-red { background: #dc3545; color: white; }
     .btn-pink {
       background: linear-gradient(135deg, #ff69b4, #ff1493);
-      color: white;
-      border: none;
-      border-radius: 15px;
-      padding: 15px;
-      font-size: 16px;
-      cursor: pointer;
-      width: 100%;
-      margin-top: 10px;
-      font-weight: bold;
+      color: white; border: none; border-radius: 15px;
+      padding: 15px; font-size: 16px; cursor: pointer;
+      width: 100%; margin-top: 10px; font-weight: bold;
     }
-    .live-dot {
-      width: 10px;
-      height: 10px;
-      background: #28a745;
-      border-radius: 50%;
-      display: inline-block;
-      margin-right: 8px;
-      animation: blink 1s infinite;
-    }
-    @keyframes blink {
-      0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; }
-    }
-    .live-bar {
-      background: #d4edda;
-      border-radius: 10px;
-      padding: 10px 15px;
-      margin-bottom: 15px;
-      font-size: 13px;
-      color: #155724;
-    }
-    .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; }
+    .stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 15px; }
     .stat-box { text-align: center; background: #f8f9fa; border-radius: 12px; padding: 15px; }
     .stat-number { font-size: 28px; font-weight: bold; color: #4a90d9; }
     .stat-label { font-size: 12px; color: #999; }
     .hint-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
     .hint-box {
-      background: #fff9e6;
-      border: 1px solid #ffc107;
-      border-radius: 8px;
-      padding: 8px 12px;
-      font-size: 13px;
+      background: #fff9e6; border: 1px solid #ffc107;
+      border-radius: 8px; padding: 8px 12px; font-size: 13px;
     }
     .hint-box strong { color: #856404; display: block; font-size: 11px; }
     .connection-status {
-      text-align: center;
-      padding: 8px;
-      border-radius: 10px;
-      margin-bottom: 15px;
-      font-size: 13px;
+      text-align: center; padding: 8px; border-radius: 10px;
+      margin-bottom: 15px; font-size: 13px;
     }
     .connected { background: #d4edda; color: #155724; }
     .disconnected { background: #f8d7da; color: #721c24; }
+    .connecting { background: #fff3cd; color: #856404; }
   </style>
 </head>
 <body>
-
 <div class="game-area">
   <div class="header">
     <h1>🎮 Teacher Control Panel</h1>
@@ -176,27 +103,15 @@
     <div class="teacher-badge">🇻🇳 TEACHER — VIETNAM</div>
   </div>
 
-  <div class="connection-status" id="connectionStatus">🔄 Connecting...</div>
+  <div class="connection-status connecting" id="connectionStatus">🔄 Connecting...</div>
 
   <div class="card">
-    <h3>📊 Student Progress (Live)</h3>
+    <h3>📊 Live Stats</h3>
     <div class="stats">
-      <div class="stat-box">
-        <div class="stat-number" id="t-revealed">0</div>
-        <div class="stat-label">Facts Revealed</div>
-      </div>
-      <div class="stat-box">
-        <div class="stat-number" id="t-customer">1</div>
-        <div class="stat-label">Customer</div>
-      </div>
-      <div class="stat-box">
-        <div class="stat-number" id="t-status">🟡</div>
-        <div class="stat-label">Game Status</div>
-      </div>
-      <div class="stat-box">
-        <div class="stat-number" id="t-complete">No</div>
-        <div class="stat-label">Complete?</div>
-      </div>
+      <div class="stat-box"><div class="stat-number" id="t-revealed">0</div><div class="stat-label">Facts Revealed</div></div>
+      <div class="stat-box"><div class="stat-number" id="t-customer">1</div><div class="stat-label">Customer</div></div>
+      <div class="stat-box"><div class="stat-number" id="t-status">🟡</div><div class="stat-label">Status</div></div>
+      <div class="stat-box"><div class="stat-number" id="t-complete">No</div><div class="stat-label">Complete?</div></div>
     </div>
   </div>
 
@@ -205,7 +120,7 @@
     <div class="customer-tabs" id="customerTabs"></div>
   </div>
 
-  <div class="card" id="profileCard">
+  <div class="card">
     <div class="profile-header">
       <div class="profile-avatar" id="t-avatar">👤</div>
       <div>
@@ -223,221 +138,250 @@
 
   <div class="card">
     <h3>🔓 Reveal Information — One At A Time!</h3>
-    <p style="font-size:13px; color:#999; margin-bottom:15px;">
-      Click REVEAL to send each fact to your student in real time!
-    </p>
+    <p style="font-size:13px; color:#999; margin-bottom:15px;">Click REVEAL to send each fact to your student!</p>
     <div id="revealItems"></div>
-
     <div class="control-buttons">
       <button class="ctrl-btn btn-yellow" onclick="revealAll()">Reveal All ⚡</button>
       <button class="ctrl-btn btn-blue" onclick="goNextCustomer()">Next Customer ➡️</button>
       <button class="ctrl-btn btn-red" onclick="resetGame()">Reset Game 🔄</button>
     </div>
-
     <button class="btn-pink" onclick="endGame()">🏁 End Game — Show Final Score</button>
   </div>
 </div>
 
 <script>
-  // ====== FIREBASE CONFIG ======
-  const firebaseConfig = {
-    apiKey: "AIzaSyBLI9wCnIQg4Pkdftll0ErZAPryS_-8P28",
-    authDomain: "nail-shop-game.firebaseapp.com",
-    databaseURL: "https://nail-shop-game-default-rtdb.firebaseio.com",
-    projectId: "nail-shop-game",
-    storageBucket: "nail-shop-game.firebasestorage.app",
-    messagingSenderId: "588326624299",
-    appId: "1:588326624299:web:d71d2d7fef2384c8339e6e"
-  };
+// ===== CUSTOMER DATA =====
+const customers = [
+  {
+    id: 1, name: "Sarah Johnson", age: 32,
+    from: "Pennsauken, New Jersey",
+    area: "South Jersey, near Philadelphia",
+    occupation: "Elementary School Teacher",
+    family: "Married with 2 kids",
+    pet: "A golden retriever named Buddy",
+    service: "Spa Pedicure", color: "Light Pink", shape: "Oval", drink: "Tea",
+    personality: "Friendly and talkative", image: "👩",
+    facts: [
+      { question: "What is the customer's name?", answer: "Sarah Johnson", choices: ["Sarah Johnson","Emily Davis","Jessica Brown","Amanda White"] },
+      { question: "Where is she from?", answer: "Pennsauken, New Jersey", choices: ["Pennsauken, New Jersey","Camden, New Jersey","Cherry Hill, New Jersey","Trenton, New Jersey"] },
+      { question: "What area is she from?", answer: "South Jersey, near Philadelphia", choices: ["South Jersey, near Philadelphia","North Jersey, near New York","Central Jersey, near Princeton","Shore area, near Atlantic City"] },
+      { question: "What does she do for work?", answer: "Elementary School Teacher", choices: ["Elementary School Teacher","Nurse","Office Worker","Chef"] },
+      { question: "Does she have any pets?", answer: "A golden retriever named Buddy", choices: ["A golden retriever named Buddy","A cat named Mimi","No pets","Two dogs named Coco and Milo"] },
+      { question: "What service does she want?", answer: "Spa Pedicure", choices: ["Spa Pedicure","Basic Manicure","Gel Manicure","Deluxe Pedicure"] },
+      { question: "What color does she want?", answer: "Light Pink", choices: ["Light Pink","Dark Red","Nude","Purple"] },
+      { question: "What nail shape does she want?", answer: "Oval", choices: ["Oval","Square","Round","Stiletto"] },
+      { question: "What drink would she like?", answer: "Tea", choices: ["Tea","Water","Juice","Wine"] }
+    ]
+  },
+  {
+    id: 2, name: "Maria Rodriguez", age: 28,
+    from: "Camden, New Jersey", area: "South Jersey, near Philadelphia",
+    occupation: "Nurse at Cooper Hospital", family: "Single, lives with her sister",
+    pet: "Two cats named Luna and Star",
+    service: "Gel Manicure", color: "Dark Red", shape: "Square", drink: "Water",
+    personality: "Busy but friendly", image: "👩‍⚕️",
+    facts: [
+      { question: "What is the customer's name?", answer: "Maria Rodriguez", choices: ["Maria Rodriguez","Sofia Martinez","Isabella Garcia","Valentina Lopez"] },
+      { question: "Where is she from?", answer: "Camden, New Jersey", choices: ["Camden, New Jersey","Pennsauken, New Jersey","Moorestown, New Jersey","Haddon Township, New Jersey"] },
+      { question: "What area is she from?", answer: "South Jersey, near Philadelphia", choices: ["South Jersey, near Philadelphia","North Jersey, near New York","Central Jersey, near Princeton","Shore area, near Atlantic City"] },
+      { question: "What does she do for work?", answer: "Nurse at Cooper Hospital", choices: ["Nurse at Cooper Hospital","Doctor at Jefferson Hospital","Teacher at Camden School","Manager at a restaurant"] },
+      { question: "Does she have any pets?", answer: "Two cats named Luna and Star", choices: ["Two cats named Luna and Star","A dog named Max","No pets","A bird named Tweety"] },
+      { question: "What service does she want?", answer: "Gel Manicure", choices: ["Gel Manicure","Spa Pedicure","Acrylic Nails","Basic Pedicure"] },
+      { question: "What color does she want?", answer: "Dark Red", choices: ["Dark Red","Light Pink","Black","Coral"] },
+      { question: "What nail shape does she want?", answer: "Square", choices: ["Square","Oval","Almond","Coffin"] },
+      { question: "What drink would she like?", answer: "Water", choices: ["Water","Tea","Coffee","Wine"] }
+    ]
+  },
+  {
+    id: 3, name: "Jennifer Kim", age: 45,
+    from: "Cherry Hill, New Jersey", area: "South Jersey, near Philadelphia",
+    occupation: "Small Business Owner", family: "Married with 3 kids and a grandchild",
+    pet: "A small poodle named Coco",
+    service: "Deluxe Pedicure", color: "Nude / Beige", shape: "Round", drink: "Wine",
+    personality: "Elegant", image: "👩‍💼",
+    facts: [
+      { question: "What is the customer's name?", answer: "Jennifer Kim", choices: ["Jennifer Kim","Susan Park","Michelle Lee","Christine Cho"] },
+      { question: "Where is she from?", answer: "Cherry Hill, New Jersey", choices: ["Cherry Hill, New Jersey","Voorhees, New Jersey","Marlton, New Jersey","Medford, New Jersey"] },
+      { question: "What area is she from?", answer: "South Jersey, near Philadelphia", choices: ["South Jersey, near Philadelphia","North Jersey, near New York","Central Jersey, near Princeton","Shore area, near Atlantic City"] },
+      { question: "What does she do for work?", answer: "Small Business Owner", choices: ["Small Business Owner","Lawyer","Doctor","Real Estate Agent"] },
+      { question: "Does she have any pets?", answer: "A small poodle named Coco", choices: ["A small poodle named Coco","Two golden retrievers","No pets","A cat named Princess"] },
+      { question: "What service does she want?", answer: "Deluxe Pedicure", choices: ["Deluxe Pedicure","Gel Manicure","Spa Pedicure","Acrylic Nails"] },
+      { question: "What color does she want?", answer: "Nude / Beige", choices: ["Nude / Beige","Hot Pink","Dark Purple","Glitter"] },
+      { question: "What nail shape does she want?", answer: "Round", choices: ["Round","Stiletto","Coffin","Square"] },
+      { question: "What drink would she like?", answer: "Wine", choices: ["Wine","Tea","Water","Juice"] }
+    ]
+  },
+  {
+    id: 4, name: "Ashley Thompson", age: 22,
+    from: "Merchantville, New Jersey", area: "South Jersey, near Philadelphia",
+    occupation: "College Student at Rutgers", family: "Single, lives with parents",
+    pet: "No pets",
+    service: "Acrylic Nails with Nail Art", color: "Purple with Glitter",
+    shape: "Coffin / Ballerina", drink: "Juice",
+    personality: "Fun and creative", image: "👩‍🎓",
+    facts: [
+      { question: "What is the customer's name?", answer: "Ashley Thompson", choices: ["Ashley Thompson","Brittany Wilson","Kayla Moore","Taylor Anderson"] },
+      { question: "Where is she from?", answer: "Merchantville, New Jersey", choices: ["Merchantville, New Jersey","Collingswood, New Jersey","Bellmawr, New Jersey","Runnemede, New Jersey"] },
+      { question: "What area is she from?", answer: "South Jersey, near Philadelphia", choices: ["South Jersey, near Philadelphia","North Jersey, near New York","Central Jersey, near Princeton","Shore area, near Atlantic City"] },
+      { question: "What does she do?", answer: "College Student at Rutgers", choices: ["College Student at Rutgers","High School Student","Works at a mall","Graphic Designer"] },
+      { question: "Does she have any pets?", answer: "No pets", choices: ["No pets","A hamster named Peanut","Two cats","A dog named Rex"] },
+      { question: "What service does she want?", answer: "Acrylic Nails with Nail Art", choices: ["Acrylic Nails with Nail Art","Basic Manicure","Gel Manicure","Spa Pedicure"] },
+      { question: "What color does she want?", answer: "Purple with Glitter", choices: ["Purple with Glitter","Plain White","Nude Pink","Dark Blue"] },
+      { question: "What nail shape does she want?", answer: "Coffin / Ballerina", choices: ["Coffin / Ballerina","Round","Square","Oval"] },
+      { question: "What drink would she like?", answer: "Juice", choices: ["Juice","Water","Tea","Coke"] }
+    ]
+  },
+  {
+    id: 5, name: "Barbara Williams", age: 58,
+    from: "Haddon Township, New Jersey", area: "South Jersey, near Philadelphia",
+    occupation: "Retired School Principal",
+    family: "Widowed, 2 adult children and 4 grandchildren",
+    pet: "A bird named Sunny",
+    service: "Basic Manicure and Pedicure", color: "Classic Red",
+    shape: "Short and Round", drink: "Tea with honey",
+    personality: "Warm and motherly", image: "👵",
+    facts: [
+      { question: "What is the customer's name?", answer: "Barbara Williams", choices: ["Barbara Williams","Patricia Davis","Nancy Miller","Linda Wilson"] },
+      { question: "Where is she from?", answer: "Haddon Township, New Jersey", choices: ["Haddon Township, New Jersey","Haddonfield, New Jersey","Audubon, New Jersey","Oaklyn, New Jersey"] },
+      { question: "What area is she from?", answer: "South Jersey, near Philadelphia", choices: ["South Jersey, near Philadelphia","North Jersey, near New York","Central Jersey, near Princeton","Shore area, near Atlantic City"] },
+      { question: "What did she do for work?", answer: "Retired School Principal", choices: ["Retired School Principal","Retired Nurse","Retired Police Officer","Retired Librarian"] },
+      { question: "Does she have any pets?", answer: "A bird named Sunny", choices: ["A bird named Sunny","No pets","Three cats","A dog named Charlie"] },
+      { question: "What service does she want?", answer: "Basic Manicure and Pedicure", choices: ["Basic Manicure and Pedicure","Deluxe Pedicure","Gel Manicure","Acrylic Nails"] },
+      { question: "What color does she want?", answer: "Classic Red", choices: ["Classic Red","Nude","Light Pink","Orange"] },
+      { question: "What nail shape does she want?", answer: "Short and Round", choices: ["Short and Round","Long Coffin","Oval","Square"] },
+      { question: "What drink would she like?", answer: "Tea with honey", choices: ["Tea with honey","Black coffee","Cold water","Orange juice"] }
+    ]
+  }
+];
 
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.database();
+// ===== FIREBASE =====
+const firebaseConfig = {
+  apiKey: "AIzaSyBLI9wCnIQg4Pkdftll0ErZAPryS_-8P28",
+  authDomain: "nail-shop-game.firebaseapp.com",
+  databaseURL: "https://nail-shop-game-default-rtdb.firebaseio.com",
+  projectId: "nail-shop-game",
+  storageBucket: "nail-shop-game.firebasestorage.app",
+  messagingSenderId: "588326624299",
+  appId: "1:588326624299:web:d71d2d7fef2384c8339e6e"
+};
 
-  // ====== STATE ======
-  let currentIndex = 0;
-  let currentRevealed = 0;
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
 
-  const factLabels = ['Name', 'From (City)', 'Area', 'Occupation', 'Pet', 'Service', 'Color', 'Shape', 'Drink'];
+// ===== STATE =====
+let currentIndex = 0;
+let currentRevealed = 0;
 
-  const hints = [
-    { en: "What is your name?", vn: "Tên bạn là gì?" },
-    { en: "Where are you from?", vn: "Bạn đến từ đâu?" },
-    { en: "What area are you from?", vn: "Bạn đến từ khu vực nào?" },
-    { en: "What do you do for work?", vn: "Bạn làm nghề gì?" },
-    { en: "Do you have any pets?", vn: "Bạn có thú cưng không?" },
-    { en: "What service would you like?", vn: "Bạn muốn dịch vụ gì?" },
-    { en: "What color do you want?", vn: "Bạn muốn màu gì?" },
-    { en: "What nail shape do you want?", vn: "Bạn muốn hình dạng móng gì?" },
-    { en: "Would you like a drink?", vn: "Bạn có muốn uống gì không?" }
-  ];
+const factLabels = ['Name','From (City)','Area','Occupation','Pet','Service','Color','Shape','Drink'];
+const hints = [
+  { en: "What is your name?", vn: "Tên bạn là gì?" },
+  { en: "Where are you from?", vn: "Bạn đến từ đâu?" },
+  { en: "What area are you from?", vn: "Bạn đến từ khu vực nào?" },
+  { en: "What do you do for work?", vn: "Bạn làm nghề gì?" },
+  { en: "Do you have any pets?", vn: "Bạn có thú cưng không?" },
+  { en: "What service would you like?", vn: "Bạn muốn dịch vụ gì?" },
+  { en: "What color do you want?", vn: "Bạn muốn màu gì?" },
+  { en: "What nail shape do you want?", vn: "Bạn muốn hình dạng móng gì?" },
+  { en: "Would you like a drink?", vn: "Bạn có muốn uống gì không?" }
+];
 
-  // ====== CONNECTION ======
-  db.ref('.info/connected').on('value', snap => {
-    const status = document.getElementById('connectionStatus');
-    if (snap.val()) {
-      status.textContent = '🟢 Connected — Student page is live!';
-      status.className = 'connection-status connected';
-    } else {
-      status.textContent = '🔴 Disconnected!';
-      status.className = 'connection-status disconnected';
+// ===== CONNECTION =====
+db.ref('.info/connected').on('value', snap => {
+  const el = document.getElementById('connectionStatus');
+  if (snap.val()) {
+    el.textContent = '🟢 Connected — Student page is live!';
+    el.className = 'connection-status connected';
+  } else {
+    el.textContent = '🔴 Disconnected!';
+    el.className = 'connection-status disconnected';
+  }
+});
+
+// ===== LISTEN =====
+db.ref('game').on('value', snap => {
+  const data = snap.val() || {};
+  document.getElementById('t-revealed').textContent = data.revealed || 0;
+  document.getElementById('t-customer').textContent = (data.currentCustomer || 0) + 1;
+  document.getElementById('t-status').textContent = data.complete ? '✅' : '🟡';
+  document.getElementById('t-complete').textContent = data.complete ? 'Yes!' : 'No';
+  currentRevealed = data.revealed || 0;
+  buildRevealItems(customers[currentIndex]);
+});
+
+// ===== INIT =====
+function init() {
+  buildCustomerTabs();
+  loadTeacherCustomer(0);
+  buildHints();
+  db.ref('game').once('value', snap => {
+    if (!snap.val()) {
+      db.ref('game').set({ currentCustomer: 0, revealed: 0, complete: false });
     }
   });
+}
 
-  // ====== LISTEN TO FIREBASE ======
-  db.ref('game').on('value', snap => {
-    const data = snap.val() || {};
-    document.getElementById('t-revealed').textContent = data.revealed || 0;
-    document.getElementById('t-customer').textContent = (data.currentCustomer || 0) + 1;
-    document.getElementById('t-status').textContent = data.complete ? '✅' : '🟡';
-    document.getElementById('t-complete').textContent = data.complete ? 'Yes!' : 'No';
-    currentRevealed = data.revealed || 0;
-    buildRevealItems(customers[currentIndex], currentIndex);
+function buildCustomerTabs() {
+  const tabs = document.getElementById('customerTabs');
+  tabs.innerHTML = '';
+  customers.forEach((c, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'customer-tab' + (i === currentIndex ? ' active' : '');
+    btn.textContent = `${c.image} ${c.name.split(' ')[0]}`;
+    btn.onclick = () => loadTeacherCustomer(i);
+    tabs.appendChild(btn);
   });
+}
 
-  // ====== INIT ======
-  function init() {
-    buildCustomerTabs();
-    loadTeacherCustomer(0);
-    buildHints();
+function loadTeacherCustomer(index) {
+  currentIndex = index;
+  const c = customers[index];
+  document.getElementById('t-avatar').textContent = c.image;
+  document.getElementById('t-name').textContent = c.name;
+  document.getElementById('t-subtitle').textContent = `${c.from} — ${c.occupation}`;
 
-    // Initialize game in Firebase if not exists
-    db.ref('game').once('value', snap => {
-      if (!snap.val()) {
-        db.ref('game').set({
-          currentCustomer: 0,
-          revealed: 0,
-          complete: false
-        });
-      }
-    });
-  }
+  document.getElementById('t-grid').innerHTML = [
+    { label: 'Full Name', value: c.name },
+    { label: 'Age', value: c.age + ' years old' },
+    { label: 'From', value: c.from },
+    { label: 'Area', value: c.area },
+    { label: 'Occupation', value: c.occupation },
+    { label: 'Family', value: c.family },
+    { label: 'Pet', value: c.pet },
+    { label: 'Personality', value: c.personality }
+  ].map(item => `
+    <div class="profile-item">
+      <div class="profile-label">${item.label}</div>
+      <div class="profile-value">${item.value}</div>
+    </div>
+  `).join('');
 
-  function buildCustomerTabs() {
-    const tabs = document.getElementById('customerTabs');
-    tabs.innerHTML = '';
-    customers.forEach((c, i) => {
-      const btn = document.createElement('button');
-      btn.className = 'customer-tab' + (i === currentIndex ? ' active' : '');
-      btn.textContent = `${c.image} ${c.name.split(' ')[0]}`;
-      btn.onclick = () => loadTeacherCustomer(i);
-      tabs.appendChild(btn);
-    });
-  }
+  buildRevealItems(c);
+  buildCustomerTabs();
+}
 
-  function loadTeacherCustomer(index) {
-    currentIndex = index;
-    const c = customers[index];
-
-    document.getElementById('t-avatar').textContent = c.image;
-    document.getElementById('t-name').textContent = c.name;
-    document.getElementById('t-subtitle').textContent = `${c.from} — ${c.occupation}`;
-
-    const items = [
-      { label: 'Full Name', value: c.name },
-      { label: 'Age', value: c.age + ' years old' },
-      { label: 'From', value: c.from },
-      { label: 'Area', value: c.area },
-      { label: 'Occupation', value: c.occupation },
-      { label: 'Family', value: c.family },
-      { label: 'Pet', value: c.pet },
-      { label: 'Personality', value: c.personality }
-    ];
-
-    document.getElementById('t-grid').innerHTML = items.map(item => `
-      <div class="profile-item">
-        <div class="profile-label">${item.label}</div>
-        <div class="profile-value">${item.value}</div>
+function buildRevealItems(customer) {
+  const container = document.getElementById('revealItems');
+  const values = [customer.name, customer.from, customer.area, customer.occupation, customer.pet, customer.service, customer.color, customer.shape, customer.drink];
+  container.innerHTML = '';
+  factLabels.forEach((label, i) => {
+    const isRevealed = i < currentRevealed;
+    const div = document.createElement('div');
+    div.className = 'reveal-item' + (isRevealed ? ' revealed' : '');
+    div.innerHTML = `
+      <div>
+        <div class="reveal-item-label">${label}</div>
+        <div class="reveal-item-value">${values[i]}</div>
       </div>
-    `).join('');
+      <button class="reveal-btn ${isRevealed ? 'done' : ''}"
+        onclick="revealFact(${i})" ${isRevealed ? 'disabled' : ''}>
+        ${isRevealed ? '✅ Revealed' : 'REVEAL'}
+      </button>
+    `;
+    container.appendChild(div);
+  });
+}
 
-    buildRevealItems(c, index);
-    buildCustomerTabs();
-  }
-
-  function buildRevealItems(customer, index) {
-    const container = document.getElementById('revealItems');
-    const values = [customer.name, customer.from, customer.area, customer.occupation, customer.pet, customer.service, customer.color, customer.shape, customer.drink];
-
-    container.innerHTML = '';
-    factLabels.forEach((label, i) => {
-      const isRevealed = i < currentRevealed;
-      const div = document.createElement('div');
-      div.className = 'reveal-item' + (isRevealed ? ' revealed' : '');
-      div.innerHTML = `
-        <div>
-          <div class="reveal-item-label">${label}</div>
-          <div class="reveal-item-value">${values[i]}</div>
-        </div>
-        <button class="reveal-btn ${isRevealed ? 'done' : ''}"
-          onclick="revealFact(${i})"
-          ${isRevealed ? 'disabled' : ''}>
-          ${isRevealed ? '✅ Revealed' : 'REVEAL'}
-        </button>
-      `;
-      container.appendChild(div);
-    });
-  }
-
-  function revealFact(factIndex) {
-    if (factIndex !== currentRevealed) {
-      alert(`Please reveal in order! Reveal fact ${currentRevealed + 1} first.`);
-      return;
-    }
-    const newCount = currentRevealed + 1;
-    db.ref('game').update({
-      revealed: newCount,
-      currentCustomer: currentIndex
-    });
-  }
-
-  function revealAll() {
-    db.ref('game').update({
-      revealed: customers[currentIndex].facts.length,
-      currentCustomer: currentIndex
-    });
-  }
-
-  function goNextCustomer() {
-    if (currentIndex < customers.length - 1) {
-      const next = currentIndex + 1;
-      db.ref('game').update({
-        currentCustomer: next,
-        revealed: 0
-      });
-      loadTeacherCustomer(next);
-    } else {
-      alert('All 5 customers done!');
-    }
-  }
-
-  function resetGame() {
-    if (confirm('Reset the entire game?')) {
-      db.ref('game').set({
-        currentCustomer: 0,
-        revealed: 0,
-        complete: false
-      });
-      loadTeacherCustomer(0);
-    }
-  }
-
-  function endGame() {
-    if (confirm('End the game and show student their final score?')) {
-      db.ref('game').update({ complete: true });
-    }
-  }
-
-  function buildHints() {
-    document.getElementById('hintGrid').innerHTML = hints.map(h => `
-      <div class="hint-box">
-        <strong>Student asks:</strong>
-        ${h.en}
-        <span style="color:#999; font-size:11px; display:block;">${h.vn}</span>
-      </div>
-    `).join('');
-  }
-
-  window.onload = init;
-</script>
-</body>
-</html>
+function revealFact(factIndex) {
+  if (factIndex !== currentRevealed) {
+    alert(`Please reveal in order! Reveal fact ${currentRevealed + 1} first.`);
+    return;
