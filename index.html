@@ -42,7 +42,99 @@
       display: inline-block;
       margin-bottom: 10px;
     }
-
+.customer-form {
+  background: #fff0f5;
+  border-radius: 15px;
+  padding: 15px;
+  margin: 15px 0;
+  text-align: left;
+}
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.form-field {
+  background: white;
+  border-radius: 12px;
+  padding: 10px 12px;
+}
+.form-field label {
+  font-size: 11px;
+  font-weight: bold;
+  color: #ff69b4;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  display: block;
+  margin-bottom: 6px;
+}
+.input-wrap {
+  display: flex;
+  gap: 6px;
+}
+.input-wrap input {
+  flex: 1;
+  padding: 8px 10px;
+  border: 2px solid #ffb6d9;
+  border-radius: 8px;
+  font-size: 13px;
+  outline: none;
+  transition: all 0.2s;
+}
+.input-wrap input:focus {
+  border-color: #ff69b4;
+}
+.input-wrap input.correct {
+  border-color: #28a745;
+  background: #d4edda;
+  color: #155724;
+}
+.input-wrap input.wrong {
+  border-color: #dc3545;
+  background: #f8d7da;
+  color: #721c24;
+}
+.input-wrap input.locked {
+  border-color: #28a745;
+  background: #d4edda;
+  color: #155724;
+  pointer-events: none;
+}
+.check-btn {
+  background: #ff69b4;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 14px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.2s;
+}
+.check-btn:hover { background: #ff1493; }
+.check-btn.locked {
+  background: #28a745;
+  cursor: default;
+}
+.field-feedback {
+  font-size: 11px;
+  margin-top: 4px;
+  min-height: 16px;
+  font-weight: bold;
+}
+.field-feedback.correct { color: #28a745; }
+.field-feedback.wrong { color: #dc3545; }
+.field-feedback.revealed { color: #4a90d9; }
+.form-score {
+  text-align: center;
+  margin-top: 15px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #ff69b4;
+  padding: 10px;
+  background: white;
+  border-radius: 10px;
+}
     .hint-section {
   background: white;
   border-radius: 20px;
@@ -252,7 +344,85 @@
     <div class="customer-number" id="customerNumber">Customer 1 of 5</div>
     <h2 id="customerName" style="color:#ff69b4; margin-bottom:5px;">New Customer!</h2>
     <p style="color:#999; font-size:14px;">Ask your teacher questions in English!</p>
-    <div class="revealed-info" id="revealedInfo">
+ <div class="customer-form" id="customerForm">
+  <div class="form-row">
+    <div class="form-field">
+      <label>👤 Name</label>
+      <div class="input-wrap">
+        <input type="text" id="field-name" placeholder="Ask: What is your name?" />
+        <button onclick="checkField('name')" class="check-btn">✓</button>
+      </div>
+      <div class="field-feedback" id="fb-name"></div>
+    </div>
+    <div class="form-field">
+      <label>📍 From (City)</label>
+      <div class="input-wrap">
+        <input type="text" id="field-from" placeholder="Ask: Where are you from?" />
+        <button onclick="checkField('from')" class="check-btn">✓</button>
+      </div>
+      <div class="field-feedback" id="fb-from"></div>
+    </div>
+    <div class="form-field">
+      <label>🗺️ Area</label>
+      <div class="input-wrap">
+        <input type="text" id="field-area" placeholder="Ask: What area are you from?" />
+        <button onclick="checkField('area')" class="check-btn">✓</button>
+      </div>
+      <div class="field-feedback" id="fb-area"></div>
+    </div>
+    <div class="form-field">
+      <label>💼 Occupation</label>
+      <div class="input-wrap">
+        <input type="text" id="field-occupation" placeholder="Ask: What do you do for work?" />
+        <button onclick="checkField('occupation')" class="check-btn">✓</button>
+      </div>
+      <div class="field-feedback" id="fb-occupation"></div>
+    </div>
+    <div class="form-field">
+      <label>🐾 Pet</label>
+      <div class="input-wrap">
+        <input type="text" id="field-pet" placeholder="Ask: Do you have any pets?" />
+        <button onclick="checkField('pet')" class="check-btn">✓</button>
+      </div>
+      <div class="field-feedback" id="fb-pet"></div>
+    </div>
+    <div class="form-field">
+      <label>💅 Service</label>
+      <div class="input-wrap">
+        <input type="text" id="field-service" placeholder="Ask: What service would you like?" />
+        <button onclick="checkField('service')" class="check-btn">✓</button>
+      </div>
+      <div class="field-feedback" id="fb-service"></div>
+    </div>
+    <div class="form-field">
+      <label>🎨 Color</label>
+      <div class="input-wrap">
+        <input type="text" id="field-color" placeholder="Ask: What color do you want?" />
+        <button onclick="checkField('color')" class="check-btn">✓</button>
+      </div>
+      <div class="field-feedback" id="fb-color"></div>
+    </div>
+    <div class="form-field">
+      <label>💎 Nail Shape</label>
+      <div class="input-wrap">
+        <input type="text" id="field-shape" placeholder="Ask: What nail shape do you want?" />
+        <button onclick="checkField('shape')" class="check-btn">✓</button>
+      </div>
+      <div class="field-feedback" id="fb-shape"></div>
+    </div>
+    <div class="form-field">
+      <label>🥤 Drink</label>
+      <div class="input-wrap">
+        <input type="text" id="field-drink" placeholder="Ask: Would you like a drink?" />
+        <button onclick="checkField('drink')" class="check-btn">✓</button>
+      </div>
+      <div class="field-feedback" id="fb-drink"></div>
+    </div>
+  </div>
+  <div class="form-score">
+    ⭐ Fields Correct: <span id="fieldScore">0</span> / 9
+  </div>
+</div>
       <div class="waiting-message">⏳ Waiting for teacher to reveal information...</div>
     </div>
   </div>
@@ -411,7 +581,95 @@ const customers = [
     ]
   }
 ];
+// Field names and correct answers
+const fieldKeys = ['name','from','area','occupation','pet','service','color','shape','drink'];
+let fieldCorrect = 0;
+let lockedFields = [];
 
+function checkField(key) {
+  if (lockedFields.includes(key)) return;
+
+  const c = customers[currentCustomer];
+  const answers = {
+    name: c.name,
+    from: c.from,
+    area: c.area,
+    occupation: c.occupation,
+    pet: c.pet,
+    service: c.service,
+    color: c.color,
+    shape: c.shape,
+    drink: c.drink
+  };
+
+  const input = document.getElementById('field-' + key);
+  const feedback = document.getElementById('fb-' + key);
+  const typed = input.value.trim().toLowerCase();
+  const correct = answers[key].toLowerCase();
+
+  if (!typed) {
+    feedback.textContent = '⚠️ Please type an answer first!';
+    feedback.className = 'field-feedback wrong';
+    return;
+  }
+
+  if (typed === correct || correct.includes(typed) || typed.includes(correct.split(' ')[0])) {
+    input.className = 'correct';
+    input.value = answers[key];
+    feedback.textContent = '✅ Correct!';
+    feedback.className = 'field-feedback correct';
+    document.querySelector(`#field-${key} ~ button`) && 
+      (document.querySelector(`#field-${key}`).nextElementSibling.className = 'check-btn locked');
+    
+    if (!lockedFields.includes(key)) {
+      lockedFields.push(key);
+      fieldCorrect++;
+      document.getElementById('fieldScore').textContent = fieldCorrect;
+      score += 5;
+      document.getElementById('scoreDisplay').textContent = score;
+    }
+    input.disabled = true;
+  } else {
+    input.className = 'wrong';
+    feedback.textContent = '❌ Try again!';
+    feedback.className = 'field-feedback wrong';
+  }
+}
+
+// When teacher reveals a fact — auto fill the field
+function autoFillField(index, value) {
+  const key = fieldKeys[index];
+  const input = document.getElementById('field-' + key);
+  const feedback = document.getElementById('fb-' + key);
+  if (input && !lockedFields.includes(key)) {
+    input.value = value;
+    input.className = 'locked';
+    input.disabled = true;
+    feedback.textContent = '🔓 Revealed by teacher!';
+    feedback.className = 'field-feedback revealed';
+    lockedFields.push(key);
+  }
+}
+
+// Reset fields for new customer
+function resetFields() {
+  fieldCorrect = 0;
+  lockedFields = [];
+  document.getElementById('fieldScore').textContent = '0';
+  fieldKeys.forEach(key => {
+    const input = document.getElementById('field-' + key);
+    const feedback = document.getElementById('fb-' + key);
+    if (input) {
+      input.value = '';
+      input.className = '';
+      input.disabled = false;
+    }
+    if (feedback) {
+      feedback.textContent = '';
+      feedback.className = 'field-feedback';
+    }
+  });
+}
 // ===== FIREBASE =====
 const firebaseConfig = {
   apiKey: "AIzaSyBLI9wCnIQg4Pkdftll0ErZAPryS_-8P28",
@@ -491,11 +749,12 @@ function loadCustomer(index) {
   answeredQuestions = [];
   lastRevealedCount = 0;
 
+  resetFields(); // ← ADD THIS LINE
+
   const c = customers[index];
   document.getElementById('customerAvatar').textContent = c.image;
   document.getElementById('customerNumber').textContent = `Customer ${index + 1} of 5`;
   document.getElementById('customerName').textContent = '???';
-  document.getElementById('revealedInfo').innerHTML = '<div class="waiting-message">⏳ Waiting for teacher to reveal information...</div>';
   document.getElementById('waitingBox').style.display = 'block';
   document.getElementById('questionSection').style.display = 'none';
   document.getElementById('feedback').className = 'feedback';
@@ -503,8 +762,18 @@ function loadCustomer(index) {
   document.getElementById('customerDisplay').textContent = index + 1;
   document.getElementById('progressFill').style.width = (index / 5 * 100) + '%';
 }
-
 function updateRevealedInfo(count) {
+  const c = customers[currentCustomer];
+  const values = [c.name, c.from, c.area, c.occupation, c.pet, c.service, c.color, c.shape, c.drink];
+
+  // Auto fill revealed fields
+  for (let i = 0; i < count; i++) {
+    autoFillField(i, values[i]);
+  }
+
+  // Show customer name when first fact revealed
+  document.getElementById('customerName').textContent = count > 0 ? c.name : '???';
+}
   const c = customers[currentCustomer];
   const labels = ['Name','From','Area','Occupation','Pet','Service','Color','Shape','Drink'];
   const values = [c.name, c.from, c.area, c.occupation, c.pet, c.service, c.color, c.shape, c.drink];
