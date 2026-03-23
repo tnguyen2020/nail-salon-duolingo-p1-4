@@ -385,3 +385,62 @@ function revealFact(factIndex) {
   if (factIndex !== currentRevealed) {
     alert(`Please reveal in order! Reveal fact ${currentRevealed + 1} first.`);
     return;
+      }
+  const newCount = currentRevealed + 1;
+  db.ref('game').update({
+    revealed: newCount,
+    currentCustomer: currentIndex
+  });
+}
+
+function revealAll() {
+  db.ref('game').update({
+    revealed: customers[currentIndex].facts.length,
+    currentCustomer: currentIndex
+  });
+}
+
+function goNextCustomer() {
+  if (currentIndex < customers.length - 1) {
+    const next = currentIndex + 1;
+    db.ref('game').update({
+      currentCustomer: next,
+      revealed: 0
+    });
+    loadTeacherCustomer(next);
+  } else {
+    alert('All 5 customers done!');
+  }
+}
+
+function resetGame() {
+  if (confirm('Reset the entire game?')) {
+    db.ref('game').set({
+      currentCustomer: 0,
+      revealed: 0,
+      complete: false
+    });
+    loadTeacherCustomer(0);
+  }
+}
+
+function endGame() {
+  if (confirm('End the game and show student their final score?')) {
+    db.ref('game').update({ complete: true });
+  }
+}
+
+function buildHints() {
+  document.getElementById('hintGrid').innerHTML = hints.map(h => `
+    <div class="hint-box">
+      <strong>Student asks:</strong>
+      ${h.en}
+      <span style="color:#999; font-size:11px; display:block;">${h.vn}</span>
+    </div>
+  `).join('');
+}
+
+window.onload = init;
+</script>
+</body>
+</html>
