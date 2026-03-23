@@ -787,7 +787,7 @@ function updateRevealedInfo(count) {
   }
   document.getElementById('revealedInfo').innerHTML = html || '<div class="waiting-message">⏳ Waiting for teacher...</div>';
   document.getElementById('customerName').textContent = count > 0 ? c.name : '???';
-}
+
 
 function showQuestion(questionIndex) {
   if (answeredQuestions.includes(questionIndex)) return;
