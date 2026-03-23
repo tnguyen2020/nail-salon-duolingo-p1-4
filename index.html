@@ -639,8 +639,29 @@ function endGame() {
     pct >= 70 ? '👍 Good job! Keep practicing!' :
     pct >= 50 ? '😊 Nice try! Practice more!' : '💪 Keep learning!';
 }
+const hints = [
+  { en: "What is your name?", vn: "Tên bạn là gì?" },
+  { en: "Where are you from?", vn: "Bạn đến từ đâu?" },
+  { en: "What area are you from?", vn: "Bạn đến từ khu vực nào?" },
+  { en: "What do you do for work?", vn: "Bạn làm nghề gì?" },
+  { en: "Do you have any pets?", vn: "Bạn có thú cưng không?" },
+  { en: "What service would you like?", vn: "Bạn muốn dịch vụ gì?" },
+  { en: "What color do you want?", vn: "Bạn muốn màu gì?" },
+  { en: "What nail shape do you want?", vn: "Bạn muốn hình dạng móng gì?" },
+  { en: "Would you like a drink?", vn: "Bạn có muốn uống gì không?" }
+];
 
-window.onload = () => { loadCustomer(0); startListening(); };
+function buildHints() {
+  document.getElementById('hintGrid').innerHTML = hints.map(h => `
+    <div class="hint-box">
+      <strong>Ask your teacher:</strong>
+      ${h.en}
+      <span class="vn">${h.vn}</span>
+    </div>
+  `).join('');
+}
+
+window.onload = () => { loadCustomer(0); startListening(); buildHints()};
 </script>
 </body>
 </html>
