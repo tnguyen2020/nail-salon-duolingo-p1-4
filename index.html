@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nail Shop English — Student Page</title>
+  <script src="customers.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-database-compat.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #ffe0f0, #fff0f5);
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .header {
+      text-align: center;
+      padding: 20px;
+      background: linear-gradient(135deg, #ff69b4, #ff1493);
+      color: white;
+      border-radius: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 15px rgba(255,105,180,0.3);
+    }
+    .header h1 { font-size: 28px; margin-bottom: 5px; }
+    .header p { font-size: 16px; opacity: 0.9; }
+    .game-area { max-width: 800px; margin: 0 auto; }
+    .customer-card {
+      background: white;
+      border-radius: 20px;
+      padding: 25px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    .customer-avatar { font-size: 80px; margin-bottom: 10px; }
+    .customer-number {
+      background: #ff69b4;
+      color: white;
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-size: 14px;
+      display: inline-block;
+      margin-bottom: 10px;
+    }
+    .revealed-info {
+      background: #fff0f5;
+      border-radius: 15px;
+      padding: 15px;
+      margin: 15px 0;
+      text-align: left;
+    }
+    .info-item {
+      display: flex;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid #ffe0f0;
+      animation: fadeIn 0.5s ease;
+    }
+    .info-item:last-child { border-bottom: none; }
+    .info-label {
+      font-weight: bold;
+      color: #ff69b4;
+      width: 140px;
+      min-width: 140px;
+      font-size: 14px;
+    }
+    .info-value { color: #333; font-size: 14px; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .waiting-message {
+      text-align: center;
+      color: #ff69b4;
+      font-style: italic;
+      padding: 10px;
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.5; }
+      100% { opacity: 1; }
+    }
+    .question-section {
+      background: white;
+      border-radius: 20px;
+      padding: 25px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    .question-title {
+      font-size: 18px;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .question-box {
+      background: linear-gradient(135deg, #fff0f5, #ffe0f0);
+      border-radius: 15px;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-left: 4px solid #ff69b4;
+    }
+    .question-text { font-size: 18px; font-weight: bold; color: #333; margin-bottom: 5px; }
+    .question-vietnamese { font-size: 13px; color: #999; font-style: italic; }
+    .choices {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+    .choice-btn {
+      background: white;
+      border: 2px solid #ffb6d9;
+      border-radius: 12px;
+      padding: 12px 15px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: left;
+    }
+    .choice-btn:hover { background: #fff0f5; border-color: #ff69b4; transform: translateY(-2px); }
+    .choice-btn.correct { background: #d4edda; border-color: #28a745; color: #155724; }
+    .choice-btn.wrong { background: #f8d7da; border-color: #dc3545; color: #721c24; }
+    .type-answer { display: flex; gap: 10px; margin-top: 10px; }
+    .type-input {
+      flex: 1;
+      padding: 12px 15px;
+      border: 2px solid #ffb6d9;
+      border-radius: 12px;
+      font-size: 14px;
+      outline: none;
+    }
+    .type-input:focus { border-color: #ff69b4; }
+    .submit-btn {
+      background: #ff69b4;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 12px 20px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .submit-btn:hover { background: #ff1493; transform: translateY(-2px); }
+    .answer-mode-toggle {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+      justify-content: center;
+    }
+    .mode-btn {
+      padding: 8px 20px;
+      border-radius: 20px;
+      border: 2px solid #ff69b4;
+      background: white;
+      color: #ff69b4;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.2s;
+    }
+    .mode-btn.active { background: #ff69b4; color: white; }
+    .feedback {
+      text-align: center;
+      padding: 10px;
+      border-radius: 10px;
+      font-weight: bold;
+      margin-top: 10px;
+      display: none;
+    }
+    .feedback.correct { background: #d4edda; color: #155724; display: block; }
+    .feedback.wrong { background: #f8d7da; color: #721c24; display: block; }
+    .score-section {
+      background: white;
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      display: flex;
+      justify-content: space-around;
+      text-align: center;
+    }
+    .score-number { font-size: 32px; font-weight: bold; color: #ff69b4; }
+    .score-label { font-size: 12px; color: #999; }
+    .next-btn {
+      background: linear-gradient(135deg, #ff69b4, #ff1493);
+      color: white;
+      border: none;
+      border-radius: 15px;
+      padding: 15px 30px;
+      font-size: 16px;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 15px;
+      transition: all 0.2s;
+      display: none;
+    }
+    .next-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(255,105,180,0.4); }
+    .progress-bar { background: #ffe0f0; border-radius: 10px; height: 10px; margin-bottom: 20px; }
+    .progress-fill {
+      background: linear-gradient(135deg, #ff69b4, #ff1493);
+      height: 100%;
+      border-radius: 10px;
+      transition: width 0.5s ease;
+    }
+    .game-complete {
+      text-align: center;
+      background: white;
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      display: none;
+    }
+    .game-complete h2 { font-size: 32px; color: #ff69b4; margin-bottom: 10px; }
+    .final-score { font-size: 48px; font-weight: bold; color: #ff1493; margin: 20px 0; }
+    .waiting-for-teacher {
+      background: #fff9e6;
+      border: 2px dashed #ffc107;
+      border-radius: 15px;
+      padding: 20px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .waiting-for-teacher p { color: #856404; font-size: 16px; }
+    .lock-icon { font-size: 40px; margin-bottom: 10px; }
+    .question-counter { text-align: center; color: #ff69b4; font-size: 14px; margin-bottom: 15px; }
+    .reload-btn {
+      background: #ff69b4;
+      color: white;
+      border: none;
+      border-radius: 15px;
+      padding: 15px 30px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: all 0.2s;
+    }
+    .reload-btn:hover { background: #ff1493; }
+    .connection-status {
+      text-align: center;
+      padding: 8px;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      font-size: 13px;
+    }
+    .connected { background: #d4edda; color: #155724; }
+    .disconnected { background: #f8d7da; color: #721c24; }
+  </style>
+</head>
+<body>
+
+<div class="game-area">
+  <div class="header">
+    <h1>💅 Nail Shop English</h1>
+    <p>Welcome! You are the Nail Technician. Serve your customers!</p>
+  </div>
+
+  <div class="connection-status" id="connectionStatus">🔄 Connecting...</div>
+
+  <div class="score-section">
+    <div>
+      <div class="score-number" id="scoreDisplay">0</div>
+      <div class="score-label">Points</div>
+    </div>
+    <div>
+      <div class="score-number" id="customerDisplay">1</div>
+      <div class="score-label">Customer</div>
+    </div>
+    <div>
+      <div class="score-number" id="correctDisplay">0</div>
+      <div class="score-label">Correct</div>
+    </div>
+    <div>
+      <div class="score-number" id="totalDisplay">0</div>
+      <div class="score-label">Answered</div>
+    </div>
+  </div>
+
+  <div class="progress-bar">
+    <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+  </div>
+
+  <div class="customer-card">
+    <div class="customer-avatar" id="customerAvatar">👤</div>
+    <div class="customer-number" id="customerNumber">Customer 1 of 5</div>
+    <h2 id="customerName" style="color:#ff69b4; margin-bottom:5px;">New Customer!</h2>
+    <p style="color:#999; font-size:14px;">Ask questions to learn about your customer</p>
+    <div class="revealed-info" id="revealedInfo">
+      <div class="waiting-message">⏳ Waiting for teacher to reveal information...</div>
+    </div>
+  </div>
+
+  <div class="waiting-for-teacher" id="waitingBox">
+    <div class="lock-icon">🔒</div>
+    <p><strong>Waiting for your teacher to reveal the next clue!</strong></p>
+    <p style="font-size:13px; margin-top:5px;">Ask your teacher a question in English to get the next answer!</p>
+  </div>
+
+  <div class="question-section" id="questionSection" style="display:none;">
+    <div class="question-title">💬 Answer the Question</div>
+    <div class="answer-mode-toggle">
+      <button class="mode-btn active" id="multipleChoiceBtn" onclick="setMode('multiple')">Multiple Choice</button>
+      <button class="mode-btn" id="typeAnswerBtn" onclick="setMode('type')">Type Answer</button>
+    </div>
+    <div class="question-counter" id="questionCounter">Question 1 of 9</div>
+    <div class="question-box">
+      <div class="question-text" id="questionText"></div>
+      <div class="question-vietnamese" id="questionVietnamese"></div>
+    </div>
+    <div id="multipleChoiceArea">
+      <div class="choices" id="choicesArea"></div>
+    </div>
+    <div id="typeAnswerArea" style="display:none;">
+      <div class="type-answer">
+        <input type="text" class="type-input" id="typeInput" placeholder="Type your answer here..." />
+        <button class="submit-btn" onclick="checkTypedAnswer()">Submit</button>
+      </div>
+    </div>
+    <div class="feedback" id="feedback"></div>
+    <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next Question ➡️</button>
+  </div>
+
+  <div class="game-complete" id="gameComplete">
+    <div style="font-size:60px;">🎉</div>
+    <h2>Game Complete!</h2>
+    <p>You served all 5 customers!</p>
+    <div class="final-score" id="finalScore">0 Points</div>
+    <p id="finalMessage"></p>
+    <button class="reload-btn" onclick="location.reload()">Play Again 🔄</button>
+  </div>
+</div>
+
+<script>
+  // ====== FIREBASE CONFIG ======
+  const firebaseConfig = {
+    apiKey: "AIzaSyBLI9wCnIQg4Pkdftll0ErZAPryS_-8P28",
+    authDomain: "nail-shop-game.firebaseapp.com",
+    databaseURL: "https://nail-shop-game-default-rtdb.firebaseio.com",
+    projectId: "nail-shop-game",
+    storageBucket: "nail-shop-game.firebasestorage.app",
+    messagingSenderId: "588326624299",
+    appId: "1:588326624299:web:d71d2d7fef2384c8339e6e"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
+
+  // ====== GAME STATE ======
+  let currentCustomer = 0;
+  let currentQuestion = 0;
+  let score = 0;
+  let correctAnswers = 0;
+  let totalAnswered = 0;
+  let answeredQuestions = [];
+  let answerMode = 'multiple';
+  let lastRevealedCount = 0;
+
+  const questionTranslations = {
+    "What is the customer's name?": "Tên khách hàng là gì?",
+    "Where is the customer from?": "Khách hàng đến từ đâu?",
+    "What area is she from?": "Cô ấy đến từ khu vực nào?",
+    "What does she do for work?": "Cô ấy làm nghề gì?",
+    "What did she do for work?": "Trước đây cô ấy làm nghề gì?",
+    "What does she do?": "Cô ấy làm gì?",
+    "Does she have any pets?": "Cô ấy có thú cưng không?",
+    "What service does she want?": "Cô ấy muốn dịch vụ gì?",
+    "What color does she want?": "Cô ấy muốn màu gì?",
+    "What nail shape does she want?": "Cô ấy muốn hình dạng móng gì?",
+    "What drink would she like?": "Cô ấy muốn uống gì?"
+  };
+
+  // ====== CONNECTION STATUS ======
+  db.ref('.info/connected').on('value', snap => {
+    const status = document.getElementById('connectionStatus');
+    if (snap.val()) {
+      status.textContent = '🟢 Connected — Live Game!';
+      status.className = 'connection-status connected';
+    } else {
+      status.textContent = '🔴 Disconnected — Check internet!';
+      status.className = 'connection-status disconnected';
+    }
+  });
+
+  // ====== LISTEN TO FIREBASE ======
+  function startListening() {
+    // Listen for customer changes
+    db.ref('game/currentCustomer').on('value', snap => {
+      const val = snap.val();
+      if (val !== null && val !== currentCustomer) {
+        loadCustomer(val);
+      }
+    });
+
+    // Listen for revealed facts
+    db.ref('game/revealed').on('value', snap => {
+      const val = snap.val() || 0;
+      if (val > lastRevealedCount) {
+        lastRevealedCount = val;
+        updateRevealedInfo(val);
+        if (val > 0) showQuestion(val - 1);
+      }
+    });
+
+    // Listen for game complete
+    db.ref('game/complete').on('value', snap => {
+      if (snap.val() === true) endGame();
+    });
+  }
+
+  function loadCustomer(index) {
+    currentCustomer = index;
+    currentQuestion = 0;
+    answeredQuestions = [];
+    lastRevealedCount = 0;
+
+    const customer = customers[index];
+    document.getElementById('customerAvatar').textContent = customer.image;
+    document.getElementById('customerNumber').textContent = `Customer ${index + 1} of 5`;
+    document.getElementById('customerName').textContent = '???';
+    document.getElementById('revealedInfo').innerHTML = '<div class="waiting-message">⏳ Waiting for teacher to reveal information...</div>';
+    document.getElementById('waitingBox').style.display = 'block';
+    document.getElementById('questionSection').style.display = 'none';
+    document.getElementById('feedback').className = 'feedback';
+    document.getElementById('nextBtn').style.display = 'none';
+    document.getElementById('customerDisplay').textContent = index + 1;
+    document.getElementById('progressFill').style.width = (index / 5 * 100) + '%';
+  }
+
+  function updateRevealedInfo(count) {
+    const customer = customers[currentCustomer];
+    const labels = ['Name', 'From', 'Area', 'Occupation', 'Pet', 'Service', 'Color', 'Shape', 'Drink'];
+    const values = [customer.name, customer.from, customer.area, customer.occupation, customer.pet, customer.service, customer.color, customer.shape, customer.drink];
+
+    let html = '';
+    for (let i = 0; i < count; i++) {
+      html += `<div class="info-item">
+        <span class="info-label">${labels[i]}:</span>
+        <span class="info-value">${values[i]}</span>
+      </div>`;
+    }
+    document.getElementById('revealedInfo').innerHTML = html || '<div class="waiting-message">⏳ Waiting for teacher to reveal information...</div>';
+    document.getElementById('customerName').textContent = count > 0 ? customer.name : '???';
+  }
+
+  function showQuestion(questionIndex) {
+    if (answeredQuestions.includes(questionIndex)) return;
+
+    const customer = customers[currentCustomer];
+    const fact = customer.facts[questionIndex];
+
+    currentQuestion = questionIndex;
+    document.getElementById('waitingBox').style.display = 'none';
+    document.getElementById('questionSection').style.display = 'block';
+    document.getElementById('questionText').textContent = fact.question;
+    document.getElementById('questionVietnamese').textContent = questionTranslations[fact.question] || '';
+    document.getElementById('questionCounter').textContent = `Question ${questionIndex + 1} of ${customer.facts.length}`;
+    document.getElementById('feedback').className = 'feedback';
+    document.getElementById('nextBtn').style.display = 'none';
+    document.getElementById('typeInput').value = '';
+    document.getElementById('typeInput').disabled = false;
+
+    renderChoices(fact);
+  }
+
+  function renderChoices(fact) {
+    const choicesArea = document.getElementById('choicesArea');
+    choicesArea.innerHTML = '';
+    const shuffled = [...fact.choices].sort(() => Math.random() - 0.5);
+    shuffled.forEach(choice => {
+      const btn = document.createElement('button');
+      btn.className = 'choice-btn';
+      btn.textContent = choice;
+      btn.onclick = () => checkAnswer(choice, fact.answer, btn);
+      choicesArea.appendChild(btn);
+    });
+  }
+
+  function checkAnswer(selected, correct, btn) {
+    if (answeredQuestions.includes(currentQuestion)) return;
+    answeredQuestions.push(currentQuestion);
+    totalAnswered++;
+    document.getElementById('totalDisplay').textContent = totalAnswered;
+
+    document.querySelectorAll('.choice-btn').forEach(b => {
+      b.style.pointerEvents = 'none';
+      if (b.textContent === correct) b.classList.add('correct');
+    });
+
+    const feedback = document.getElementById('feedback');
+    if (selected === correct) {
+      btn.classList.add('correct');
+      score += 10;
+      correctAnswers++;
+      feedback.textContent = '✅ Correct! Great job! +10 points';
+      feedback.className = 'feedback correct';
+    } else {
+      btn.classList.add('wrong');
+      feedback.textContent = `❌ Not quite! The answer is: ${correct}`;
+      feedback.className = 'feedback wrong';
+    }
+
+    document.getElementById('scoreDisplay').textContent = score;
+    document.getElementById('correctDisplay').textContent = correctAnswers;
+    document.getElementById('nextBtn').style.display = 'block';
+
+    const customer = customers[currentCustomer];
+    if (answeredQuestions.length >= customer.facts.length) {
+      document.getElementById('nextBtn').textContent = currentCustomer < 4 ? 'Next Customer ➡️' : 'See Final Score 🎉';
+    }
+  }
+
+  function checkTypedAnswer() {
+    const input = document.getElementById('typeInput');
+    const typed = input.value.trim().toLowerCase();
+    if (typed === '' || answeredQuestions.includes(currentQuestion)) return;
+
+    const customer = customers[currentCustomer];
+    const correct = customer.facts[currentQuestion].answer;
+    const correctLower = correct.toLowerCase();
+
+    answeredQuestions.push(currentQuestion);
+    totalAnswered++;
+    input.disabled = true;
+    document.getElementById('totalDisplay').textContent = totalAnswered;
+
+    const feedback = document.getElementById('feedback');
+    if (typed === correctLower || correctLower.includes(typed) || typed.includes(correctLower.split(' ')[0])) {
+      score += 10;
+      correctAnswers++;
+      feedback.textContent = '✅ Correct! Great job! +10 points';
+      feedback.className = 'feedback correct';
+    } else {
+      feedback.textContent = `❌ Not quite! The answer is: ${correct}`;
+      feedback.className = 'feedback wrong';
+    }
+
+    document.getElementById('scoreDisplay').textContent = score;
+    document.getElementById('correctDisplay').textContent = correctAnswers;
+    document.getElementById('nextBtn').style.display = 'block';
+  }
+
+  function nextQuestion() {
+    const customer = customers[currentCustomer];
+    if (answeredQuestions.length >= customer.facts.length) {
+      if (currentCustomer < 4) {
+        loadCustomer(currentCustomer + 1);
+      } else {
+        endGame();
+      }
+      return;
+    }
+    document.getElementById('waitingBox').style.display = 'block';
+    document.getElementById('questionSection').style.display = 'none';
+  }
+
+  function setMode(mode) {
+    answerMode = mode;
+    document.getElementById('multipleChoiceBtn').className = mode === 'multiple' ? 'mode-btn active' : 'mode-btn';
+    document.getElementById('typeAnswerBtn').className = mode === 'type' ? 'mode-btn active' : 'mode-btn';
+    document.getElementById('multipleChoiceArea').style.display = mode === 'multiple' ? 'block' : 'none';
+    document.getElementById('typeAnswerArea').style.display = mode === 'type' ? 'block' : 'none';
+  }
+
+  function endGame() {
+    document.getElementById('gameComplete').style.display = 'block';
+    document.getElementById('questionSection').style.display = 'none';
+    document.getElementById('waitingBox').style.display = 'none';
+    document.getElementById('finalScore').textContent = score + ' Points';
+    document.getElementById('progressFill').style.width = '100%';
+
+    const percentage = totalAnswered > 0 ? (correctAnswers / totalAnswered) * 100 : 0;
+    let message = '';
+    if (percentage >= 90) message = '🌟 Excellent! You are a great nail technician!';
+    else if (percentage >= 70) message = '👍 Good job! Keep practicing!';
+    else if (percentage >= 50) message = '😊 Nice try! Practice more!';
+    else message = '💪 Keep learning! You will get better!';
+    document.getElementById('finalMessage').textContent = message;
+  }
+
+  // ====== START ======
+  window.onload = () => {
+    loadCustomer(0);
+    startListening();
+  };
+</script>
+</body>
+</html>
