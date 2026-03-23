@@ -42,6 +42,49 @@
       display: inline-block;
       margin-bottom: 10px;
     }
+
+    .hint-section {
+  background: white;
+  border-radius: 20px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+.hint-section h3 {
+  color: #ff69b4;
+  margin-bottom: 15px;
+  font-size: 16px;
+}
+.hint-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.hint-box {
+  background: #fff0f5;
+  border: 1px solid #ffb6d9;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.hint-box:hover {
+  background: #ffe0f0;
+  border-color: #ff69b4;
+}
+.hint-box strong {
+  color: #ff69b4;
+  display: block;
+  font-size: 11px;
+  margin-bottom: 3px;
+}
+.hint-box .vn {
+  color: #999;
+  font-size: 11px;
+  display: block;
+  margin-top: 2px;
+}
     .revealed-info {
       background: #fff0f5;
       border-radius: 15px;
@@ -213,6 +256,11 @@
       <div class="waiting-message">⏳ Waiting for teacher to reveal information...</div>
     </div>
   </div>
+
+  <div class="hint-section">
+  <h3>💡 Ask Your Teacher These Questions!</h3>
+  <div class="hint-grid" id="hintGrid"></div>
+</div>
 
   <div class="waiting-for-teacher" id="waitingBox">
     <div class="lock-icon">🔒</div>
