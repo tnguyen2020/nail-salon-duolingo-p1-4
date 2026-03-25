@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nail Shop English — Student Page</title>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #ffe0f0, #fff0f5);
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .header {
+      text-align: center;
+      padding: 20px;
+      background: linear-gradient(135deg, #ff69b4, #ff1493);
+      color: white;
+      border-radius: 20px;
+      margin-bottom: 20px;
+    }
+    .header h1 { font-size: 28px; margin-bottom: 5px; }
+    .game-area { max-width: 800px; margin: 0 auto; }
+    .customer-card {
+      background: white;
+      border-radius: 20px;
+      padding: 25px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    .customer-avatar { font-size: 80px; margin-bottom: 10px; }
+    .customer-number {
+      background: #ff69b4;
+      color: white;
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-size: 14px;
+      display: inline-block;
+      margin-bottom: 10px;
+    }
+.customer-form {
+  background: #fff0f5;
+  border-radius: 15px;
+  padding: 15px;
+  margin: 15px 0;
+  text-align: left;
+}
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.form-field {
+  background: white;
+  border-radius: 12px;
+  padding: 10px 12px;
+}
+.form-field label {
+  font-size: 11px;
+  font-weight: bold;
+  color: #ff69b4;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  display: block;
+  margin-bottom: 6px;
+}
+.input-wrap {
+  display: flex;
+  gap: 6px;
+}
+.input-wrap input {
+  flex: 1;
+  padding: 8px 10px;
+  border: 2px solid #ffb6d9;
+  border-radius: 8px;
+  font-size: 13px;
+  outline: none;
+  transition: all 0.2s;
+}
+.input-wrap input:focus {
+  border-color: #ff69b4;
+}
+.input-wrap input.correct {
+  border-color: #28a745;
+  background: #d4edda;
+  color: #155724;
+}
+.input-wrap input.wrong {
+  border-color: #dc3545;
+  background: #f8d7da;
+  color: #721c24;
+}
+.input-wrap input.locked {
+  border-color: #28a745;
+  background: #d4edda;
+  color: #155724;
+  pointer-events: none;
+}
+.check-btn {
+  background: #ff69b4;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 14px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.2s;
+}
+.check-btn:hover { background: #ff1493; }
+.check-btn.locked {
+  background: #28a745;
+  cursor: default;
+}
+.field-feedback {
+  font-size: 11px;
+  margin-top: 4px;
+  min-height: 16px;
+  font-weight: bold;
+}
+.field-feedback.correct { color: #28a745; }
+.field-feedback.wrong { color: #dc3545; }
+.field-feedback.revealed { color: #4a90d9; }
+.form-score {
+  text-align: center;
+  margin-top: 15px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #ff69b4;
+  padding: 10px;
+  background: white;
+  border-radius: 10px;
+}
+    .hint-section {
+  background: white;
+  border-radius: 20px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+.hint-section h3 {
+  color: #ff69b4;
+  margin-bottom: 15px;
+  font-size: 16px;
+}
+.hint-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.hint-box {
+  background: #fff0f5;
+  border: 1px solid #ffb6d9;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.hint-box:hover {
+  background: #ffe0f0;
+  border-color: #ff69b4;
+}
+.hint-box strong {
+  color: #ff69b4;
+  display: block;
+  font-size: 11px;
+  margin-bottom: 3px;
+}
+.hint-box .vn {
+  color: #999;
+  font-size: 11px;
+  display: block;
+  margin-top: 2px;
+}
+    .revealed-info {
+      background: #fff0f5;
+      border-radius: 15px;
+      padding: 15px;
+      margin: 15px 0;
+      text-align: left;
+    }
+    .info-item {
+      display: flex;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid #ffe0f0;
+      animation: fadeIn 0.5s ease;
+    }
+    .info-item:last-child { border-bottom: none; }
+    .info-label {
+      font-weight: bold;
+      color: #ff69b4;
+      width: 140px;
+      min-width: 140px;
+      font-size: 14px;
+    }
+    .info-value { color: #333; font-size: 14px; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .waiting-message {
+      text-align: center;
+      color: #ff69b4;
+      font-style: italic;
+      padding: 10px;
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; }
+    }
+    .question-section {
+      background: white;
+      border-radius: 20px;
+      padding: 25px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    .question-box {
+      background: linear-gradient(135deg, #fff0f5, #ffe0f0);
+      border-radius: 15px;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-left: 4px solid #ff69b4;
+    }
+    .question-text { font-size: 18px; font-weight: bold; color: #333; margin-bottom: 5px; }
+    .question-vietnamese { font-size: 13px; color: #999; font-style: italic; }
+    .choices {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+    .choice-btn {
+      background: white;
+      border: 2px solid #ffb6d9;
+      border-radius: 12px;
+      padding: 12px 15px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: left;
+    }
+    .choice-btn:hover { background: #fff0f5; border-color: #ff69b4; }
+    .choice-btn.correct { background: #d4edda; border-color: #28a745; color: #155724; }
+    .choice-btn.wrong { background: #f8d7da; border-color: #dc3545; color: #721c24; }
+    .type-answer { display: flex; gap: 10px; margin-top: 10px; }
+    .type-input {
+      flex: 1; padding: 12px 15px;
+      border: 2px solid #ffb6d9;
+      border-radius: 12px; font-size: 14px; outline: none;
+    }
+    .type-input:focus { border-color: #ff69b4; }
+    .submit-btn {
+      background: #ff69b4; color: white; border: none;
+      border-radius: 12px; padding: 12px 20px;
+      font-size: 14px; cursor: pointer;
+    }
+    .answer-mode-toggle {
+      display: flex; gap: 10px; margin-bottom: 15px; justify-content: center;
+    }
+    .mode-btn {
+      padding: 8px 20px; border-radius: 20px;
+      border: 2px solid #ff69b4; background: white;
+      color: #ff69b4; cursor: pointer; font-size: 14px;
+    }
+    .mode-btn.active { background: #ff69b4; color: white; }
+    .feedback {
+      text-align: center; padding: 10px; border-radius: 10px;
+      font-weight: bold; margin-top: 10px; display: none;
+    }
+    .feedback.correct { background: #d4edda; color: #155724; display: block; }
+    .feedback.wrong { background: #f8d7da; color: #721c24; display: block; }
+    .score-section {
+      background: white; border-radius: 20px; padding: 20px;
+      margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      display: flex; justify-content: space-around; text-align: center;
+    }
+    .score-number { font-size: 32px; font-weight: bold; color: #ff69b4; }
+    .score-label { font-size: 12px; color: #999; }
+    .next-btn {
+      background: linear-gradient(135deg, #ff69b4, #ff1493);
+      color: white; border: none; border-radius: 15px;
+      padding: 15px 30px; font-size: 16px; cursor: pointer;
+      width: 100%; margin-top: 15px; display: none;
+    }
+    .progress-bar { background: #ffe0f0; border-radius: 10px; height: 10px; margin-bottom: 20px; }
+    .progress-fill {
+      background: linear-gradient(135deg, #ff69b4, #ff1493);
+      height: 100%; border-radius: 10px; transition: width 0.5s ease;
+    }
+    .game-complete {
+      text-align: center; background: white; border-radius: 20px;
+      padding: 40px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); display: none;
+    }
+    .game-complete h2 { font-size: 32px; color: #ff69b4; }
+    .final-score { font-size: 48px; font-weight: bold; color: #ff1493; margin: 20px 0; }
+    .waiting-for-teacher {
+      background: #fff9e6; border: 2px dashed #ffc107;
+      border-radius: 15px; padding: 20px; text-align: center; margin-bottom: 20px;
+    }
+    .waiting-for-teacher p { color: #856404; font-size: 16px; }
+    .lock-icon { font-size: 40px; margin-bottom: 10px; }
+    .question-counter { text-align: center; color: #ff69b4; font-size: 14px; margin-bottom: 15px; }
+    .reload-btn {
+      background: #ff69b4; color: white; border: none;
+      border-radius: 15px; padding: 15px 30px; font-size: 16px; cursor: pointer; margin-top: 20px;
+    }
+    .connection-status {
+      text-align: center; padding: 8px; border-radius: 10px; margin-bottom: 15px; font-size: 13px;
+    }
+    .connected { background: #d4edda; color: #155724; }
+    .disconnected { background: #f8d7da; color: #721c24; }
+    .connecting { background: #fff3cd; color: #856404; }
+  </style>
+</head>
+<body>
+<div class="game-area">
+  <div class="header">
+    <h1>💅 Nail Shop English</h1>
+    <p>Welcome! You are the Nail Technician. Serve your customers!</p>
+  </div>
+
+  <div class="connection-status connecting" id="connectionStatus">🔄 Connecting...</div>
+
+  <div class="score-section">
+    <div><div class="score-number" id="scoreDisplay">0</div><div class="score-label">Points</div></div>
+    <div><div class="score-number" id="customerDisplay">1</div><div class="score-label">Customer</div></div>
+    <div><div class="score-number" id="correctDisplay">0</div><div class="score-label">Correct</div></div>
+    <div><div class="score-number" id="totalDisplay">0</div><div class="score-label">Answered</div></div>
+  </div>
+
+  <div class="progress-bar">
+    <div class="progress-fill" id="progressFill" style="width:0%"></div>
+  </div>
+
+  <div class="customer-card">
+    <div class="customer-avatar" id="customerAvatar">👤</div>
+    <div class="customer-number" id="customerNumber">Customer 1 of 5</div>
+    <h2 id="customerName" style="color:#ff69b4; margin-bottom:5px;">New Customer!</h2>
+    <p style="color:#999; font-size:14px;">Ask your teacher questions in English!</p>
+ <div class="customer-form" id="customerForm">
+  <div class="form-row">
+    <div class="form-field">
+      <label>👤 Name</label>
+      <div class="input-wrap">
+        <input type="text" id="field-name" placeholder="Ask: What is your name?" />
+        <button onclick="checkField('name')" class="check-btn">✓</button>
+      </div>
+      <div class="field-feedback" id="fb-name"></div>
+    </div>
+    <div class="form-field">
+      <label>📍 From (City)</label>
+      <div class="input-wrap">
+        <input type="text" id="field-from" placeholder="Ask: Where are you from?" />
+        <button onclick="checkField('from')" class="check-btn">✓</button>
+      </div>
+      <div class="field-feedback" id="fb-from"></div>
+    </div>
+    <div class="form-field">
+      <label>🗺️ Area</label>
+      <div class="input-wrap">
+        <input type="text" id="field-area" placeholder="Ask: What area are you from?" />
+        <button onclick="checkField('area')" class="check-btn">✓</button>
+      </div>
+      <div class="field-feedback" id="fb-area"></div>
+    </div>
+    <div class="form-field">
+      <label>💼 Occupation</label>
+      <div class="input-wrap">
+        <input type="text" id="field-occupation" placeholder="Ask: What do you do for work?" />
+        <button onclick="checkField('occupation')" class="check-btn">✓</button>
+      </div>
+      <div class="field-feedback" id="fb-occupation"></div>
+    </div>
+    <div class="form-field">
+      <label>🐾 Pet</label>
+      <div class="input-wrap">
+        <input type="text" id="field-pet" placeholder="Ask: Do you have any pets?" />
+        <button onclick="checkField('pet')" class="check-btn">✓</button>
+      </div>
+      <div class="field-feedback" id="fb-pet"></div>
+    </div>
+    <div class="form-field">
+      <label>💅 Service</label>
+      <div class="input-wrap">
+        <input type="text" id="field-service" placeholder="Ask: What service would you like?" />
+        <button onclick="checkField('service')" class="check-btn">✓</button>
+      </div>
+      <div class="field-feedback" id="fb-service"></div>
+    </div>
+    <div class="form-field">
+      <label>🎨 Color</label>
+      <div class="input-wrap">
+        <input type="text" id="field-color" placeholder="Ask: What color do you want?" />
+        <button onclick="checkField('color')" class="check-btn">✓</button>
+      </div>
+      <div class="field-feedback" id="fb-color"></div>
+    </div>
+    <div class="form-field">
+      <label>💎 Nail Shape</label>
+      <div class="input-wrap">
+        <input type="text" id="field-shape" placeholder="Ask: What nail shape do you want?" />
+        <button onclick="checkField('shape')" class="check-btn">✓</button>
+      </div>
+      <div class="field-feedback" id="fb-shape"></div>
+    </div>
+    <div class="form-field">
+      <label>🥤 Drink</label>
+      <div class="input-wrap">
+        <input type="text" id="field-drink" placeholder="Ask: Would you like a drink?" />
+        <button onclick="checkField('drink')" class="check-btn">✓</button>
+      </div>
+      <div class="field-feedback" id="fb-drink"></div>
+    </div>
+  </div>
+  <div class="form-score">
+    ⭐ Fields Correct: <span id="fieldScore">0</span> / 9
+  </div>
+</div>
+      <div class="waiting-message">⏳ Waiting for teacher to reveal information...</div>
+    </div>
+  </div>
+
+  <div class="hint-section">
+  <h3>💡 Ask Your Teacher These Questions!</h3>
+  <div class="hint-grid" id="hintGrid"></div>
+</div>
+
+  <div class="waiting-for-teacher" id="waitingBox">
+    <div class="lock-icon">🔒</div>
+    <p><strong>Ask your teacher a question in English!</strong></p>
+    <p style="font-size:13px; margin-top:5px;">Your teacher will reveal the answer!</p>
+  </div>
+
+  <div class="question-section" id="questionSection" style="display:none;">
+    <div style="font-size:18px; font-weight:bold; text-align:center; margin-bottom:20px;">💬 Answer the Question</div>
+    <div class="answer-mode-toggle">
+      <button class="mode-btn active" id="multipleChoiceBtn" onclick="setMode('multiple')">Multiple Choice</button>
+      <button class="mode-btn" id="typeAnswerBtn" onclick="setMode('type')">Type Answer</button>
+    </div>
+    <div class="question-counter" id="questionCounter">Question 1 of 9</div>
+    <div class="question-box">
+      <div class="question-text" id="questionText"></div>
+      <div class="question-vietnamese" id="questionVietnamese"></div>
+    </div>
+    <div id="multipleChoiceArea">
+      <div class="choices" id="choicesArea"></div>
+    </div>
+    <div id="typeAnswerArea" style="display:none;">
+      <div class="type-answer">
+        <input type="text" class="type-input" id="typeInput" placeholder="Type your answer here..."/>
+        <button class="submit-btn" onclick="checkTypedAnswer()">Submit</button>
+      </div>
+    </div>
+    <div class="feedback" id="feedback"></div>
+    <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next Question ➡️</button>
+  </div>
+
+  <div class="game-complete" id="gameComplete">
+    <div style="font-size:60px;">🎉</div>
+    <h2>Game Complete!</h2>
+    <p>You served all 5 customers!</p>
+    <div class="final-score" id="finalScore">0 Points</div>
+    <p id="finalMessage"></p>
+    <button class="reload-btn" onclick="location.reload()">Play Again 🔄</button>
+  </div>
+</div>
+
+<script>
+// ===== CUSTOMER DATA =====
+const customers = [
+  {
+    id: 1, name: "Sarah Johnson", age: 32,
+    from: "Pennsauken, New Jersey",
+    area: "South Jersey, near Philadelphia",
+    occupation: "Elementary School Teacher",
+    family: "Married with 2 kids",
+    pet: "A golden retriever named Buddy",
+    service: "Spa Pedicure", color: "Light Pink", shape: "Oval", drink: "Tea",
+    image: "👩",
+    facts: [
+      { question: "What is the customer's name?", answer: "Sarah Johnson", choices: ["Sarah Johnson","Emily Davis","Jessica Brown","Amanda White"] },
+      { question: "Where is she from?", answer: "Pennsauken, New Jersey", choices: ["Pennsauken, New Jersey","Camden, New Jersey","Cherry Hill, New Jersey","Trenton, New Jersey"] },
+      { question: "What area is she from?", answer: "South Jersey, near Philadelphia", choices: ["South Jersey, near Philadelphia","North Jersey, near New York","Central Jersey, near Princeton","Shore area, near Atlantic City"] },
+      { question: "What does she do for work?", answer: "Elementary School Teacher", choices: ["Elementary School Teacher","Nurse","Office Worker","Chef"] },
+      { question: "Does she have any pets?", answer: "A golden retriever named Buddy", choices: ["A golden retriever named Buddy","A cat named Mimi","No pets","Two dogs named Coco and Milo"] },
+      { question: "What service does she want?", answer: "Spa Pedicure", choices: ["Spa Pedicure","Basic Manicure","Gel Manicure","Deluxe Pedicure"] },
+      { question: "What color does she want?", answer: "Light Pink", choices: ["Light Pink","Dark Red","Nude","Purple"] },
+      { question: "What nail shape does she want?", answer: "Oval", choices: ["Oval","Square","Round","Stiletto"] },
+      { question: "What drink would she like?", answer: "Tea", choices: ["Tea","Water","Juice","Wine"] }
+    ]
+  },
+  {
+    id: 2, name: "Maria Rodriguez", age: 28,
+    from: "Camden, New Jersey",
+    area: "South Jersey, near Philadelphia",
+    occupation: "Nurse at Cooper Hospital",
+    family: "Single, lives with her sister",
+    pet: "Two cats named Luna and Star",
+    service: "Gel Manicure", color: "Dark Red", shape: "Square", drink: "Water",
+    image: "👩‍⚕️",
+    facts: [
+      { question: "What is the customer's name?", answer: "Maria Rodriguez", choices: ["Maria Rodriguez","Sofia Martinez","Isabella Garcia","Valentina Lopez"] },
+      { question: "Where is she from?", answer: "Camden, New Jersey", choices: ["Camden, New Jersey","Pennsauken, New Jersey","Moorestown, New Jersey","Haddon Township, New Jersey"] },
+      { question: "What area is she from?", answer: "South Jersey, near Philadelphia", choices: ["South Jersey, near Philadelphia","North Jersey, near New York","Central Jersey, near Princeton","Shore area, near Atlantic City"] },
+      { question: "What does she do for work?", answer: "Nurse at Cooper Hospital", choices: ["Nurse at Cooper Hospital","Doctor at Jefferson Hospital","Teacher at Camden School","Manager at a restaurant"] },
+      { question: "Does she have any pets?", answer: "Two cats named Luna and Star", choices: ["Two cats named Luna and Star","A dog named Max","No pets","A bird named Tweety"] },
+      { question: "What service does she want?", answer: "Gel Manicure", choices: ["Gel Manicure","Spa Pedicure","Acrylic Nails","Basic Pedicure"] },
+      { question: "What color does she want?", answer: "Dark Red", choices: ["Dark Red","Light Pink","Black","Coral"] },
+      { question: "What nail shape does she want?", answer: "Square", choices: ["Square","Oval","Almond","Coffin"] },
+      { question: "What drink would she like?", answer: "Water", choices: ["Water","Tea","Coffee","Wine"] }
+    ]
+  },
+  {
+    id: 3, name: "Jennifer Kim", age: 45,
+    from: "Cherry Hill, New Jersey",
+    area: "South Jersey, near Philadelphia",
+    occupation: "Small Business Owner",
+    family: "Married with 3 kids and a grandchild",
+    pet: "A small poodle named Coco",
+    service: "Deluxe Pedicure", color: "Nude / Beige", shape: "Round", drink: "Wine",
+    image: "👩‍💼",
+    facts: [
+      { question: "What is the customer's name?", answer: "Jennifer Kim", choices: ["Jennifer Kim","Susan Park","Michelle Lee","Christine Cho"] },
+      { question: "Where is she from?", answer: "Cherry Hill, New Jersey", choices: ["Cherry Hill, New Jersey","Voorhees, New Jersey","Marlton, New Jersey","Medford, New Jersey"] },
+      { question: "What area is she from?", answer: "South Jersey, near Philadelphia", choices: ["South Jersey, near Philadelphia","North Jersey, near New York","Central Jersey, near Princeton","Shore area, near Atlantic City"] },
+      { question: "What does she do for work?", answer: "Small Business Owner", choices: ["Small Business Owner","Lawyer","Doctor","Real Estate Agent"] },
+      { question: "Does she have any pets?", answer: "A small poodle named Coco", choices: ["A small poodle named Coco","Two golden retrievers","No pets","A cat named Princess"] },
+      { question: "What service does she want?", answer: "Deluxe Pedicure", choices: ["Deluxe Pedicure","Gel Manicure","Spa Pedicure","Acrylic Nails"] },
+      { question: "What color does she want?", answer: "Nude / Beige", choices: ["Nude / Beige","Hot Pink","Dark Purple","Glitter"] },
+      { question: "What nail shape does she want?", answer: "Round", choices: ["Round","Stiletto","Coffin","Square"] },
+      { question: "What drink would she like?", answer: "Wine", choices: ["Wine","Tea","Water","Juice"] }
+    ]
+  },
+  {
+    id: 4, name: "Ashley Thompson", age: 22,
+    from: "Merchantville, New Jersey",
+    area: "South Jersey, near Philadelphia",
+    occupation: "College Student at Rutgers",
+    family: "Single, lives with parents",
+    pet: "No pets",
+    service: "Acrylic Nails with Nail Art", color: "Purple with Glitter", shape: "Coffin / Ballerina", drink: "Juice",
+    image: "👩‍🎓",
+    facts: [
+      { question: "What is the customer's name?", answer: "Ashley Thompson", choices: ["Ashley Thompson","Brittany Wilson","Kayla Moore","Taylor Anderson"] },
+      { question: "Where is she from?", answer: "Merchantville, New Jersey", choices: ["Merchantville, New Jersey","Collingswood, New Jersey","Bellmawr, New Jersey","Runnemede, New Jersey"] },
+      { question: "What area is she from?", answer: "South Jersey, near Philadelphia", choices: ["South Jersey, near Philadelphia","North Jersey, near New York","Central Jersey, near Princeton","Shore area, near Atlantic City"] },
+      { question: "What does she do?", answer: "College Student at Rutgers", choices: ["College Student at Rutgers","High School Student","Works at a mall","Graphic Designer"] },
+      { question: "Does she have any pets?", answer: "No pets", choices: ["No pets","A hamster named Peanut","Two cats","A dog named Rex"] },
+      { question: "What service does she want?", answer: "Acrylic Nails with Nail Art", choices: ["Acrylic Nails with Nail Art","Basic Manicure","Gel Manicure","Spa Pedicure"] },
+      { question: "What color does she want?", answer: "Purple with Glitter", choices: ["Purple with Glitter","Plain White","Nude Pink","Dark Blue"] },
+      { question: "What nail shape does she want?", answer: "Coffin / Ballerina", choices: ["Coffin / Ballerina","Round","Square","Oval"] },
+      { question: "What drink would she like?", answer: "Juice", choices: ["Juice","Water","Tea","Coke"] }
+    ]
+  },
+  {
+    id: 5, name: "Barbara Williams", age: 58,
+    from: "Haddon Township, New Jersey",
+    area: "South Jersey, near Philadelphia",
+    occupation: "Retired School Principal",
+    family: "Widowed, 2 adult children and 4 grandchildren",
+    pet: "A bird named Sunny",
+    service: "Basic Manicure and Pedicure", color: "Classic Red", shape: "Short and Round", drink: "Tea with honey",
+    image: "👵",
+    facts: [
+      { question: "What is the customer's name?", answer: "Barbara Williams", choices: ["Barbara Williams","Patricia Davis","Nancy Miller","Linda Wilson"] },
+      { question: "Where is she from?", answer: "Haddon Township, New Jersey", choices: ["Haddon Township, New Jersey","Haddonfield, New Jersey","Audubon, New Jersey","Oaklyn, New Jersey"] },
+      { question: "What area is she from?", answer: "South Jersey, near Philadelphia", choices: ["South Jersey, near Philadelphia","North Jersey, near New York","Central Jersey, near Princeton","Shore area, near Atlantic City"] },
+      { question: "What did she do for work?", answer: "Retired School Principal", choices: ["Retired School Principal","Retired Nurse","Retired Police Officer","Retired Librarian"] },
+      { question: "Does she have any pets?", answer: "A bird named Sunny", choices: ["A bird named Sunny","No pets","Three cats","A dog named Charlie"] },
+      { question: "What service does she want?", answer: "Basic Manicure and Pedicure", choices: ["Basic Manicure and Pedicure","Deluxe Pedicure","Gel Manicure","Acrylic Nails"] },
+      { question: "What color does she want?", answer: "Classic Red", choices: ["Classic Red","Nude","Light Pink","Orange"] },
+      { question: "What nail shape does she want?", answer: "Short and Round", choices: ["Short and Round","Long Coffin","Oval","Square"] },
+      { question: "What drink would she like?", answer: "Tea with honey", choices: ["Tea with honey","Black coffee","Cold water","Orange juice"] }
+    ]
+  }
+];
+// Field names and correct answers
+const fieldKeys = ['name','from','area','occupation','pet','service','color','shape','drink'];
+let fieldCorrect = 0;
+let lockedFields = [];
+
+function checkField(key) {
+  if (lockedFields.includes(key)) return;
+
+  const c = customers[currentCustomer];
+  const answers = {
+    name: c.name,
+    from: c.from,
+    area: c.area,
+    occupation: c.occupation,
+    pet: c.pet,
+    service: c.service,
+    color: c.color,
+    shape: c.shape,
+    drink: c.drink
+  };
+
+  const input = document.getElementById('field-' + key);
+  const feedback = document.getElementById('fb-' + key);
+  const typed = input.value.trim().toLowerCase();
+  const correct = answers[key].toLowerCase();
+
+  if (!typed) {
+    feedback.textContent = '⚠️ Please type an answer first!';
+    feedback.className = 'field-feedback wrong';
+    return;
+  }
+
+  if (typed === correct || correct.includes(typed) || typed.includes(correct.split(' ')[0])) {
+    input.className = 'correct';
+    input.value = answers[key];
+    feedback.textContent = '✅ Correct!';
+    feedback.className = 'field-feedback correct';
+    document.querySelector(`#field-${key} ~ button`) && 
+      (document.querySelector(`#field-${key}`).nextElementSibling.className = 'check-btn locked');
+    
+    if (!lockedFields.includes(key)) {
+      lockedFields.push(key);
+      fieldCorrect++;
+      document.getElementById('fieldScore').textContent = fieldCorrect;
+      score += 5;
+      document.getElementById('scoreDisplay').textContent = score;
+    }
+    input.disabled = true;
+  } else {
+    input.className = 'wrong';
+    feedback.textContent = '❌ Try again!';
+    feedback.className = 'field-feedback wrong';
+  }
+}
+
+// When teacher reveals a fact — auto fill the field
+function autoFillField(index, value) {
+  const key = fieldKeys[index];
+  const input = document.getElementById('field-' + key);
+  const feedback = document.getElementById('fb-' + key);
+  if (input && !lockedFields.includes(key)) {
+    input.value = value;
+    input.className = 'locked';
+    input.disabled = true;
+    feedback.textContent = '🔓 Revealed by teacher!';
+    feedback.className = 'field-feedback revealed';
+    lockedFields.push(key);
+  }
+}
+
+// Reset fields for new customer
+function resetFields() {
+  fieldCorrect = 0;
+  lockedFields = [];
+  document.getElementById('fieldScore').textContent = '0';
+  fieldKeys.forEach(key => {
+    const input = document.getElementById('field-' + key);
+    const feedback = document.getElementById('fb-' + key);
+    if (input) {
+      input.value = '';
+      input.className = '';
+      input.disabled = false;
+    }
+    if (feedback) {
+      feedback.textContent = '';
+      feedback.className = 'field-feedback';
+    }
+  });
+}
+// ===== FIREBASE =====
+const firebaseConfig = {
+  apiKey: "AIzaSyBLI9wCnIQg4Pkdftll0ErZAPryS_-8P28",
+  authDomain: "nail-shop-game.firebaseapp.com",
+  databaseURL: "https://nail-shop-game-default-rtdb.firebaseio.com",
+  projectId: "nail-shop-game",
+  storageBucket: "nail-shop-game.firebasestorage.app",
+  messagingSenderId: "588326624299",
+  appId: "1:588326624299:web:d71d2d7fef2384c8339e6e"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+// ===== GAME STATE =====
+let currentCustomer = 0;
+let currentQuestion = 0;
+let score = 0;
+let correctAnswers = 0;
+let totalAnswered = 0;
+let answeredQuestions = [];
+let answerMode = 'multiple';
+let lastRevealedCount = 0;
+
+const questionTranslations = {
+  "What is the customer's name?": "Tên khách hàng là gì?",
+  "Where is she from?": "Cô ấy đến từ đâu?",
+  "What area is she from?": "Cô ấy đến từ khu vực nào?",
+  "What does she do for work?": "Cô ấy làm nghề gì?",
+  "What did she do for work?": "Trước đây cô ấy làm nghề gì?",
+  "What does she do?": "Cô ấy làm gì?",
+  "Does she have any pets?": "Cô ấy có thú cưng không?",
+  "What service does she want?": "Cô ấy muốn dịch vụ gì?",
+  "What color does she want?": "Cô ấy muốn màu gì?",
+  "What nail shape does she want?": "Cô ấy muốn hình dạng móng gì?",
+  "What drink would she like?": "Cô ấy muốn uống gì?"
+};
+
+// ===== CONNECTION STATUS =====
+db.ref('.info/connected').on('value', snap => {
+  const el = document.getElementById('connectionStatus');
+  if (snap.val()) {
+    el.textContent = '🟢 Connected — Live Game!';
+    el.className = 'connection-status connected';
+  } else {
+    el.textContent = '🔴 Disconnected — Check internet!';
+    el.className = 'connection-status disconnected';
+  }
+});
+
+// ===== LISTEN TO FIREBASE =====
+function startListening() {
+  db.ref('game/currentCustomer').on('value', snap => {
+    const val = snap.val();
+    if (val !== null && val !== currentCustomer) {
+      loadCustomer(val);
+    }
+  });
+
+  db.ref('game/revealed').on('value', snap => {
+    const val = snap.val() || 0;
+    if (val > lastRevealedCount) {
+      lastRevealedCount = val;
+      updateRevealedInfo(val);
+      if (val > 0) showQuestion(val - 1);
+    }
+  });
+
+  db.ref('game/complete').on('value', snap => {
+    if (snap.val() === true) endGame();
+  });
+}
+
+function loadCustomer(index) {
+  currentCustomer = index;
+  currentQuestion = 0;
+  answeredQuestions = [];
+  lastRevealedCount = 0;
+
+  resetFields(); // ← ADD THIS LINE
+
+  const c = customers[index];
+  document.getElementById('customerAvatar').textContent = c.image;
+  document.getElementById('customerNumber').textContent = `Customer ${index + 1} of 5`;
+  document.getElementById('customerName').textContent = '???';
+  document.getElementById('waitingBox').style.display = 'block';
+  document.getElementById('questionSection').style.display = 'none';
+  document.getElementById('feedback').className = 'feedback';
+  document.getElementById('nextBtn').style.display = 'none';
+  document.getElementById('customerDisplay').textContent = index + 1;
+  document.getElementById('progressFill').style.width = (index / 5 * 100) + '%';
+}
+function updateRevealedInfo(count) {
+  const c = customers[currentCustomer];
+  const values = [c.name, c.from, c.area, c.occupation, c.pet, c.service, c.color, c.shape, c.drink];
+
+  // Auto fill revealed fields
+  for (let i = 0; i < count; i++) {
+    autoFillField(i, values[i]);
+  }
+
+  // Show customer name when first fact revealed
+  document.getElementById('customerName').textContent = count > 0 ? c.name : '???';
+}
+  const c = customers[currentCustomer];
+  const labels = ['Name','From','Area','Occupation','Pet','Service','Color','Shape','Drink'];
+  const values = [c.name, c.from, c.area, c.occupation, c.pet, c.service, c.color, c.shape, c.drink];
+
+  let html = '';
+  for (let i = 0; i < count; i++) {
+    html += `<div class="info-item">
+      <span class="info-label">${labels[i]}:</span>
+      <span class="info-value">${values[i]}</span>
+    </div>`;
+  }
+  document.getElementById('revealedInfo').innerHTML = html || '<div class="waiting-message">⏳ Waiting for teacher...</div>';
+  document.getElementById('customerName').textContent = count > 0 ? c.name : '???';
+
+
+function showQuestion(questionIndex) {
+  if (answeredQuestions.includes(questionIndex)) return;
+  const c = customers[currentCustomer];
+  const fact = c.facts[questionIndex];
+
+  currentQuestion = questionIndex;
+  document.getElementById('waitingBox').style.display = 'none';
+  document.getElementById('questionSection').style.display = 'block';
+  document.getElementById('questionText').textContent = fact.question;
+  document.getElementById('questionVietnamese').textContent = questionTranslations[fact.question] || '';
+  document.getElementById('questionCounter').textContent = `Question ${questionIndex + 1} of ${c.facts.length}`;
+  document.getElementById('feedback').className = 'feedback';
+  document.getElementById('nextBtn').style.display = 'none';
+  document.getElementById('typeInput').value = '';
+  document.getElementById('typeInput').disabled = false;
+
+  const choicesArea = document.getElementById('choicesArea');
+  choicesArea.innerHTML = '';
+  [...fact.choices].sort(() => Math.random() - 0.5).forEach(choice => {
+    const btn = document.createElement('button');
+    btn.className = 'choice-btn';
+    btn.textContent = choice;
+    btn.onclick = () => checkAnswer(choice, fact.answer, btn);
+    choicesArea.appendChild(btn);
+  });
+}
+
+function checkAnswer(selected, correct, btn) {
+  if (answeredQuestions.includes(currentQuestion)) return;
+  answeredQuestions.push(currentQuestion);
+  totalAnswered++;
+  document.getElementById('totalDisplay').textContent = totalAnswered;
+
+  document.querySelectorAll('.choice-btn').forEach(b => {
+    b.style.pointerEvents = 'none';
+    if (b.textContent === correct) b.classList.add('correct');
+  });
+
+  const feedback = document.getElementById('feedback');
+  if (selected === correct) {
+    btn.classList.add('correct');
+    score += 10; correctAnswers++;
+    feedback.textContent = '✅ Correct! Great job! +10 points';
+    feedback.className = 'feedback correct';
+  } else {
+    btn.classList.add('wrong');
+    feedback.textContent = `❌ The answer is: ${correct}`;
+    feedback.className = 'feedback wrong';
+  }
+  document.getElementById('scoreDisplay').textContent = score;
+  document.getElementById('correctDisplay').textContent = correctAnswers;
+  document.getElementById('nextBtn').style.display = 'block';
+
+  const c = customers[currentCustomer];
+  if (answeredQuestions.length >= c.facts.length) {
+    document.getElementById('nextBtn').textContent = currentCustomer < 4 ? 'Next Customer ➡️' : 'See Final Score 🎉';
+  }
+}
+
+function checkTypedAnswer() {
+  const input = document.getElementById('typeInput');
+  const typed = input.value.trim().toLowerCase();
+  if (!typed || answeredQuestions.includes(currentQuestion)) return;
+
+  const c = customers[currentCustomer];
+  const correct = c.facts[currentQuestion].answer;
+  answeredQuestions.push(currentQuestion);
+  totalAnswered++;
+  input.disabled = true;
+  document.getElementById('totalDisplay').textContent = totalAnswered;
+
+  const feedback = document.getElementById('feedback');
+  if (typed === correct.toLowerCase() || correct.toLowerCase().includes(typed)) {
+    score += 10; correctAnswers++;
+    feedback.textContent = '✅ Correct! Great job! +10 points';
+    feedback.className = 'feedback correct';
+  } else {
+    feedback.textContent = `❌ The answer is: ${correct}`;
+    feedback.className = 'feedback wrong';
+  }
+  document.getElementById('scoreDisplay').textContent = score;
+  document.getElementById('correctDisplay').textContent = correctAnswers;
+  document.getElementById('nextBtn').style.display = 'block';
+}
+
+function nextQuestion() {
+  const c = customers[currentCustomer];
+  if (answeredQuestions.length >= c.facts.length) {
+    if (currentCustomer < 4) {
+      loadCustomer(currentCustomer + 1);
+    } else {
+      endGame();
+    }
+    return;
+  }
+  document.getElementById('waitingBox').style.display = 'block';
+  document.getElementById('questionSection').style.display = 'none';
+}
+
+function setMode(mode) {
+  answerMode = mode;
+  document.getElementById('multipleChoiceBtn').className = mode === 'multiple' ? 'mode-btn active' : 'mode-btn';
+  document.getElementById('typeAnswerBtn').className = mode === 'type' ? 'mode-btn active' : 'mode-btn';
+  document.getElementById('multipleChoiceArea').style.display = mode === 'multiple' ? 'block' : 'none';
+  document.getElementById('typeAnswerArea').style.display = mode === 'type' ? 'block' : 'none';
+}
+
+function endGame() {
+  document.getElementById('gameComplete').style.display = 'block';
+  document.getElementById('questionSection').style.display = 'none';
+  document.getElementById('waitingBox').style.display = 'none';
+  document.getElementById('finalScore').textContent = score + ' Points';
+  document.getElementById('progressFill').style.width = '100%';
+  const pct = totalAnswered > 0 ? (correctAnswers / totalAnswered) * 100 : 0;
+  document.getElementById('finalMessage').textContent =
+    pct >= 90 ? '🌟 Excellent! You are a great nail technician!' :
+    pct >= 70 ? '👍 Good job! Keep practicing!' :
+    pct >= 50 ? '😊 Nice try! Practice more!' : '💪 Keep learning!';
+}
+const hints = [
+  { en: "What is your name?", vn: "Tên bạn là gì?" },
+  { en: "Where are you from?", vn: "Bạn đến từ đâu?" },
+  { en: "What area are you from?", vn: "Bạn đến từ khu vực nào?" },
+  { en: "What do you do for work?", vn: "Bạn làm nghề gì?" },
+  { en: "Do you have any pets?", vn: "Bạn có thú cưng không?" },
+  { en: "What service would you like?", vn: "Bạn muốn dịch vụ gì?" },
+  { en: "What color do you want?", vn: "Bạn muốn màu gì?" },
+  { en: "What nail shape do you want?", vn: "Bạn muốn hình dạng móng gì?" },
+  { en: "Would you like a drink?", vn: "Bạn có muốn uống gì không?" }
+];
+
+function buildHints() {
+  document.getElementById('hintGrid').innerHTML = hints.map(h => `
+    <div class="hint-box">
+      <strong>Ask your teacher:</strong>
+      ${h.en}
+      <span class="vn">${h.vn}</span>
+    </div>
+  `).join('');
+}
+
+window.onload = () => { loadCustomer(0); startListening(); buildHints()};
+</script>
+</body>
+</html>
