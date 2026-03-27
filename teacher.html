@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>👩 Customer Script — Cửa 3 Teacher</title>
+    <title>👩 Teacher — Customer Info — Cửa 3</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
@@ -12,7 +12,10 @@
             min-height: 100vh; padding: 15px;
             max-width: 700px; margin: 0 auto;
         }
-        .back-link { display: inline-block; margin-bottom: 10px; color: #6f42c1; text-decoration: none; font-size: 0.9rem; font-weight: bold; }
+        .back-link {
+            display: inline-block; margin-bottom: 10px; color: #6f42c1;
+            text-decoration: none; font-size: 0.9rem; font-weight: bold;
+        }
         .header {
             text-align: center; padding: 18px;
             background: linear-gradient(135deg, #6f42c1, #5a32a3);
@@ -21,86 +24,113 @@
         .header h1 { font-size: 1.3rem; margin-bottom: 4px; }
         .header p { font-size: 0.85rem; opacity: 0.9; }
 
+        /* Instructions */
         .instructions {
             background: #fff3e0; border-left: 4px solid #ff9800;
             border-radius: 12px; padding: 15px; margin-bottom: 15px;
-            font-size: 0.9rem; color: #e65100; line-height: 1.5;
+            font-size: 0.9rem; color: #e65100; line-height: 1.6;
         }
+        .instructions strong { color: #bf360c; }
 
         /* Customer Tabs */
-        .customer-tabs {
-            display: flex; gap: 6px; margin-bottom: 15px; overflow-x: auto;
-            padding-bottom: 5px;
+        .customer-row {
+            display: flex; gap: 8px; justify-content: center;
+            margin-bottom: 15px; flex-wrap: wrap;
         }
-        .c-tab {
+        .customer-tab {
             display: flex; flex-direction: column; align-items: center;
             background: white; border: 3px solid #e0e0e0; border-radius: 15px;
             padding: 10px 8px; cursor: pointer; transition: all 0.3s;
             min-width: 60px; flex: 1; max-width: 80px;
         }
-        .c-tab:hover { border-color: #6f42c1; }
-        .c-tab.active { border-color: #6f42c1; background: #f3e8ff; }
-        .c-tab .av { font-size: 1.6rem; }
-        .c-tab .lb { font-size: 0.6rem; font-weight: bold; color: #888; margin-top: 2px; }
-        .c-tab.active .lb { color: #6f42c1; }
+        .customer-tab:hover { border-color: #6f42c1; transform: translateY(-2px); }
+        .customer-tab.active {
+            border-color: #6f42c1; background: #f3e8ff;
+            box-shadow: 0 4px 12px rgba(111,66,193,0.2);
+        }
+        .customer-tab .av { font-size: 1.8rem; }
+        .customer-tab .lb { font-size: 0.6rem; font-weight: bold; color: #888; margin-top: 3px; }
+        .customer-tab.active .lb { color: #6f42c1; }
 
-        /* Script Card */
-        .card {
+        /* Customer Card */
+        .customer-card {
             background: white; border-radius: 20px; padding: 25px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.08); margin-bottom: 15px;
+            display: none;
         }
-        .card h2 { font-size: 1.2rem; color: #6f42c1; margin-bottom: 5px; }
-        .card .desc { font-size: 0.85rem; color: #999; margin-bottom: 20px; }
+        .customer-card.active { display: block; }
 
-        /* Step */
-        .step {
-            margin-bottom: 18px; padding: 15px; border-radius: 15px;
-            border: 2px solid #f0f0f0; transition: all 0.3s;
+        .card-header {
+            display: flex; align-items: center; gap: 12px;
+            margin-bottom: 20px; padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
         }
-        .step:hover { border-color: #ddd; background: #fafafa; }
+        .card-header .av { font-size: 2.5rem; }
+        .card-header .info h2 { font-size: 1.2rem; color: #6f42c1; }
+        .card-header .info p { font-size: 0.85rem; color: #999; }
 
-        .step-header {
-            display: flex; align-items: center; gap: 10px; margin-bottom: 10px;
-        }
-        .step-num {
-            width: 30px; height: 30px; border-radius: 50%;
-            background: #6f42c1; color: white; display: flex;
-            align-items: center; justify-content: center;
-            font-size: 0.85rem; font-weight: bold; flex-shrink: 0;
-        }
-        .step-role { font-size: 0.7rem; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
-        .step-role.you { color: #6f42c1; }
-        .step-role.student { color: #d63384; }
-
-        .say-box {
-            background: #f0e6ff; border-left: 4px solid #6f42c1;
-            border-radius: 10px; padding: 12px 15px; margin-bottom: 8px;
-        }
-        .say-text { font-size: 1.05rem; color: #333; font-weight: 500; line-height: 1.4; }
-        .say-vn { font-size: 0.85rem; color: #888; font-style: italic; margin-top: 4px; }
-
-        .expect-box {
-            background: #fff0f5; border-left: 4px solid #ff69b4;
-            border-radius: 10px; padding: 12px 15px; margin-bottom: 8px;
-        }
-        .expect-text { font-size: 0.95rem; color: #888; font-style: italic; line-height: 1.4; }
-        .expect-answer { font-size: 0.9rem; color: #d63384; margin-top: 5px; font-weight: bold; }
-
-        .btn-speak {
-            background: #6f42c1; color: white; border: none;
-            padding: 8px 16px; border-radius: 20px; font-size: 0.8rem;
-            cursor: pointer; margin-top: 6px; transition: all 0.2s;
-        }
-        .btn-speak:hover { background: #5a32a3; transform: scale(1.05); }
-
-        .tip {
-            background: #fff3e0; border-radius: 8px; padding: 8px 12px;
-            margin-top: 6px; font-size: 0.8rem; color: #e65100;
+        /* Section Divider */
+        .section-title {
+            font-size: 0.8rem; font-weight: bold; color: #6f42c1;
+            text-transform: uppercase; letter-spacing: 1px;
+            margin: 20px 0 10px; padding-bottom: 5px;
+            border-bottom: 2px solid #ede0ff;
         }
 
-        /* Script Content (one per customer) */
-        .script-content { display: none; }
-        .script-content.active { display: block; }
+        /* Info Row */
+        .info-row {
+            display: flex; align-items: center; gap: 12px;
+            padding: 12px 15px; margin-bottom: 8px;
+            background: #f8f0ff; border-radius: 12px;
+            border-left: 4px solid #6f42c1;
+        }
+        .info-row .icon { font-size: 1.3rem; flex-shrink: 0; }
+        .info-row .content { flex: 1; }
+        .info-row .label {
+            font-size: 0.75rem; color: #888; font-weight: bold;
+            text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .info-row .value {
+            font-size: 1.05rem; color: #333; font-weight: 600;
+        }
+        .info-row .value-vn {
+            font-size: 0.8rem; color: #999; font-style: italic;
+        }
+
+        /* Script hint */
+        .script-box {
+            background: #e8f5e9; border-left: 4px solid #4caf50;
+            border-radius: 12px; padding: 15px; margin-top: 8px;
+        }
+        .script-box .script-label {
+            font-size: 0.75rem; color: #2e7d32; font-weight: bold;
+            text-transform: uppercase; margin-bottom: 5px;
+        }
+        .script-box .script-text {
+            font-size: 0.95rem; color: #333; line-height: 1.5;
+        }
+        .script-box .script-vn {
+            font-size: 0.85rem; color: #888; font-style: italic; margin-top: 4px;
+        }
+
+        /* Conversation Starters */
+        .convo-box {
+            background: #fff8e1; border-left: 4px solid #ffc107;
+            border-radius: 12px; padding: 15px; margin-top: 15px;
+        }
+        .convo-box h4 { font-size: 0.85rem; color: #f57f17; margin-bottom: 8px; }
+        .convo-line {
+            padding: 8px 0; border-bottom: 1px solid #fff0c0;
+            font-size: 0.9rem; line-height: 1.5;
+        }
+        .convo-line:last-child { border-bottom: none; }
+        .convo-line .en { color: #333; font-weight: 500; }
+        .convo-line .vn { color: #999; font-size: 0.8rem; font-style: italic; }
+
+        @media (max-width: 400px) {
+            .customer-tab { min-width: 52px; padding: 8px 5px; }
+            .customer-tab .av { font-size: 1.5rem; }
+        }
     </style>
 </head>
 <body>
@@ -108,133 +138,227 @@
 <a href="index.html" class="back-link">← Back to Menu</a>
 
 <div class="header">
-    <h1>👩 Teacher — Customer Script</h1>
-    <p>Cửa 3 — Read these lines to your student!</p>
+    <h1>👩 Teacher — Customer Information</h1>
+    <p>Cửa 3 — Read these details to your student!</p>
 </div>
 
 <div class="instructions">
     <strong>📋 How to play:</strong><br>
-    1. Pick a customer (same one the student picks)<br>
-    2. Read the <strong style="color:#6f42c1;">purple boxes</strong> out loud to the student<br>
-    3. The student types their response on their device<br>
-    4. Check if their answer matches the <strong style="color:#d63384;">pink expected answer</strong><br>
-    5. Move to the next step!
+    1. Pick the same customer as the student<br>
+    2. Read each piece of information <strong>one at a time</strong> when the student asks<br>
+    3. The student types the answer on their device<br>
+    4. Use the <strong>conversation starters</strong> to sound natural!
 </div>
 
 <!-- Customer Tabs -->
-<div class="customer-tabs" id="teacherTabs">
-    <div class="c-tab active" onclick="showScript(0)"><div class="av">👩</div><div class="lb">Customer 1</div></div>
-    <div class="c-tab" onclick="showScript(1)"><div class="av">👩‍🦰</div><div class="lb">Customer 2</div></div>
-    <div class="c-tab" onclick="showScript(2)"><div class="av">👱‍♀️</div><div class="lb">Customer 3</div></div>
-    <div class="c-tab" onclick="showScript(3)"><div class="av">👩‍🦱</div><div class="lb">Customer 4</div></div>
-    <div class="c-tab" onclick="showScript(4)"><div class="av">🧑‍🦳</div><div class="lb">Customer 5</div></div>
+<div class="customer-row" id="teacherTabs">
+    <div class="customer-tab active" onclick="showCustomer(0)">
+        <div class="av">👩</div><div class="lb">Cust. 1</div>
+    </div>
+    <div class="customer-tab" onclick="showCustomer(1)">
+        <div class="av">👩‍🦰</div><div class="lb">Cust. 2</div>
+    </div>
+    <div class="customer-tab" onclick="showCustomer(2)">
+        <div class="av">👱‍♀️</div><div class="lb">Cust. 3</div>
+    </div>
+    <div class="customer-tab" onclick="showCustomer(3)">
+        <div class="av">👩‍🦱</div><div class="lb">Cust. 4</div>
+    </div>
+    <div class="customer-tab" onclick="showCustomer(4)">
+        <div class="av">🧑‍🦳</div><div class="lb">Cust. 5</div>
+    </div>
 </div>
 
-<!-- Scripts generated by JS -->
-<div id="scriptsContainer"></div>
+<!-- Customer Cards (generated by JS) -->
+<div id="cardsContainer"></div>
 
 <script>
-function speak(text) {
-    speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(text);
-    u.lang = 'en-US'; u.rate = 0.85;
-    speechSynthesis.speak(u);
-}
-
 const customers = [
     {
-        name: "Customer 1 — New Client", avatar: "👩",
-        desc: "You are a brand new customer who has never been to this salon before.",
-        steps: [
-            { role: "you", say: "Hi there! I'm new here.", vn: "Xin chào! Tôi mới đến đây.", tip: "Wait for the student to greet you and say their name." },
-            { role: "student", expect: "The student should greet you and introduce themselves.", answer: "Hello! My name is ___. Nice to meet you!" },
-            { role: "you", say: "Nice to meet you too! My name is Sarah.", vn: "Tôi cũng rất vui! Tên tôi là Sarah.", tip: "Wait for the student to ask if it's your first time." },
-            { role: "student", expect: "The student should ask about first time.", answer: "Is this your first time here?" },
-            { role: "you", say: "Yes, it's my first time!", vn: "Vâng, lần đầu tiên!", tip: "Wait for the student to welcome you and ask about appointment." },
-            { role: "student", expect: "The student should welcome you and ask about appointment.", answer: "Welcome! Do you have an appointment?" },
-            { role: "you", say: "No, I don't have an appointment. Is that okay?", vn: "Không, tôi không có lịch hẹn. Được không?", tip: "Wait for the student to say it's okay." },
-            { role: "student", expect: "The student should tell you it's no problem.", answer: "No problem! Please have a seat." }
+        name: "Customer 1 — Sarah", avatar: "👩",
+        desc: "New client, first time visiting the salon",
+        fields: [
+            { icon: "👤", label: "Name", value: "Sarah", vn: "Tên: Sarah" },
+            { icon: "🆕", label: "First time?", value: "Yes — first time here!", vn: "Lần đầu: Có" },
+            { icon: "📅", label: "Appointment?", value: "No — walk-in", vn: "Lịch hẹn: Không" },
+            { icon: "💅", label: "Service", value: "Manicure", vn: "Dịch vụ: Làm móng tay" },
+            { icon: "🔲", label: "Nail Shape", value: "Round", vn: "Hình dáng: Tròn" },
+            { icon: "🎨", label: "Color", value: "Pink", vn: "Màu: Hồng" },
+            { icon: "🥤", label: "Drink", value: "Water", vn: "Thức uống: Nước lọc" }
+        ],
+        script: [
+            { en: "Hi! I'm new here. My name is Sarah.", vn: "Xin chào! Tôi mới đến đây. Tên tôi là Sarah." },
+            { en: "Yes, this is my first time!", vn: "Vâng, đây là lần đầu tiên!" },
+            { en: "No, I don't have an appointment.", vn: "Không, tôi không có lịch hẹn." },
+            { en: "I'd like a manicure please.", vn: "Tôi muốn làm móng tay." },
+            { en: "Round shape please.", vn: "Hình tròn nhé." },
+            { en: "Pink color please!", vn: "Màu hồng nhé!" },
+            { en: "Just water, thank you.", vn: "Nước lọc thôi, cám ơn." }
         ]
     },
     {
-        name: "Customer 2 — Returning Client", avatar: "👩‍🦰",
-        desc: "You are a regular customer who comes every month. You brought your sister today!",
-        steps: [
-            { role: "you", say: "Hi! I'm back again!", vn: "Xin chào! Tôi trở lại rồi!", tip: "Wait for 'Welcome back!'" },
-            { role: "student", expect: "The student should say 'Welcome back!'", answer: "Welcome back! Good to see you again!" },
-            { role: "you", say: "I have an appointment at 2 o'clock.", vn: "Tôi có lịch hẹn lúc 2 giờ.", tip: "Wait for confirmation." },
-            { role: "student", expect: "Should confirm and offer a seat.", answer: "Great! Please have a seat." },
-            { role: "you", say: "I also brought my sister today!", vn: "Hôm nay tôi cũng mang theo chị gái!", tip: "Wait for the student to welcome the sister." },
-            { role: "student", expect: "Should welcome the sister.", answer: "Nice to meet you! Welcome!" }
+        name: "Customer 2 — Jessica", avatar: "👩‍🦰",
+        desc: "Returning client, brought her sister today",
+        fields: [
+            { icon: "👤", label: "Name", value: "Jessica", vn: "Tên: Jessica" },
+            { icon: "🆕", label: "First time?", value: "No — regular customer!", vn: "Lần đầu: Không, khách quen" },
+            { icon: "📅", label: "Appointment?", value: "Yes, at 2 o'clock", vn: "Lịch hẹn: Có, lúc 2 giờ" },
+            { icon: "👫", label: "Came with?", value: "Her sister", vn: "Đến cùng: Chị gái" },
+            { icon: "💅", label: "Service", value: "Pedicure", vn: "Dịch vụ: Làm móng chân" },
+            { icon: "🔲", label: "Nail Shape", value: "Square", vn: "Hình dáng: Vuông" },
+            { icon: "🎨", label: "Color", value: "Red", vn: "Màu: Đỏ" },
+            { icon: "🥤", label: "Drink", value: "Coffee", vn: "Thức uống: Cà phê" }
+        ],
+        script: [
+            { en: "Hi! I'm back! My name is Jessica.", vn: "Xin chào! Tôi trở lại! Tên tôi là Jessica." },
+            { en: "No, I come here every month!", vn: "Không, tôi đến đây mỗi tháng!" },
+            { en: "Yes, I have an appointment at 2 o'clock.", vn: "Vâng, tôi có lịch hẹn lúc 2 giờ." },
+            { en: "I brought my sister today!", vn: "Hôm nay tôi mang theo chị gái!" },
+            { en: "I'd like a pedicure please.", vn: "Tôi muốn làm móng chân." },
+            { en: "Square shape for me.", vn: "Hình vuông cho tôi." },
+            { en: "Red please!", vn: "Màu đỏ nhé!" },
+            { en: "Can I have coffee?", vn: "Cho tôi cà phê được không?" }
         ]
     },
     {
-        name: "Customer 3 — Family Talk", avatar: "👱‍♀️",
-        desc: "You are a chatty customer who loves talking about family!",
-        steps: [
-            { role: "you", say: "Hi! Nice salon you have here!", vn: "Xin chào! Tiệm nail đẹp quá!", tip: "Wait for thanks and introduction." },
-            { role: "student", expect: "Should say thank you and introduce themselves.", answer: "Thank you! My name is ___. Nice to meet you!" },
-            { role: "you", say: "Do you have children?", vn: "Bạn có con không?", tip: "Wait for the student to answer about their family." },
-            { role: "student", expect: "Should answer about their children.", answer: "Yes, I have ___ kids! / No, I don't." },
-            { role: "you", say: "Are they going to school?", vn: "Họ có đang đi học không?", tip: "Wait for the student to answer about school." },
-            { role: "student", expect: "Should answer about school.", answer: "Yes, one goes to primary school and one goes to college." },
-            { role: "you", say: "That's wonderful! This is my husband waiting outside.", vn: "Tuyệt! Đây là chồng tôi đang đợi bên ngoài.", tip: "Wait for a nice response." },
-            { role: "student", expect: "Should respond nicely.", answer: "Oh nice! Hello to your husband!" }
+        name: "Customer 3 — Emily", avatar: "👱‍♀️",
+        desc: "Chatty client who loves talking about family",
+        fields: [
+            { icon: "👤", label: "Name", value: "Emily", vn: "Tên: Emily" },
+            { icon: "💍", label: "Married?", value: "Yes", vn: "Kết hôn: Có" },
+            { icon: "👨", label: "Husband's name", value: "David", vn: "Tên chồng: David" },
+            { icon: "👶", label: "Children?", value: "Yes, 2 kids", vn: "Con: Có, 2 đứa" },
+            { icon: "🏫", label: "Kids in school?", value: "Yes — primary school", vn: "Đi học: Có, tiểu học" },
+            { icon: "💅", label: "Service", value: "Gel nails", vn: "Dịch vụ: Gel" },
+            { icon: "🎨", label: "Color", value: "French tips", vn: "Màu: French" },
+            { icon: "🥤", label: "Drink", value: "Tea", vn: "Thức uống: Trà" }
+        ],
+        script: [
+            { en: "Hi! My name is Emily. Nice salon!", vn: "Xin chào! Tên tôi là Emily. Tiệm đẹp quá!" },
+            { en: "Yes, I'm married!", vn: "Vâng, tôi đã kết hôn!" },
+            { en: "My husband's name is David.", vn: "Chồng tôi tên là David." },
+            { en: "I have 2 kids.", vn: "Tôi có 2 đứa con." },
+            { en: "Yes, they go to primary school.", vn: "Có, chúng học tiểu học." },
+            { en: "I want gel nails please.", vn: "Tôi muốn làm gel." },
+            { en: "French tips, please!", vn: "Kiểu French nhé!" },
+            { en: "Tea for me, please.", vn: "Cho tôi trà nhé." }
         ]
     },
     {
-        name: "Customer 4 — Shy New Client", avatar: "👩‍🦱",
-        desc: "You are a shy customer whose mother recommended this salon.",
-        steps: [
-            { role: "you", say: "Um... hello...", vn: "Ừm... xin chào...", tip: "Be shy! Wait for a warm greeting." },
-            { role: "student", expect: "Should give a warm greeting and introduction.", answer: "Hello! Welcome! My name is ___." },
-            { role: "you", say: "My name is Lisa. It's my first time getting my nails done.", vn: "Tên tôi là Lisa. Đây là lần đầu tiên tôi làm nail.", tip: "Wait for 'Nice to meet you' and comfort." },
-            { role: "student", expect: "Should say nice to meet you and comfort.", answer: "Nice to meet you Lisa! Don't worry, I'll take care of you!" },
-            { role: "you", say: "My mother told me to come here. She's your regular customer!", vn: "Mẹ tôi bảo tôi đến đây. Bà ấy là khách quen của bạn!", tip: "Wait for reaction about the mother." },
-            { role: "student", expect: "Should react positively about the mother.", answer: "Oh your mother! That's wonderful! Welcome!" },
-            { role: "you", say: "Do you have an appointment available?", vn: "Bạn còn lịch hẹn trống không?", tip: "Wait for confirmation." },
-            { role: "student", expect: "Should say yes and offer a seat.", answer: "Yes, of course! Please have a seat." }
+        name: "Customer 4 — Lisa", avatar: "👩‍🦱",
+        desc: "Shy new client, her mother is a regular here",
+        fields: [
+            { icon: "👤", label: "Name", value: "Lisa", vn: "Tên: Lisa" },
+            { icon: "🆕", label: "First time?", value: "Yes — first time ever!", vn: "Lần đầu: Có, lần đầu tiên!" },
+            { icon: "👩‍👧", label: "Who recommended?", value: "Her mother", vn: "Ai giới thiệu: Mẹ" },
+            { icon: "📅", label: "Appointment?", value: "No — walk-in", vn: "Lịch hẹn: Không" },
+            { icon: "💅", label: "Service", value: "Manicure", vn: "Dịch vụ: Làm móng tay" },
+            { icon: "🔲", label: "Nail Shape", value: "Oval", vn: "Hình dáng: Oval" },
+            { icon: "🎨", label: "Color", value: "White", vn: "Màu: Trắng" },
+            { icon: "🥤", label: "Drink", value: "Orange juice", vn: "Thức uống: Nước cam" }
+        ],
+        script: [
+            { en: "Um... hi... my name is Lisa.", vn: "Ừm... xin chào... tên tôi là Lisa." },
+            { en: "Yes, this is my first time getting nails done.", vn: "Vâng, đây là lần đầu tôi làm nail." },
+            { en: "My mother told me to come here.", vn: "Mẹ tôi bảo tôi đến đây." },
+            { en: "No, I don't have an appointment.", vn: "Không, tôi không có lịch hẹn." },
+            { en: "Just a manicure please.", vn: "Chỉ làm móng tay thôi." },
+            { en: "Oval shape please.", vn: "Hình oval nhé." },
+            { en: "White color please.", vn: "Màu trắng nhé." },
+            { en: "Can I have orange juice?", vn: "Cho tôi nước cam được không?" }
         ]
     },
     {
-        name: "Customer 5 — Chatty Grandma", avatar: "🧑‍🦳",
-        desc: "You are a chatty older customer who LOVES talking about your big family!",
-        steps: [
-            { role: "you", say: "Hello darling! I'm back for my nails!", vn: "Xin chào cưng! Tôi trở lại làm nail!", tip: "Be enthusiastic! Wait for welcome back." },
-            { role: "student", expect: "Should say welcome back.", answer: "Welcome back! So nice to see you!" },
-            { role: "you", say: "I just came from my daughter's wedding!", vn: "Tôi vừa đi đám cưới con gái xong!", tip: "Wait for excitement/congratulations." },
-            { role: "student", expect: "Should react with excitement.", answer: "Wow, congratulations! That's wonderful!" },
-            { role: "you", say: "Yes! Now I have 3 children — 2 daughters and 1 son. All married!", vn: "Vâng! Giờ tôi có 3 con — 2 con gái và 1 con trai. Đều đã kết hôn!", tip: "Wait for a follow-up question about grandchildren." },
-            { role: "student", expect: "Should ask about grandchildren or family.", answer: "That's so nice! Do you have grandchildren?" },
-            { role: "you", say: "Oh yes! I have 5 grandchildren! They're my whole world!", vn: "Ồ có! Tôi có 5 cháu! Các cháu là cả thế giới của tôi!", tip: "Wait for a warm response." },
-            { role: "student", expect: "Should respond warmly.", answer: "That's so sweet! You have a beautiful family!" },
-            { role: "you", say: "What about you? Do you have kids?", vn: "Còn bạn thì sao? Bạn có con không?", tip: "Wait for the student to talk about their own family." },
-            { role: "student", expect: "Should answer about their own family.", answer: "Yes, I have ___ kids! / No, not yet." }
+        name: "Customer 5 — Margaret", avatar: "🧑‍🦳",
+        desc: "Chatty grandma, regular client, big family!",
+        fields: [
+            { icon: "👤", label: "Name", value: "Margaret", vn: "Tên: Margaret" },
+            { icon: "🆕", label: "First time?", value: "No — regular client", vn: "Lần đầu: Không, khách quen" },
+            { icon: "👶", label: "Children?", value: "3 (2 daughters, 1 son)", vn: "Con: 3 (2 gái, 1 trai)" },
+            { icon: "👶", label: "Grandchildren?", value: "5 grandchildren", vn: "Cháu: 5 cháu" },
+            { icon: "💒", label: "Family event?", value: "Daughter's wedding", vn: "Sự kiện: Đám cưới con gái" },
+            { icon: "💅", label: "Service", value: "Acrylic nails", vn: "Dịch vụ: Acrylic" },
+            { icon: "🔲", label: "Nail Shape", value: "Coffin", vn: "Hình dáng: Coffin" },
+            { icon: "🎨", label: "Color", value: "Gold", vn: "Màu: Vàng gold" },
+            { icon: "🥤", label: "Drink", value: "Wine", vn: "Thức uống: Rượu" }
+        ],
+        script: [
+            { en: "Hello darling! I'm back! My name is Margaret.", vn: "Xin chào cưng! Tôi trở lại! Tên tôi là Margaret." },
+            { en: "No no, I come here all the time!", vn: "Không không, tôi đến đây hoài!" },
+            { en: "I have 3 children — 2 daughters and 1 son.", vn: "Tôi có 3 con — 2 gái và 1 trai." },
+            { en: "5 grandchildren! They're my world!", vn: "5 cháu! Các cháu là cả thế giới!" },
+            { en: "I just came from my daughter's wedding!", vn: "Tôi vừa đi đám cưới con gái!" },
+            { en: "Acrylic nails, please!", vn: "Làm acrylic nhé!" },
+            { en: "Coffin shape, darling.", vn: "Hình coffin nhé cưng." },
+            { en: "Gold! I want to sparkle!", vn: "Vàng gold! Tôi muốn lấp lánh!" },
+            { en: "A glass of wine would be lovely.", vn: "Một ly rượu thì tuyệt." }
         ]
     }
 ];
 
-// Build all scripts
-function buildScripts() {
-    const container = document.getElementById('scriptsContainer');
+function buildCards() {
+    const container = document.getElementById('cardsContainer');
     customers.forEach((c, ci) => {
-        let html = `<div class="card script-content${ci===0?' active':''}" id="script${ci}">`;
-        html += `<h2>${c.avatar} ${c.name}</h2>`;
-        html += `<p class="desc">${c.desc}</p>`;
+        const card = document.createElement('div');
+        card.className = 'customer-card' + (ci === 0 ? ' active' : '');
+        card.id = 'card-' + ci;
 
-        c.steps.forEach((s, si) => {
-            html += `<div class="step">`;
-            html += `<div class="step-header">`;
-            html += `<div class="step-num">${si + 1}</div>`;
+        let fieldsHtml = '';
+        c.fields.forEach(f => {
+            fieldsHtml += `
+                <div class="info-row">
+                    <div class="icon">${f.icon}</div>
+                    <div class="content">
+                        <div class="label">${f.label}</div>
+                        <div class="value">${f.value}</div>
+                        <div class="value-vn">${f.vn}</div>
+                    </div>
+                </div>
+            `;
+        });
 
-            if (s.role === 'you') {
-                html += `<div class="step-role you">👩 YOU SAY (read out loud):</div>`;
-                html += `</div>`; // close header
-                html += `<div class="say-box">`;
-                html += `<div class="say-text">"${s.say}"</div>`;
-                html += `<div class="say-vn">${s.vn}</div>`;
-                html += `</div>`;
-                html += `<button class="btn-speak" onclick="speak('${s.say.replace(/'/g, "\\'")}')">🔊 Hear it</button>`;
-                if (s.tip) html += `<div class="tip">💡 ${s.tip}</div>`;
-            } else {
-                html += `<div class="step-role student">💁‍♀️ STUDENT SHOULD
+        let scriptHtml = '';
+        c.script.forEach(s => {
+            scriptHtml += `
+                <div class="convo-line">
+                    <div class="en">🗣️ "${s.en}"</div>
+                    <div class="vn">${s.vn}</div>
+                </div>
+            `;
+        });
+
+        card.innerHTML = `
+            <div class="card-header">
+                <div class="av">${c.avatar}</div>
+                <div class="info">
+                    <h2>${c.name}</h2>
+                    <p>${c.desc}</p>
+                </div>
+            </div>
+
+            <div class="section-title">📋 Customer Information (Answers)</div>
+            ${fieldsHtml}
+
+            <div class="convo-box">
+                <h4>🗣️ What to Say (Conversation Lines)</h4>
+                ${scriptHtml}
+            </div>
+        `;
+
+        container.appendChild(card);
+    });
+}
+
+function showCustomer(idx) {
+    document.querySelectorAll('.customer-tab').forEach((t, i) =>
+        t.classList.toggle('active', i === idx)
+    );
+    document.querySelectorAll('.customer-card').forEach((c, i) =>
+        c.classList.toggle('active', i === idx)
+    );
+}
+
+buildCards();
+</script>
+</body>
+</html>
