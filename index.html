@@ -10,24 +10,17 @@
             font-family: 'Segoe UI', sans-serif;
             background: linear-gradient(135deg, #ffe0f0, #fff0f5);
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
             padding: 20px;
         }
         .container { text-align: center; max-width: 600px; width: 100%; }
         h1 { font-size: 2rem; color: #d63384; margin-bottom: 5px; }
         .subtitle { font-size: 1rem; color: #888; margin-bottom: 8px; }
         .topic-badge {
-            display: inline-block;
-            background: linear-gradient(135deg, #ff69b4, #ff1493);
-            color: white;
-            padding: 6px 18px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: bold;
-            margin-bottom: 35px;
+            display: inline-block; background: linear-gradient(135deg, #ff69b4, #ff1493);
+            color: white; padding: 6px 18px; border-radius: 20px;
+            font-size: 0.85rem; font-weight: bold; margin-bottom: 35px;
         }
         .emoji-header { font-size: 4rem; margin-bottom: 20px; }
         .role-cards { display: flex; flex-direction: column; gap: 20px; align-items: center; }
@@ -36,7 +29,7 @@
             background: white; border-radius: 20px; padding: 25px 30px;
             width: 100%; max-width: 450px; text-decoration: none; color: inherit;
             box-shadow: 0 6px 20px rgba(0,0,0,0.08);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: transform 0.3s, box-shadow 0.3s;
             border: 3px solid transparent;
         }
         .role-card:hover { transform: translateY(-5px); box-shadow: 0 12px 30px rgba(0,0,0,0.15); }
@@ -54,15 +47,9 @@
             display: inline-block; font-size: 0.75rem; font-weight: bold;
             padding: 3px 10px; border-radius: 20px; margin-bottom: 6px; color: white;
         }
-        .role-card.student .role-badge { background-color: #ff69b4; }
-        .role-card.teacher .role-badge { background-color: #6f42c1; }
+        .role-card.student .role-badge { background: #ff69b4; }
+        .role-card.teacher .role-badge { background: #6f42c1; }
         .footer { margin-top: 50px; font-size: 0.85rem; color: #aaa; }
-        @media (max-width: 500px) {
-            h1 { font-size: 1.5rem; }
-            .role-card { padding: 20px; gap: 15px; }
-            .role-icon { font-size: 2.8rem; }
-            .role-info h2 { font-size: 1.2rem; }
-        }
     </style>
 </head>
 <body>
@@ -71,22 +58,21 @@
         <h1>Nail Salon English</h1>
         <p class="subtitle">Cửa 3 — Introducing Yourself & Family</p>
         <div class="topic-badge">🚪 CỬA 3 — Giới Thiệu Bản Thân và Gia Đình</div>
-
         <div class="role-cards">
             <a href="student.html" class="role-card student">
                 <div class="role-icon">💁‍♀️</div>
                 <div class="role-info">
                     <span class="role-badge">STUDENT</span>
                     <h2>Nail Technician</h2>
-                    <p>You're the nail tech! Greet customers, introduce yourself & make small talk about family. 💅</p>
+                    <p>Listen to the customer and type the correct English responses! 💅</p>
                 </div>
             </a>
             <a href="teacher.html" class="role-card teacher">
                 <div class="role-icon">👩</div>
                 <div class="role-info">
-                    <span class="role-badge">TEACHER / CUSTOMER</span>
+                    <span class="role-badge">TEACHER</span>
                     <h2>Customer</h2>
-                    <p>Play as the customer! Use the script prompts to guide the conversation. 📋</p>
+                    <p>Read the customer lines to your student and check their answers! 📋</p>
                 </div>
             </a>
         </div>
