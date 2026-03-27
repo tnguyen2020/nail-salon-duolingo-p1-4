@@ -1,442 +1,478 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Teacher Control Panel</title>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(135deg, #e8f4f8, #f0f8ff);
-      min-height: 100vh; padding: 20px;
-    }
-    .header {
-      text-align: center; padding: 20px;
-      background: linear-gradient(135deg, #4a90d9, #357abd);
-      color: white; border-radius: 20px; margin-bottom: 20px;
-    }
-    .teacher-badge {
-      background: #ffc107; color: #333; padding: 5px 15px;
-      border-radius: 20px; font-size: 12px; font-weight: bold;
-      display: inline-block; margin-top: 8px;
-    }
-    .game-area { max-width: 900px; margin: 0 auto; }
-    .card {
-      background: white; border-radius: 20px; padding: 25px;
-      margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    }
-    .card h3 { color: #4a90d9; margin-bottom: 15px; }
-    .customer-tabs { display: flex; gap: 10px; flex-wrap: wrap; }
-    .customer-tab {
-      padding: 10px 20px; border-radius: 15px;
-      border: 2px solid #4a90d9; background: white;
-      color: #4a90d9; cursor: pointer; font-size: 14px;
-    }
-    .customer-tab.active { background: #4a90d9; color: white; }
-    .profile-header {
-      display: flex; align-items: center; gap: 20px;
-      margin-bottom: 20px; padding-bottom: 20px;
-      border-bottom: 2px solid #e8f4f8;
-    }
-    .profile-avatar { font-size: 60px; }
-    .profile-name { font-size: 24px; font-weight: bold; color: #333; }
-    .profile-subtitle { font-size: 14px; color: #999; }
-    .profile-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
-    .profile-item { background: #f8f9fa; border-radius: 12px; padding: 12px 15px; }
-    .profile-label { font-size: 12px; color: #999; text-transform: uppercase; margin-bottom: 4px; }
-    .profile-value { font-size: 15px; font-weight: bold; color: #333; }
-    .reveal-item {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 12px 15px; border-radius: 12px; margin-bottom: 10px;
-      background: #f8f9fa; border: 2px solid transparent;
-    }
-    .reveal-item.revealed { background: #d4edda; border-color: #28a745; }
-    .reveal-item-label { font-size: 12px; color: #999; margin-bottom: 2px; }
-    .reveal-item-value { font-size: 15px; font-weight: bold; color: #333; }
-    .reveal-btn {
-      background: #4a90d9; color: white; border: none;
-      border-radius: 10px; padding: 8px 20px; font-size: 13px;
-      cursor: pointer; min-width: 100px;
-    }
-    .reveal-btn.done { background: #28a745; cursor: default; }
-    .control-buttons { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 15px; }
-    .ctrl-btn {
-      padding: 12px; border-radius: 12px; border: none;
-      font-size: 14px; cursor: pointer; font-weight: bold;
-    }
-    .btn-yellow { background: #ffc107; color: #333; }
-    .btn-blue { background: #4a90d9; color: white; }
-    .btn-red { background: #dc3545; color: white; }
-    .btn-pink {
-      background: linear-gradient(135deg, #ff69b4, #ff1493);
-      color: white; border: none; border-radius: 15px;
-      padding: 15px; font-size: 16px; cursor: pointer;
-      width: 100%; margin-top: 10px; font-weight: bold;
-    }
-    .stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 15px; }
-    .stat-box { text-align: center; background: #f8f9fa; border-radius: 12px; padding: 15px; }
-    .stat-number { font-size: 28px; font-weight: bold; color: #4a90d9; }
-    .stat-label { font-size: 12px; color: #999; }
-    .hint-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-    .hint-box {
-      background: #fff9e6; border: 1px solid #ffc107;
-      border-radius: 8px; padding: 8px 12px; font-size: 13px;
-    }
-    .hint-box strong { color: #856404; display: block; font-size: 11px; }
-    .connection-status {
-      text-align: center; padding: 8px; border-radius: 10px;
-      margin-bottom: 15px; font-size: 13px;
-    }
-    .connected { background: #d4edda; color: #155724; }
-    .disconnected { background: #f8d7da; color: #721c24; }
-    .connecting { background: #fff3cd; color: #856404; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>👩 Customer — Cửa 3 Teacher</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #e8e0ff, #f3e8ff);
+            min-height: 100vh;
+            padding: 15px;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center; padding: 18px;
+            background: linear-gradient(135deg, #6f42c1, #5a32a3);
+            color: white; border-radius: 20px; margin-bottom: 15px;
+            box-shadow: 0 4px 15px rgba(111,66,193,0.3);
+        }
+        .header h1 { font-size: 1.3rem; margin-bottom: 4px; }
+        .header p { font-size: 0.85rem; opacity: 0.9; }
+
+        .back-link {
+            display: inline-block; margin-bottom: 15px;
+            color: #6f42c1; text-decoration: none; font-size: 0.9rem; font-weight: bold;
+        }
+        .back-link:hover { text-decoration: underline; }
+
+        /* Scene Cards */
+        .scene-selector {
+            display: flex; gap: 8px; margin-bottom: 15px; overflow-x: auto;
+            padding-bottom: 5px;
+        }
+        .scene-tab {
+            padding: 8px 16px; border-radius: 20px; font-size: 0.8rem;
+            font-weight: bold; cursor: pointer; white-space: nowrap;
+            border: 2px solid #e0e0e0; background: white; color: #888;
+            transition: all 0.3s;
+        }
+        .scene-tab:hover { border-color: #6f42c1; }
+        .scene-tab.active { background: #6f42c1; color: white; border-color: #6f42c1; }
+
+        /* Script Card */
+        .card {
+            background: white; border-radius: 20px; padding: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08); margin-bottom: 15px;
+        }
+        .card h2 { font-size: 1.2rem; color: #6f42c1; margin-bottom: 5px; }
+        .card .card-desc { font-size: 0.85rem; color: #999; margin-bottom: 20px; }
+
+        /* Script Steps */
+        .script-step {
+            display: flex; gap: 12px; margin-bottom: 15px;
+            padding: 15px; border-radius: 15px; transition: all 0.3s;
+        }
+        .script-step:hover { background: #f8f0ff; }
+
+        .step-number {
+            width: 32px; height: 32px; border-radius: 50%;
+            background: #6f42c1; color: white; display: flex;
+            align-items: center; justify-content: center;
+            font-size: 0.85rem; font-weight: bold; flex-shrink: 0;
+        }
+
+        .step-content { flex: 1; }
+
+        .step-role {
+            font-size: 0.7rem; font-weight: bold; text-transform: uppercase;
+            letter-spacing: 1px; margin-bottom: 4px;
+        }
+        .step-role.customer { color: #6f42c1; }
+        .step-role.tech { color: #d63384; }
+
+        .step-text {
+            font-size: 1rem; color: #333; margin-bottom: 4px;
+            line-height: 1.4;
+        }
+        .step-text.say-this {
+            background: #f0e6ff; padding: 10px 14px; border-radius: 10px;
+            border-left: 3px solid #6f42c1; font-weight: 500;
+        }
+        .step-text.expect {
+            background: #fff0f5; padding: 10px 14px; border-radius: 10px;
+            border-left: 3px solid #ff69b4; font-style: italic; color: #888;
+        }
+
+        .step-vn { font-size: 0.8rem; color: #999; font-style: italic; margin-top: 3px; }
+
+        .step-speak {
+            background: #6f42c1; color: white; border: none;
+            padding: 5px 12px; border-radius: 15px; font-size: 0.75rem;
+            cursor: pointer; margin-top: 6px; transition: all 0.2s;
+        }
+        .step-speak:hover { background: #5a32a3; }
+
+        .step-tip {
+            background: #fff3e0; border-radius: 8px; padding: 8px 12px;
+            margin-top: 6px; font-size: 0.8rem; color: #e65100;
+        }
+
+        /* Divider */
+        .divider {
+            border: none; border-top: 2px dashed #e0e0e0;
+            margin: 20px 0;
+        }
+
+        /* Vocab Quick Ref */
+        .vocab-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+            margin-bottom: 15px;
+        }
+        .vocab-item {
+            background: #f8f0ff; border-radius: 10px; padding: 10px;
+            cursor: pointer; transition: all 0.2s;
+        }
+        .vocab-item:hover { background: #efe0ff; }
+        .vocab-item .en { font-weight: bold; color: #333; font-size: 0.9rem; }
+        .vocab-item .vn { font-size: 0.8rem; color: #888; }
+
+        /* Assessment Checklist */
+        .checklist { margin-top: 15px; }
+        .check-item {
+            display: flex; align-items: center; gap: 10px;
+            padding: 10px; border-radius: 10px; margin-bottom: 6px;
+            background: #fafafa; cursor: pointer; transition: all 0.2s;
+        }
+        .check-item:hover { background: #f0f0f0; }
+        .check-item.checked { background: #d4edda; }
+        .check-box {
+            width: 24px; height: 24px; border: 2px solid #ccc;
+            border-radius: 6px; display: flex; align-items: center;
+            justify-content: center; font-size: 0.9rem; flex-shrink: 0;
+            transition: all 0.3s;
+        }
+        .check-item.checked .check-box { background: #28a745; border-color: #28a745; color: white; }
+        .check-label { font-size: 0.9rem; color: #555; }
+
+        .score-display {
+            text-align: center; padding: 15px;
+            font-size: 1.5rem; font-weight: bold; color: #6f42c1;
+        }
+
+        @media (max-width: 400px) {
+            .vocab-grid { grid-template-columns: 1fr; }
+        }
+    </style>
 </head>
 <body>
-<div class="game-area">
-  <div class="header">
-    <h1>🎮 Teacher Control Panel</h1>
-    <p>Nail Shop English — Game Master View</p>
-    <div class="teacher-badge">🇻🇳 TEACHER — VIETNAM</div>
-  </div>
 
-  <div class="connection-status connecting" id="connectionStatus">🔄 Connecting...</div>
+<a href="index.html" class="back-link">← Back to Menu</a>
 
-  <div class="card">
-    <h3>📊 Live Stats</h3>
-    <div class="stats">
-      <div class="stat-box"><div class="stat-number" id="t-revealed">0</div><div class="stat-label">Facts Revealed</div></div>
-      <div class="stat-box"><div class="stat-number" id="t-customer">1</div><div class="stat-label">Customer</div></div>
-      <div class="stat-box"><div class="stat-number" id="t-status">🟡</div><div class="stat-label">Status</div></div>
-      <div class="stat-box"><div class="stat-number" id="t-complete">No</div><div class="stat-label">Complete?</div></div>
+<div class="header">
+    <h1>👩 You Are the Customer</h1>
+    <p>Cửa 3 — Use these scripts to role-play with your student!</p>
+</div>
+
+<!-- Scene Selector -->
+<div class="scene-selector">
+    <div class="scene-tab active" onclick="showScene(0)">🆕 Scene 1: New Client</div>
+    <div class="scene-tab" onclick="showScene(1)">🔄 Scene 2: Returning Client</div>
+    <div class="scene-tab" onclick="showScene(2)">👨‍👩‍👧 Scene 3: Family Talk</div>
+</div>
+
+<!-- ====== SCENE 1: New Client ====== -->
+<div class="card scene-card" id="scene0">
+    <h2>🆕 Scene 1: New Client Arrives</h2>
+    <p class="card-desc">You're a first-time customer. See if the student can greet you properly!</p>
+
+    <div class="script-step">
+        <div class="step-number">1</div>
+        <div class="step-content">
+            <div class="step-role customer">👩 YOU SAY (Customer):</div>
+            <div class="step-text say-this">"Hi! I'm new here."</div>
+            <div class="step-vn">Xin chào! Tôi mới đến đây.</div>
+            <button class="step-speak" onclick="speak('Hi! I\'m new here.')">🔊 Say it</button>
+            <div class="step-tip">💡 Wait for the student to greet you and introduce themselves.</div>
+        </div>
     </div>
-  </div>
 
-  <div class="card">
-    <h3>👥 Select Customer</h3>
-    <div class="customer-tabs" id="customerTabs"></div>
-  </div>
-
-  <div class="card">
-    <div class="profile-header">
-      <div class="profile-avatar" id="t-avatar">👤</div>
-      <div>
-        <div class="profile-name" id="t-name">Select a customer</div>
-        <div class="profile-subtitle" id="t-subtitle">Profile will appear here</div>
-      </div>
+    <div class="script-step">
+        <div class="step-number">2</div>
+        <div class="step-content">
+            <div class="step-role tech">💁‍♀️ STUDENT SHOULD SAY:</div>
+            <div class="step-text expect">"Hello! My name is ___. Nice to meet you!"</div>
+            <div class="step-tip">✅ Check: Did they say their name? Did they say "nice to meet you"?</div>
+        </div>
     </div>
-    <div class="profile-grid" id="t-grid"></div>
-  </div>
 
- 
-  <div class="card">
-    <h3>🔓 Reveal Information — One At A Time!</h3>
-    <p style="font-size:13px; color:#999; margin-bottom:15px;">Click REVEAL to send each fact to your student!</p>
-    <div id="revealItems"></div>
-    <div class="control-buttons">
-      <button class="ctrl-btn btn-yellow" onclick="revealAll()">Reveal All ⚡</button>
-      <button class="ctrl-btn btn-blue" onclick="goNextCustomer()">Next Customer ➡️</button>
-      <button class="ctrl-btn btn-red" onclick="resetGame()">Reset Game 🔄</button>
+    <div class="script-step">
+        <div class="step-number">3</div>
+        <div class="step-content">
+            <div class="step-role customer">👩 YOU SAY:</div>
+            <div class="step-text say-this">"Nice to meet you too! My name is Sarah."</div>
+            <div class="step-vn">Tôi cũng rất vui! Tên tôi là Sarah.</div>
+            <button class="step-speak" onclick="speak('Nice to meet you too! My name is Sarah.')">🔊 Say it</button>
+        </div>
     </div>
-    <button class="btn-pink" onclick="endGame()">🏁 End Game — Show Final Score</button>
-  </div>
+
+    <div class="script-step">
+        <div class="step-number">4</div>
+        <div class="step-content">
+            <div class="step-role tech">💁‍♀️ STUDENT SHOULD ASK:</div>
+            <div class="step-text expect">"Is this your first time here?" or "Do you have an appointment?"</div>
+            <div class="step-tip">✅ Check: Did they ask a relevant question?</div>
+        </div>
+    </div>
+
+    <div class="script-step">
+        <div class="step-number">5</div>
+        <div class="step-content">
+            <div class="step-role customer">👩 YOU SAY:</div>
+            <div class="step-text say-this">"Yes, it's my first time! I don't have an appointment. Is that okay?"</div>
+            <div class="step-vn">Vâng, lần đầu tiên! Tôi không có lịch hẹn. Được không?</div>
+            <button class="step-speak" onclick="speak('Yes, it\'s my first time! I don\'t have an appointment. Is that okay?')">🔊 Say it</button>
+        </div>
+    </div>
+
+    <div class="script-step">
+        <div class="step-number">6</div>
+        <div class="step-content">
+            <div class="step-role tech">💁‍♀️ STUDENT SHOULD RESPOND:</div>
+            <div class="step-text expect">Welcome them! "Of course! Welcome!" / "No problem!"</div>
+        </div>
+    </div>
+
+    <hr class="divider">
+
+    <h3 style="color:#6f42c1;margin-bottom:10px;">✅ Assessment Checklist</h3>
+    <div class="checklist" id="checklist0">
+        <div class="check-item" onclick="toggleCheck(this)">
+            <div class="check-box"></div>
+            <div class="check-label">Said "Hello" or greeted the customer</div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)">
+            <div class="check-box"></div>
+            <div class="check-label">Introduced themselves ("My name is...")</div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)">
+            <div class="check-box"></div>
+            <div class="check-label">Said "Nice to meet you"</div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)">
+            <div class="check-box"></div>
+            <div class="check-label">Asked "Is this your first time?"</div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)">
+            <div class="check-box"></div>
+            <div class="check-label">Asked about appointment</div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)">
+            <div class="check-box"></div>
+            <div class="check-label">Welcomed the customer warmly</div>
+        </div>
+    </div>
+    <div class="score-display" id="score0">0 / 6 ✅</div>
+</div>
+
+<!-- ====== SCENE 2: Returning Client ====== -->
+<div class="card scene-card" id="scene1" style="display:none;">
+    <h2>🔄 Scene 2: Returning Client</h2>
+    <p class="card-desc">You're a regular customer. See if the student remembers "Welcome back!"</p>
+
+    <div class="script-step">
+        <div class="step-number">1</div>
+        <div class="step-content">
+            <div class="step-role customer">👩 YOU SAY:</div>
+            <div class="step-text say-this">"Hi! I'm back again!"</div>
+            <div class="step-vn">Xin chào! Tôi trở lại rồi!</div>
+            <button class="step-speak" onclick="speak('Hi! I\'m back again!')">🔊 Say it</button>
+            <div class="step-tip">💡 See if the student says "Welcome back!"</div>
+        </div>
+    </div>
+
+    <div class="script-step">
+        <div class="step-number">2</div>
+        <div class="step-content">
+            <div class="step-role tech">💁‍♀️ STUDENT SHOULD SAY:</div>
+            <div class="step-text expect">"Welcome back!" / "Good to see you again!"</div>
+        </div>
+    </div>
+
+    <div class="script-step">
+        <div class="step-number">3</div>
+        <div class="step-content">
+            <div class="step-role customer">👩 YOU SAY:</div>
+            <div class="step-text say-this">"Yes, I have an appointment at 2 o'clock. I also brought my sister today!"</div>
+            <div class="step-vn">Vâng, tôi có lịch hẹn lúc 2 giờ. Hôm nay tôi cũng mang theo chị gái!</div>
+            <button class="step-speak" onclick="speak('Yes, I have an appointment at 2 o\'clock. I also brought my sister today!')">🔊 Say it</button>
+        </div>
+    </div>
+
+    <div class="script-step">
+        <div class="step-number">4</div>
+        <div class="step-content">
+            <div class="step-role tech">💁‍♀️ STUDENT SHOULD:</div>
+            <div class="step-text expect">Welcome the sister too! "Nice to meet you!" / "Welcome!"</div>
+        </div>
+    </div>
+
+    <hr class="divider">
+
+    <h3 style="color:#6f42c1;margin-bottom:10px;">✅ Assessment Checklist</h3>
+    <div class="checklist" id="checklist1">
+        <div class="check-item" onclick="toggleCheck(this)">
+            <div class="check-box"></div>
+            <div class="check-label">Said "Welcome back!"</div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)">
+            <div class="check-box"></div>
+            <div class="check-label">Asked about appointment</div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)">
+            <div class="check-box"></div>
+            <div class="check-label">Acknowledged the sister</div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)">
+            <div class="check-box"></div>
+            <div class="check-label">Said "Nice to meet you" to sister</div>
+        </div>
+    </div>
+    <div class="score-display" id="score1">0 / 4 ✅</div>
+</div>
+
+<!-- ====== SCENE 3: Family Small Talk ====== -->
+<div class="card scene-card" id="scene2" style="display:none;">
+    <h2>👨‍👩‍👧 Scene 3: Family Small Talk</h2>
+    <p class="card-desc">During the appointment, see if the student can make family small talk!</p>
+
+    <div class="script-step">
+        <div class="step-number">1</div>
+        <div class="step-content">
+            <div class="step-role tech">💁‍♀️ STUDENT SHOULD ASK:</div>
+            <div class="step-text expect">A family question: "Do you have children?" / "Are you married?"</div>
+            <div class="step-tip">💡 If the student doesn't ask, you can start by mentioning your family.</div>
+        </div>
+    </div>
+
+    <div class="script-step">
+        <div class="step-number">2</div>
+        <div class="step-content">
+            <div class="step-role customer">👩 YOU SAY:</div>
+            <div class="step-text say-this">"Yes! I have 3 kids. This is my husband waiting outside."</div>
+            <div class="step-vn">Vâng! Tôi có 3 người con. Đây là chồng tôi đang đợi bên ngoài.</div>
+            <button class="step-speak" onclick="speak('Yes! I have 3 kids. This is my husband waiting outside.')">🔊 Say it</button>
+        </div>
+    </div>
+
+    <div class="script-step">
+        <div class="step-number">3</div>
+        <div class="step-content">
+            <div class="step-role tech">💁‍♀️ STUDENT SHOULD RESPOND:</div>
+            <div class="step-text expect">"Oh nice!" + follow-up question: "Are they going to school?"</div>
+        </div>
+    </div>
+
+    <div class="script-step">
+        <div class="step-number">4</div>
+        <div class="step-content">
+            <div class="step-role customer">👩 YOU SAY:</div>
+            <div class="step-text say-this">"Yes, one is going to primary school and the other two go to college."</div>
+            <div class="step-vn">Vâng, một đứa đang học tiểu học và hai đứa kia học đại học.</div>
+            <button class="step-speak" onclick="speak('Yes, one is going to primary school and the other two go to college.')">🔊 Say it</button>
+        </div>
+    </div>
+
+    <div class="script-step">
+        <div class="step-number">5</div>
+        <div class="step-content">
+            <div class="step-role customer">👩 YOU ASK BACK:</div>
+            <div class="step-text say-this">"What about you? Do you have kids?"</div>
+            <div class="step-vn">Còn bạn thì sao? Bạn có con không?</div>
+            <button class="step-speak" onclick="speak('What about you? Do you have kids?')">🔊 Say it</button>
+            <div class="step-tip">💡 The student should answer about their own family!</div>
+        </div>
+    </div>
+
+    <div class="script-step">
+        <div class="step-number">6</div>
+        <div class="step-content">
+            <div class="step-role tech">💁‍♀️ STUDENT SHOULD:</div>
+            <div class="step-text expect">Answer about their family: "Yes, I have..." or "No, I don't have..."</div>
+        </div>
+    </div>
+
+    <hr class="divider">
+
+    <h3 style="color:#6f42c1;margin-bottom:10px;">✅ Assessment Checklist</h3>
+    <div class="checklist" id="checklist2">
+        <div class="check-item" onclick="toggleCheck(this)">
+            <div class="check-box"></div>
+            <div class="check-label">Asked "Do you have children/kids?"</div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)">
+            <div class="check-box"></div>
+            <div class="check-label">Responded to family info naturally</div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)">
+            <div class="check-box"></div>
+            <div class="check-label">Asked follow-up question (school, age, etc.)</div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)">
+            <div class="check-box"></div>
+            <div class="check-label">Answered about their own family</div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)">
+            <div class="check-box"></div>
+            <div class="check-label">Used family vocabulary correctly</div>
+        </div>
+    </div>
+    <div class="score-display" id="score2">0 / 5 ✅</div>
+</div>
+
+<!-- Vocab Reference -->
+<div class="card">
+    <h2>📚 Quick Vocabulary Reference</h2>
+    <div class="vocab-grid">
+        <div class="vocab-item" onclick="speak('name')"><div class="en">name</div><div class="vn">tên</div></div>
+        <div class="vocab-item" onclick="speak('nice to meet you')"><div class="en">nice to meet you</div><div class="vn">rất vui được gặp bạn</div></div>
+        <div class="vocab-item" onclick="speak('appointment')"><div class="en">appointment</div><div class="vn">lịch hẹn</div></div>
+        <div class="vocab-item" onclick="speak('first time')"><div class="en">first time</div><div class="vn">lần đầu tiên</div></div>
+        <div class="vocab-item" onclick="speak('welcome back')"><div class="en">welcome back</div><div class="vn">chào mừng trở lại</div></div>
+        <div class="vocab-item" onclick="speak('mother')"><div class="en">mother</div><div class="vn">mẹ</div></div>
+        <div class="vocab-item" onclick="speak('father')"><div class="en">father</div><div class="vn">bố / ba</div></div>
+        <div class="vocab-item" onclick="speak('sister')"><div class="en">sister</div><div class="vn">chị / em gái</div></div>
+        <div class="vocab-item" onclick="speak('brother')"><div class="en">brother</div><div class="vn">anh / em trai</div></div>
+        <div class="vocab-item" onclick="speak('husband')"><div class="en">husband</div><div class="vn">chồng</div></div>
+        <div class="vocab-item" onclick="speak('wife')"><div class="en">wife</div><div class="vn">vợ</div></div>
+        <div class="vocab-item" onclick="speak('children')"><div class="en">children / kids</div><div class="vn">con cái</div></div>
+    </div>
 </div>
 
 <script>
-// ===== CUSTOMER DATA =====
-const customers = [
-  {
-    id: 1, name: "Sarah Johnson", age: 32,
-    from: "Pennsauken, New Jersey",
-    area: "South Jersey, near Philadelphia",
-    occupation: "Elementary School Teacher",
-    family: "Married with 2 kids",
-    pet: "A golden retriever named Buddy",
-    service: "Spa Pedicure", color: "Light Pink", shape: "Oval", drink: "Tea",
-    personality: "Friendly and talkative", image: "👩",
-    facts: [
-      { question: "What is the customer's name?", answer: "Sarah Johnson", choices: ["Sarah Johnson","Emily Davis","Jessica Brown","Amanda White"] },
-      { question: "Where is she from?", answer: "Pennsauken, New Jersey", choices: ["Pennsauken, New Jersey","Camden, New Jersey","Cherry Hill, New Jersey","Trenton, New Jersey"] },
-      { question: "What area is she from?", answer: "South Jersey, near Philadelphia", choices: ["South Jersey, near Philadelphia","North Jersey, near New York","Central Jersey, near Princeton","Shore area, near Atlantic City"] },
-      { question: "What does she do for work?", answer: "Elementary School Teacher", choices: ["Elementary School Teacher","Nurse","Office Worker","Chef"] },
-      { question: "Does she have any pets?", answer: "A golden retriever named Buddy", choices: ["A golden retriever named Buddy","A cat named Mimi","No pets","Two dogs named Coco and Milo"] },
-      { question: "What service does she want?", answer: "Spa Pedicure", choices: ["Spa Pedicure","Basic Manicure","Gel Manicure","Deluxe Pedicure"] },
-      { question: "What color does she want?", answer: "Light Pink", choices: ["Light Pink","Dark Red","Nude","Purple"] },
-      { question: "What nail shape does she want?", answer: "Oval", choices: ["Oval","Square","Round","Stiletto"] },
-      { question: "What drink would she like?", answer: "Tea", choices: ["Tea","Water","Juice","Wine"] }
-    ]
-  },
-  {
-    id: 2, name: "Maria Rodriguez", age: 28,
-    from: "Camden, New Jersey", area: "South Jersey, near Philadelphia",
-    occupation: "Nurse at Cooper Hospital", family: "Single, lives with her sister",
-    pet: "Two cats named Luna and Star",
-    service: "Gel Manicure", color: "Dark Red", shape: "Square", drink: "Water",
-    personality: "Busy but friendly", image: "👩‍⚕️",
-    facts: [
-      { question: "What is the customer's name?", answer: "Maria Rodriguez", choices: ["Maria Rodriguez","Sofia Martinez","Isabella Garcia","Valentina Lopez"] },
-      { question: "Where is she from?", answer: "Camden, New Jersey", choices: ["Camden, New Jersey","Pennsauken, New Jersey","Moorestown, New Jersey","Haddon Township, New Jersey"] },
-      { question: "What area is she from?", answer: "South Jersey, near Philadelphia", choices: ["South Jersey, near Philadelphia","North Jersey, near New York","Central Jersey, near Princeton","Shore area, near Atlantic City"] },
-      { question: "What does she do for work?", answer: "Nurse at Cooper Hospital", choices: ["Nurse at Cooper Hospital","Doctor at Jefferson Hospital","Teacher at Camden School","Manager at a restaurant"] },
-      { question: "Does she have any pets?", answer: "Two cats named Luna and Star", choices: ["Two cats named Luna and Star","A dog named Max","No pets","A bird named Tweety"] },
-      { question: "What service does she want?", answer: "Gel Manicure", choices: ["Gel Manicure","Spa Pedicure","Acrylic Nails","Basic Pedicure"] },
-      { question: "What color does she want?", answer: "Dark Red", choices: ["Dark Red","Light Pink","Black","Coral"] },
-      { question: "What nail shape does she want?", answer: "Square", choices: ["Square","Oval","Almond","Coffin"] },
-      { question: "What drink would she like?", answer: "Water", choices: ["Water","Tea","Coffee","Wine"] }
-    ]
-  },
-  {
-    id: 3, name: "Jennifer Kim", age: 45,
-    from: "Cherry Hill, New Jersey", area: "South Jersey, near Philadelphia",
-    occupation: "Small Business Owner", family: "Married with 3 kids and a grandchild",
-    pet: "A small poodle named Coco",
-    service: "Deluxe Pedicure", color: "Nude / Beige", shape: "Round", drink: "Wine",
-    personality: "Elegant", image: "👩‍💼",
-    facts: [
-      { question: "What is the customer's name?", answer: "Jennifer Kim", choices: ["Jennifer Kim","Susan Park","Michelle Lee","Christine Cho"] },
-      { question: "Where is she from?", answer: "Cherry Hill, New Jersey", choices: ["Cherry Hill, New Jersey","Voorhees, New Jersey","Marlton, New Jersey","Medford, New Jersey"] },
-      { question: "What area is she from?", answer: "South Jersey, near Philadelphia", choices: ["South Jersey, near Philadelphia","North Jersey, near New York","Central Jersey, near Princeton","Shore area, near Atlantic City"] },
-      { question: "What does she do for work?", answer: "Small Business Owner", choices: ["Small Business Owner","Lawyer","Doctor","Real Estate Agent"] },
-      { question: "Does she have any pets?", answer: "A small poodle named Coco", choices: ["A small poodle named Coco","Two golden retrievers","No pets","A cat named Princess"] },
-      { question: "What service does she want?", answer: "Deluxe Pedicure", choices: ["Deluxe Pedicure","Gel Manicure","Spa Pedicure","Acrylic Nails"] },
-      { question: "What color does she want?", answer: "Nude / Beige", choices: ["Nude / Beige","Hot Pink","Dark Purple","Glitter"] },
-      { question: "What nail shape does she want?", answer: "Round", choices: ["Round","Stiletto","Coffin","Square"] },
-      { question: "What drink would she like?", answer: "Wine", choices: ["Wine","Tea","Water","Juice"] }
-    ]
-  },
-  {
-    id: 4, name: "Ashley Thompson", age: 22,
-    from: "Merchantville, New Jersey", area: "South Jersey, near Philadelphia",
-    occupation: "College Student at Rutgers", family: "Single, lives with parents",
-    pet: "No pets",
-    service: "Acrylic Nails with Nail Art", color: "Purple with Glitter",
-    shape: "Coffin / Ballerina", drink: "Juice",
-    personality: "Fun and creative", image: "👩‍🎓",
-    facts: [
-      { question: "What is the customer's name?", answer: "Ashley Thompson", choices: ["Ashley Thompson","Brittany Wilson","Kayla Moore","Taylor Anderson"] },
-      { question: "Where is she from?", answer: "Merchantville, New Jersey", choices: ["Merchantville, New Jersey","Collingswood, New Jersey","Bellmawr, New Jersey","Runnemede, New Jersey"] },
-      { question: "What area is she from?", answer: "South Jersey, near Philadelphia", choices: ["South Jersey, near Philadelphia","North Jersey, near New York","Central Jersey, near Princeton","Shore area, near Atlantic City"] },
-      { question: "What does she do?", answer: "College Student at Rutgers", choices: ["College Student at Rutgers","High School Student","Works at a mall","Graphic Designer"] },
-      { question: "Does she have any pets?", answer: "No pets", choices: ["No pets","A hamster named Peanut","Two cats","A dog named Rex"] },
-      { question: "What service does she want?", answer: "Acrylic Nails with Nail Art", choices: ["Acrylic Nails with Nail Art","Basic Manicure","Gel Manicure","Spa Pedicure"] },
-      { question: "What color does she want?", answer: "Purple with Glitter", choices: ["Purple with Glitter","Plain White","Nude Pink","Dark Blue"] },
-      { question: "What nail shape does she want?", answer: "Coffin / Ballerina", choices: ["Coffin / Ballerina","Round","Square","Oval"] },
-      { question: "What drink would she like?", answer: "Juice", choices: ["Juice","Water","Tea","Coke"] }
-    ]
-  },
-  {
-    id: 5, name: "Barbara Williams", age: 58,
-    from: "Haddon Township, New Jersey", area: "South Jersey, near Philadelphia",
-    occupation: "Retired School Principal",
-    family: "Widowed, 2 adult children and 4 grandchildren",
-    pet: "A bird named Sunny",
-    service: "Basic Manicure and Pedicure", color: "Classic Red",
-    shape: "Short and Round", drink: "Tea with honey",
-    personality: "Warm and motherly", image: "👵",
-    facts: [
-      { question: "What is the customer's name?", answer: "Barbara Williams", choices: ["Barbara Williams","Patricia Davis","Nancy Miller","Linda Wilson"] },
-      { question: "Where is she from?", answer: "Haddon Township, New Jersey", choices: ["Haddon Township, New Jersey","Haddonfield, New Jersey","Audubon, New Jersey","Oaklyn, New Jersey"] },
-      { question: "What area is she from?", answer: "South Jersey, near Philadelphia", choices: ["South Jersey, near Philadelphia","North Jersey, near New York","Central Jersey, near Princeton","Shore area, near Atlantic City"] },
-      { question: "What did she do for work?", answer: "Retired School Principal", choices: ["Retired School Principal","Retired Nurse","Retired Police Officer","Retired Librarian"] },
-      { question: "Does she have any pets?", answer: "A bird named Sunny", choices: ["A bird named Sunny","No pets","Three cats","A dog named Charlie"] },
-      { question: "What service does she want?", answer: "Basic Manicure and Pedicure", choices: ["Basic Manicure and Pedicure","Deluxe Pedicure","Gel Manicure","Acrylic Nails"] },
-      { question: "What color does she want?", answer: "Classic Red", choices: ["Classic Red","Nude","Light Pink","Orange"] },
-      { question: "What nail shape does she want?", answer: "Short and Round", choices: ["Short and Round","Long Coffin","Oval","Square"] },
-      { question: "What drink would she like?", answer: "Tea with honey", choices: ["Tea with honey","Black coffee","Cold water","Orange juice"] }
-    ]
-  }
-];
+// ============ SPEECH ============
+function speak(text) {
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'en-US'; u.rate = 0.85;
+    speechSynthesis.speak(u);
+}
 
-// ===== FIREBASE =====
-const firebaseConfig = {
-  apiKey: "AIzaSyBLI9wCnIQg4Pkdftll0ErZAPryS_-8P28",
-  authDomain: "nail-shop-game.firebaseapp.com",
-  databaseURL: "https://nail-shop-game-default-rtdb.firebaseio.com",
-  projectId: "nail-shop-game",
-  storageBucket: "nail-shop-game.firebasestorage.app",
-  messagingSenderId: "588326624299",
-  appId: "1:588326624299:web:d71d2d7fef2384c8339e6e"
-};
+// ============ SCENE SWITCHING ============
+function showScene(index) {
+    document.querySelectorAll('.scene-card').forEach((card, i) => {
+        card.style.display = i === index ? 'block' : 'none';
+    });
+    document.querySelectorAll('.scene-tab').forEach((tab, i) => {
+        tab.classList.toggle('active', i === index);
+    });
+}
 
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
+// ============ CHECKLIST ============
+function toggleCheck(item) {
+    item.classList.toggle('checked');
+    const box = item.querySelector('.check-box');
+    box.textContent = item.classList.contains('checked') ? '✓' : '';
 
-// ===== STATE =====
-let currentIndex = 0;
-let currentRevealed = 0;
+    // Update scores
+    updateScores();
+}
 
-const factLabels = ['Name','From (City)','Area','Occupation','Pet','Service','Color','Shape','Drink'];
-const hints = [
-  { en: "What is your name?", vn: "Tên bạn là gì?" },
-  { en: "Where are you from?", vn: "Bạn đến từ đâu?" },
-  { en: "What area are you from?", vn: "Bạn đến từ khu vực nào?" },
-  { en: "What do you do for work?", vn: "Bạn làm nghề gì?" },
-  { en: "Do you have any pets?", vn: "Bạn có thú cưng không?" },
-  { en: "What service would you like?", vn: "Bạn muốn dịch vụ gì?" },
-  { en: "What color do you want?", vn: "Bạn muốn màu gì?" },
-  { en: "What nail shape do you want?", vn: "Bạn muốn hình dạng móng gì?" },
-  { en: "Would you like a drink?", vn: "Bạn có muốn uống gì không?" }
-];
-
-// ===== CONNECTION =====
-db.ref('.info/connected').on('value', snap => {
-  const el = document.getElementById('connectionStatus');
-  if (snap.val()) {
-    el.textContent = '🟢 Connected — Student page is live!';
-    el.className = 'connection-status connected';
-  } else {
-    el.textContent = '🔴 Disconnected!';
-    el.className = 'connection-status disconnected';
-  }
-});
-
-// ===== LISTEN =====
-db.ref('game').on('value', snap => {
-  const data = snap.val() || {};
-  document.getElementById('t-revealed').textContent = data.revealed || 0;
-  document.getElementById('t-customer').textContent = (data.currentCustomer || 0) + 1;
-  document.getElementById('t-status').textContent = data.complete ? '✅' : '🟡';
-  document.getElementById('t-complete').textContent = data.complete ? 'Yes!' : 'No';
-  currentRevealed = data.revealed || 0;
-  buildRevealItems(customers[currentIndex]);
-});
-
-// ===== INIT =====
-function init() {
-  buildCustomerTabs();
-  loadTeacherCustomer(0);
-  buildHints();
-  db.ref('game').once('value', snap => {
-    if (!snap.val()) {
-      db.ref('game').set({ currentCustomer: 0, revealed: 0, complete: false });
+function updateScores() {
+    for (let i = 0; i < 3; i++) {
+        const checklist = document.getElementById('checklist' + i);
+        if (!checklist) continue;
+        const items = checklist.querySelectorAll('.check-item');
+        const checked = checklist.querySelectorAll('.check-item.checked');
+        document.getElementById('score' + i).textContent =
+            checked.length + ' / ' + items.length + ' ✅';
     }
-  });
 }
-
-function buildCustomerTabs() {
-  const tabs = document.getElementById('customerTabs');
-  tabs.innerHTML = '';
-  customers.forEach((c, i) => {
-    const btn = document.createElement('button');
-    btn.className = 'customer-tab' + (i === currentIndex ? ' active' : '');
-    btn.textContent = `${c.image} ${c.name.split(' ')[0]}`;
-    btn.onclick = () => loadTeacherCustomer(i);
-    tabs.appendChild(btn);
-  });
-}
-
-function loadTeacherCustomer(index) {
-  currentIndex = index;
-  const c = customers[index];
-  document.getElementById('t-avatar').textContent = c.image;
-  document.getElementById('t-name').textContent = c.name;
-  document.getElementById('t-subtitle').textContent = `${c.from} — ${c.occupation}`;
-
-  document.getElementById('t-grid').innerHTML = [
-    { label: 'Full Name', value: c.name },
-    { label: 'Age', value: c.age + ' years old' },
-    { label: 'From', value: c.from },
-    { label: 'Area', value: c.area },
-    { label: 'Occupation', value: c.occupation },
-    { label: 'Family', value: c.family },
-    { label: 'Pet', value: c.pet },
-    { label: 'Personality', value: c.personality }
-  ].map(item => `
-    <div class="profile-item">
-      <div class="profile-label">${item.label}</div>
-      <div class="profile-value">${item.value}</div>
-    </div>
-  `).join('');
-
-  buildRevealItems(c);
-  buildCustomerTabs();
-}
-
-function buildRevealItems(customer) {
-  const container = document.getElementById('revealItems');
-  const values = [customer.name, customer.from, customer.area, customer.occupation, customer.pet, customer.service, customer.color, customer.shape, customer.drink];
-  container.innerHTML = '';
-  factLabels.forEach((label, i) => {
-    const isRevealed = i < currentRevealed;
-    const div = document.createElement('div');
-    div.className = 'reveal-item' + (isRevealed ? ' revealed' : '');
-    div.innerHTML = `
-      <div>
-        <div class="reveal-item-label">${label}</div>
-        <div class="reveal-item-value">${values[i]}</div>
-      </div>
-      <button class="reveal-btn ${isRevealed ? 'done' : ''}"
-        onclick="revealFact(${i})" ${isRevealed ? 'disabled' : ''}>
-        ${isRevealed ? '✅ Revealed' : 'REVEAL'}
-      </button>
-    `;
-    container.appendChild(div);
-  });
-}
-
-function revealFact(factIndex) {
-  if (factIndex !== currentRevealed) {
-    alert(`Please reveal in order! Reveal fact ${currentRevealed + 1} first.`);
-    return;
-      }
-  const newCount = currentRevealed + 1;
-  db.ref('game').update({
-    revealed: newCount,
-    currentCustomer: currentIndex
-  });
-}
-
-function revealAll() {
-  db.ref('game').update({
-    revealed: customers[currentIndex].facts.length,
-    currentCustomer: currentIndex
-  });
-}
-
-function goNextCustomer() {
-  if (currentIndex < customers.length - 1) {
-    const next = currentIndex + 1;
-    db.ref('game').update({
-      currentCustomer: next,
-      revealed: 0
-    });
-    loadTeacherCustomer(next);
-  } else {
-    alert('All 5 customers done!');
-  }
-}
-
-function resetGame() {
-  if (confirm('Reset the entire game?')) {
-    db.ref('game').set({
-      currentCustomer: 0,
-      revealed: 0,
-      complete: false
-    });
-    loadTeacherCustomer(0);
-  }
-}
-
-function endGame() {
-  if (confirm('End the game and show student their final score?')) {
-    db.ref('game').update({ complete: true });
-  }
-}
-
-function buildHints() {
-  document.getElementById('hintGrid').innerHTML = hints.map(h => `
-    <div class="hint-box">
-      <strong>Student asks:</strong>
-      ${h.en}
-      <span style="color:#999; font-size:11px; display:block;">${h.vn}</span>
-    </div>
-  `).join('');
-}
-
-window.onload = init;
 </script>
+
 </body>
 </html>
