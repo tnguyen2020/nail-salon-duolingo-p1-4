@@ -3,922 +3,550 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nail Tech — Customer Practice</title>
+    <title>💁‍♀️ Nail Tech — Cửa 3</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', sans-serif;
-        }
-
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
-            background: linear-gradient(135deg, #ffe4f0, #fff0f5);
-            min-height: 100vh;
-            padding: 20px;
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #ffe0f0, #fff0f5);
+            min-height: 100vh; padding: 15px;
+            max-width: 700px; margin: 0 auto;
         }
-
-        .header-banner {
-            background: #e91e8c;
-            color: white;
-            text-align: center;
-            padding: 15px;
-            border-radius: 12px;
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 20px;
+        .back-link {
+            display: inline-block; margin-bottom: 10px; color: #d63384;
+            text-decoration: none; font-size: 0.9rem; font-weight: bold;
         }
-
-        /* Customer selector tabs */
-        .customer-tabs {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 25px;
-            flex-wrap: wrap;
+        .header {
+            text-align: center; padding: 18px;
+            background: linear-gradient(135deg, #ff69b4, #ff1493);
+            color: white; border-radius: 20px; margin-bottom: 15px;
         }
+        .header h1 { font-size: 1.3rem; margin-bottom: 4px; }
+        .header p { font-size: 0.85rem; opacity: 0.9; }
 
-        .customer-tab {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            cursor: pointer;
-            padding: 10px 15px;
-            border-radius: 12px;
-            border: 3px solid transparent;
-            background: white;
-            transition: all 0.2s;
-            min-width: 80px;
+        /* Customer Row */
+        .customer-row {
+            display: flex; gap: 8px; justify-content: center;
+            margin-bottom: 15px; flex-wrap: wrap;
         }
-
-        .customer-tab.active {
-            border-color: #e91e8c;
-            box-shadow: 0 0 0 2px #f9a8d4;
+        .customer-slot {
+            display: flex; flex-direction: column; align-items: center;
+            background: white; border: 3px solid #e0e0e0; border-radius: 15px;
+            padding: 10px 8px; cursor: pointer; transition: all 0.3s;
+            min-width: 60px; flex: 1; max-width: 80px; position: relative;
         }
-
-        .customer-tab .emoji {
-            font-size: 36px;
+        .customer-slot:hover { border-color: #ff69b4; transform: translateY(-2px); }
+        .customer-slot.active {
+            border-color: #ff1493; background: #fff0f5;
+            box-shadow: 0 4px 12px rgba(255,20,147,0.2);
         }
-
-        .customer-tab .label {
-            font-size: 12px;
-            color: #555;
-            margin-top: 4px;
+        .customer-slot .av { font-size: 1.8rem; }
+        .customer-slot .lb { font-size: 0.6rem; font-weight: bold; color: #888; margin-top: 3px; }
+        .customer-slot.active .lb { color: #d63384; }
+        .customer-slot .dot {
+            width: 10px; height: 10px; border-radius: 50%; margin-top: 4px;
+            background: #e0e0e0; transition: background 0.3s;
         }
-
-        .customer-tab .dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #ddd;
-            margin-top: 4px;
+        .customer-slot.done .dot { background: #28a745; }
+        .customer-slot.in-progress .dot { background: #ffc107; }
+        .customer-slot .star-badge {
+            position: absolute; top: -6px; right: -6px; font-size: 0.75rem; display: none;
         }
+        .customer-slot.done .star-badge { display: block; }
 
-        .customer-tab.completed .dot {
-            background: #4caf50;
-        }
-
-        /* Score bar */
+        /* Score Bar */
         .score-bar {
-            display: flex;
-            justify-content: center;
-            gap: 60px;
-            background: white;
-            border-radius: 12px;
-            padding: 15px 30px;
-            margin-bottom: 25px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            display: flex; justify-content: space-around; align-items: center;
+            background: white; border-radius: 15px; padding: 12px;
+            margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
+        .score-item { text-align: center; }
+        .score-item .num { font-size: 1.4rem; font-weight: bold; }
+        .score-item .lbl { font-size: 0.7rem; color: #888; }
+        .s-correct .num { color: #28a745; }
+        .s-wrong .num { color: #dc3545; }
+        .s-streak .num { color: #ff9800; }
 
-        .score-item {
-            text-align: center;
+        /* Info Card */
+        .info-card {
+            background: white; border-radius: 20px; padding: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08); margin-bottom: 15px;
         }
-
-        .score-number {
-            font-size: 24px;
-            font-weight: bold;
+        .info-card-header {
+            display: flex; align-items: center; gap: 12px;
+            margin-bottom: 20px; padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
         }
+        .info-card-header .av { font-size: 2.5rem; }
+        .info-card-header .info h2 { font-size: 1.1rem; color: #333; }
+        .info-card-header .info p { font-size: 0.8rem; color: #999; }
 
-        .score-number.correct { color: #4caf50; }
-        .score-number.streak { color: #ff9800; }
-        .score-number.wrong { color: #f44336; }
-
-        .score-label {
-            font-size: 13px;
-            color: #777;
-            margin-top: 2px;
-        }
-
-        /* Customer card */
-        .customer-card {
-            background: white;
-            border-radius: 16px;
-            padding: 25px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-            max-width: 700px;
-            margin: 0 auto 20px;
-        }
-
-        .customer-header {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #f9a8d4;
-        }
-
-        .customer-avatar {
-            font-size: 48px;
-        }
-
-        .customer-info h2 {
-            font-size: 22px;
-            color: #333;
-        }
-
-        .customer-info p {
-            color: #888;
-            font-size: 14px;
-        }
-
-        /* Background card */
-        .background-card {
-            background: #fff8fc;
-            border: 2px dashed #f9a8d4;
-            border-radius: 12px;
-            padding: 15px 20px;
-            margin-bottom: 20px;
-        }
-
-        .background-card h3 {
-            color: #e91e8c;
-            font-size: 14px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 10px;
-        }
-
-        .background-card p {
-            color: #555;
-            font-size: 14px;
-            line-height: 1.6;
-        }
-
-        .background-card .tag {
+        /* Hint Link & Content */
+        .hint-link {
+            color: #e91e93;
+            cursor: pointer;
+            font-size: 0.82rem;
+            text-decoration: none;
             display: inline-block;
-            background: #fce4ec;
-            color: #e91e8c;
-            padding: 3px 10px;
-            border-radius: 20px;
-            font-size: 12px;
-            margin: 3px;
+            margin: 5px 0;
+            font-weight: bold;
+            user-select: none;
+            transition: all 0.2s;
         }
-
-        /* Question fields */
-        .question-field {
-            background: #fafafa;
-            border-radius: 12px;
-            padding: 18px 20px;
-            margin-bottom: 15px;
-            border: 1px solid #f0f0f0;
+        .hint-link:hover {
+            text-decoration: underline;
+            color: #c4157b;
         }
-
-        .question-field .field-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        .field-title {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-weight: 600;
-            font-size: 16px;
-            color: #333;
-        }
-
-        .field-title .icon {
-            font-size: 20px;
-        }
-
-        .hint-btn {
-            color: #e91e8c;
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 13px;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            padding: 4px 0;
-        }
-
-        .hint-text {
-            background: #fff3e0;
-            border-left: 3px solid #ff9800;
-            padding: 8px 12px;
-            border-radius: 6px;
-            font-size: 13px;
-            color: #555;
-            margin-bottom: 10px;
+        .hint-content {
             display: none;
+            margin-top: 4px;
         }
-
-        .hint-text.visible {
+        .hint-content.show {
             display: block;
         }
 
-        .input-row {
-            display: flex;
-            gap: 10px;
+        /* Field Row */
+        .field-row {
+            margin-bottom: 14px; padding: 14px;
+            background: #fafafa; border-radius: 14px;
+            border: 2px solid #f0f0f0;
+            transition: all 0.3s;
+        }
+        .field-row.correct { border-color: #28a745; background: #f0fff0; }
+        .field-row.wrong { border-color: #dc3545; background: #fff5f5; }
+
+        .field-label {
+            display: flex; align-items: center; gap: 8px; margin-bottom: 4px;
+        }
+        .field-label .icon { font-size: 1.2rem; }
+        .field-label .text { font-size: 0.9rem; font-weight: bold; color: #555; }
+        .field-label .vn { font-size: 0.75rem; color: #aaa; font-style: italic; margin-left: auto; }
+
+        .field-question {
+            font-size: 0.8rem; color: #6f42c1; margin-bottom: 8px;
+            padding: 6px 10px; background: #f0e6ff; border-radius: 8px;
+            border-left: 3px solid #6f42c1;
         }
 
-        .answer-input {
-            flex: 1;
-            padding: 12px 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            font-size: 15px;
-            outline: none;
-            transition: border-color 0.2s;
+        .field-input-row { display: flex; gap: 8px; align-items: center; }
+        .field-input {
+            flex: 1; padding: 12px 16px; border: 2px solid #e0e0e0;
+            border-radius: 12px; font-size: 1rem; outline: none;
+            transition: border-color 0.3s;
         }
+        .field-input:focus { border-color: #ff69b4; }
+        .field-input:disabled { background: #f5f5f5; color: #333; }
 
-        .answer-input:focus {
-            border-color: #e91e8c;
+        .btn-check {
+            background: linear-gradient(135deg, #ff69b4, #ff1493);
+            color: white; border: none; padding: 12px 20px;
+            border-radius: 12px; font-size: 0.9rem; font-weight: bold;
+            cursor: pointer; transition: all 0.2s; white-space: nowrap;
         }
+        .btn-check:hover { transform: scale(1.05); box-shadow: 0 3px 10px rgba(255,20,147,0.3); }
 
-        .answer-input.correct {
-            border-color: #4caf50;
-            background: #f1fff4;
+        .field-result { font-size: 1.2rem; flex-shrink: 0; }
+
+        .field-feedback {
+            margin-top: 8px; padding: 8px 12px; border-radius: 8px;
+            font-size: 0.85rem; display: none;
         }
+        .field-feedback.fb-correct { display: block; background: #d4edda; color: #155724; }
+        .field-feedback.fb-wrong { display: block; background: #f8d7da; color: #721c24; }
 
-        .answer-input.wrong {
-            border-color: #f44336;
-            background: #fff5f5;
+        /* Complete Screen */
+        .complete-screen {
+            background: white; border-radius: 20px; padding: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            text-align: center; display: none; margin-bottom: 15px;
         }
-
-        .check-btn {
-            background: #e91e8c;
-            color: white;
-            border: none;
-            padding: 12px 22px;
-            border-radius: 10px;
-            font-size: 15px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background 0.2s;
+        .complete-screen.show { display: block; }
+        .cp-emoji { font-size: 4rem; margin-bottom: 10px; }
+        .cp-title { font-size: 1.3rem; color: #333; margin-bottom: 8px; }
+        .cp-score { font-size: 2.5rem; font-weight: bold; color: #ff1493; }
+        .cp-stars { font-size: 2.2rem; margin: 10px 0; }
+        .cp-msg { color: #888; margin-bottom: 20px; }
+        .btn-action {
+            border: none; padding: 14px 28px; border-radius: 25px;
+            font-size: 1rem; font-weight: bold; cursor: pointer;
+            margin: 5px; color: white; transition: all 0.2s;
+            display: inline-block; text-decoration: none;
         }
+        .btn-action:hover { transform: scale(1.05); }
+        .btn-pink { background: linear-gradient(135deg, #ff69b4, #ff1493); }
+        .btn-purple { background: linear-gradient(135deg, #6f42c1, #5a32a3); }
+        .btn-green { background: linear-gradient(135deg, #28a745, #20c997); }
 
-        .check-btn:hover {
-            background: #c2185b;
-        }
-
-        .check-btn:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-        }
-
-        .result-text {
-            margin-top: 8px;
-            font-size: 13px;
-            font-weight: 600;
-        }
-
-        .result-text.correct { color: #4caf50; }
-        .result-text.wrong { color: #f44336; }
-
-        /* Dialogue sample */
-        .dialogue-box {
-            background: #f3e5f5;
-            border-radius: 12px;
-            padding: 15px 20px;
-            margin-bottom: 20px;
-        }
-
-        .dialogue-box h3 {
-            color: #7b1fa2;
-            font-size: 13px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 10px;
-        }
-
-        .dialogue-line {
-            margin-bottom: 8px;
-            font-size: 14px;
-            line-height: 1.5;
-        }
-
-        .dialogue-line .speaker {
-            font-weight: bold;
-            color: #e91e8c;
-        }
-
-        .dialogue-line .speaker.client {
-            color: #7b1fa2;
-        }
-
-        /* Next customer button */
-        .next-btn {
-            background: linear-gradient(135deg, #e91e8c, #c2185b);
-            color: white;
-            border: none;
-            padding: 14px 35px;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            display: block;
-            margin: 20px auto;
-            transition: transform 0.2s;
-        }
-
-        .next-btn:hover {
-            transform: scale(1.05);
-        }
-
-        /* Completion message */
-        .completion-msg {
-            text-align: center;
-            padding: 30px;
-            display: none;
-        }
-
-        .completion-msg h2 {
-            font-size: 28px;
-            color: #e91e8c;
-            margin-bottom: 10px;
-        }
-
-        .completion-msg p {
-            color: #666;
-            font-size: 16px;
-        }
-
-        /* Area info section */
-        .area-info {
-            background: #e8f5e9;
-            border-radius: 12px;
-            padding: 15px 20px;
-            margin-bottom: 20px;
-            border-left: 4px solid #4caf50;
-        }
-
-        .area-info h3 {
-            color: #2e7d32;
-            font-size: 14px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 8px;
-        }
-
-        .area-info p {
-            font-size: 13px;
-            color: #555;
-            line-height: 1.6;
+        @media (max-width: 400px) {
+            .customer-slot { min-width: 52px; padding: 8px 5px; }
+            .customer-slot .av { font-size: 1.5rem; }
+            .field-input-row { flex-wrap: wrap; }
+            .btn-check { width: 100%; }
         }
     </style>
 </head>
 <body>
 
-<div class="header-banner">
-    💅 Ask the customer questions, listen, and type the answer!
+<a href="index.html" class="back-link">← Back to Menu</a>
+
+<div class="header">
+    <h1>💁‍♀️ Nail Technician — Cửa 3</h1>
+    <p>Ask the customer questions, listen, and type the answer!</p>
 </div>
 
-<!-- Customer Tabs -->
-<div class="customer-tabs" id="customerTabs"></div>
+<!-- Customer Row -->
+<div class="customer-row" id="customerRow">
+    <div class="customer-slot active" onclick="switchCustomer(0)">
+        <div class="av">👩</div><div class="lb">Cust. 1</div><div class="dot"></div>
+        <div class="star-badge">⭐</div>
+    </div>
+    <div class="customer-slot" onclick="switchCustomer(1)">
+        <div class="av">👩‍🦰</div><div class="lb">Cust. 2</div><div class="dot"></div>
+        <div class="star-badge">⭐</div>
+    </div>
+    <div class="customer-slot" onclick="switchCustomer(2)">
+        <div class="av">👱‍♀️</div><div class="lb">Cust. 3</div><div class="dot"></div>
+        <div class="star-badge">⭐</div>
+    </div>
+    <div class="customer-slot" onclick="switchCustomer(3)">
+        <div class="av">👩‍🦱</div><div class="lb">Cust. 4</div><div class="dot"></div>
+        <div class="star-badge">⭐</div>
+    </div>
+    <div class="customer-slot" onclick="switchCustomer(4)">
+        <div class="av">🧑‍🦳</div><div class="lb">Cust. 5</div><div class="dot"></div>
+        <div class="star-badge">⭐</div>
+    </div>
+</div>
 
 <!-- Score Bar -->
 <div class="score-bar">
-    <div class="score-item">
-        <div class="score-number correct" id="correctCount">0</div>
-        <div class="score-label">Correct ✅</div>
-    </div>
-    <div class="score-item">
-        <div class="score-number streak" id="streakCount">0</div>
-        <div class="score-label">Streak 🔥</div>
-    </div>
-    <div class="score-item">
-        <div class="score-number wrong" id="wrongCount">0</div>
-        <div class="score-label">Wrong ❌</div>
-    </div>
+    <div class="score-item s-correct"><div class="num" id="numCorrect">0</div><div class="lbl">Correct ✅</div></div>
+    <div class="score-item s-streak"><div class="num" id="numStreak">0</div><div class="lbl">Streak 🔥</div></div>
+    <div class="score-item s-wrong"><div class="num" id="numWrong">0</div><div class="lbl">Wrong ❌</div></div>
 </div>
 
-<!-- Customer Card -->
-<div class="customer-card" id="customerCard"></div>
+<!-- Info Card -->
+<div class="info-card" id="infoCard">
+    <div class="info-card-header">
+        <div class="av" id="cardAvatar">👩</div>
+        <div class="info">
+            <h2 id="cardTitle">Customer 1</h2>
+            <p id="cardDesc">Ask the customer and fill in each field!</p>
+        </div>
+    </div>
+    <div id="fieldsContainer"></div>
+</div>
 
-<!-- Completion Message -->
-<div class="completion-msg" id="completionMsg">
-    <h2>🎉 Amazing Job!</h2>
-    <p>You've practiced with all 5 customers!<br>Keep talking to your real clients with confidence! 💅</p>
+<!-- Complete Screen -->
+<div class="complete-screen" id="completeScreen">
+    <div class="cp-emoji">🎉💅</div>
+    <div class="cp-title" id="cpTitle">All Fields Complete!</div>
+    <div class="cp-score" id="cpScore">0/0</div>
+    <div class="cp-stars" id="cpStars"></div>
+    <div class="cp-msg" id="cpMsg"></div>
+    <button class="btn-action btn-pink" onclick="restartCustomer()">🔄 Try Again</button>
+    <button class="btn-action btn-purple" onclick="nextCustomer()">Next Customer ➡️</button>
+    <br><br>
+    <a href="index.html" class="btn-action btn-green">🏠 Home</a>
 </div>
 
 <script>
-// ============================================================
-// CUSTOMER DATA
-// All 5 customers with backgrounds from areas near Pennsauken, NJ
-// ============================================================
 const customers = [
     {
-        id: 1,
-        emoji: "👩",
-        label: "Cust. 1",
-        subtitle: "New client — first visit!",
-        background: {
-            name: "Sarah",
-            from: "Cherry Hill",
-            area: "Cherry Hill",
-            areaFact: "Cherry Hill is right next to Pennsauken — it's a busy suburb with lots of shopping malls like Cherry Hill Mall. Many customers come from there!",
-            firstTime: "yes",
-            appointment: "no",
-            tags: ["#CherryHill", "#NewClient", "#WalkIn"]
-        },
-        dialogue: [
-            { speaker: "Nail Tech", text: "Hi! Welcome! What's your name?" },
-            { speaker: "Client", text: "Hi! I'm Sarah." },
-            { speaker: "Nail Tech", text: "Nice to meet you, Sarah! Is this your first time here?" },
-            { speaker: "Client", text: "Yes, it is!" },
-            { speaker: "Nail Tech", text: "Do you live near here?" },
-            { speaker: "Client", text: "Yes, I do." },
-            { speaker: "Nail Tech", text: "What area do you live in?" },
-            { speaker: "Client", text: "I live in Cherry Hill." },
-        ],
-        questions: [
-            {
-                id: "name",
-                icon: "👤",
-                label: "Name",
-                hint: 'Ask: "What is your name?" → Listen for the name.',
-                answers: ["sarah"],
-                placeholder: "Type the customer's name..."
-            },
-            {
-                id: "firstTime",
-                icon: "🆕",
-                label: "First time?",
-                hint: 'Ask: "Is this your first time here?" → Type: yes or no',
-                answers: ["yes"],
-                placeholder: "yes or no"
-            },
-            {
-                id: "appointment",
-                icon: "📅",
-                label: "Appointment?",
-                hint: 'Ask: "Do you have an appointment?" → Type: yes or no',
-                answers: ["no"],
-                placeholder: "yes or no"
-            },
-            {
-                id: "area",
-                icon: "📍",
-                label: "What area do you live in?",
-                hint: 'Ask: "What area do you live in?" → Listen for the neighborhood.',
-                answers: ["cherry hill"],
-                placeholder: "Type the area..."
-            }
+        name: "Customer 1", avatar: "👩", desc: "New client — first visit!",
+        fields: [
+            { icon: "👤", label: "Name", vn: "Tên", answer: "sarah", display: "Sarah",
+              question: 'Ask: "What is your name?"', placeholder: 'What is your name?' },
+            { icon: "🆕", label: "First time?", vn: "Lần đầu?", answer: "yes", display: "Yes",
+              question: 'Ask: "Is this your first time here?"', placeholder: 'Is this your first time here?' },
+            { icon: "📅", label: "Appointment?", vn: "Lịch hẹn?", answer: "no", display: "No",
+              question: 'Ask: "Do you have an appointment?"', placeholder: 'Do you have an appointment?' },
+            { icon: "💅", label: "Service", vn: "Dịch vụ", answer: "manicure", display: "Manicure",
+              question: 'Ask: "What service would you like today?"', placeholder: 'What service would you like?' },
+            { icon: "🔲", label: "Nail Shape", vn: "Hình dáng móng", answer: "round", display: "Round",
+              question: 'Ask: "What nail shape would you like?"', placeholder: 'What nail shape would you like?' },
+            { icon: "🎨", label: "Color", vn: "Màu", answer: "pink", display: "Pink",
+              question: 'Ask: "What color would you like?"', placeholder: 'What color would you like?' },
+            { icon: "🥤", label: "Drink", vn: "Thức uống", answer: "water", display: "Water",
+              question: 'Ask: "Would you like something to drink?"', placeholder: 'Would you like something to drink?' }
         ]
     },
     {
-        id: 2,
-        emoji: "👩‍🦱",
-        label: "Cust. 2",
-        subtitle: "Regular client — every 2 weeks",
-        background: {
-            name: "Maria",
-            from: "Camden",
-            area: "Camden",
-            areaFact: "Camden is right across the bridge from Philadelphia and borders Pennsauken. It's a busy urban city — many residents come to Pennsauken for shopping and services.",
-            firstTime: "no",
-            appointment: "yes",
-            tags: ["#Camden", "#Regular", "#AppointmentClient"]
-        },
-        dialogue: [
-            { speaker: "Nail Tech", text: "Hey Maria! Good to see you again!" },
-            { speaker: "Client", text: "Hi! I'm so happy to be back." },
-            { speaker: "Nail Tech", text: "Do you have an appointment today?" },
-            { speaker: "Client", text: "Yes, I do." },
-            { speaker: "Nail Tech", text: "Do you still live near here?" },
-            { speaker: "Client", text: "Yes." },
-            { speaker: "Nail Tech", text: "What area again?" },
-            { speaker: "Client", text: "Camden." },
-        ],
-        questions: [
-            {
-                id: "name",
-                icon: "👤",
-                label: "Name",
-                hint: 'Listen carefully — the nail tech greets her by name!',
-                answers: ["maria"],
-                placeholder: "Type the customer's name..."
-            },
-            {
-                id: "firstTime",
-                icon: "🆕",
-                label: "First time?",
-                hint: 'She is a regular — is this her first time?',
-                answers: ["no"],
-                placeholder: "yes or no"
-            },
-            {
-                id: "appointment",
-                icon: "📅",
-                label: "Appointment?",
-                hint: 'Ask: "Do you have an appointment?" → yes or no',
-                answers: ["yes"],
-                placeholder: "yes or no"
-            },
-            {
-                id: "area",
-                icon: "📍",
-                label: "What area do you live in?",
-                hint: 'Ask: "What area do you live in?" → Listen carefully.',
-                answers: ["camden"],
-                placeholder: "Type the area..."
-            }
+        name: "Customer 2", avatar: "👩‍🦰", desc: "Returning client with her sister!",
+        fields: [
+            { icon: "👤", label: "Name", vn: "Tên", answer: "jessica", display: "Jessica",
+              question: 'Ask: "What is your name?"', placeholder: 'What is your name?' },
+            { icon: "🆕", label: "First time?", vn: "Lần đầu?", answer: "no", display: "No — regular!",
+              question: 'Ask: "Is this your first time here?"', placeholder: 'Is this your first time here?' },
+            { icon: "📅", label: "Appointment?", vn: "Lịch hẹn?", answer: "yes", display: "Yes, at 2 o'clock",
+              question: 'Ask: "Do you have an appointment?"', placeholder: 'Do you have an appointment?' },
+            { icon: "👫", label: "Came with?", vn: "Đến cùng?", answer: "sister", display: "Her sister",
+              question: 'Ask: "Did you come with anyone today?"', placeholder: 'Did you come with anyone today?' },
+            { icon: "💅", label: "Service", vn: "Dịch vụ", answer: "pedicure", display: "Pedicure",
+              question: 'Ask: "What service would you like?"', placeholder: 'What service would you like?' },
+            { icon: "🔲", label: "Nail Shape", vn: "Hình dáng móng", answer: "square", display: "Square",
+              question: 'Ask: "What nail shape would you like?"', placeholder: 'What nail shape would you like?' },
+            { icon: "🎨", label: "Color", vn: "Màu", answer: "red", display: "Red",
+              question: 'Ask: "What color would you like?"', placeholder: 'What color would you like?' },
+            { icon: "🥤", label: "Drink", vn: "Thức uống", answer: "coffee", display: "Coffee",
+              question: 'Ask: "Would you like something to drink?"', placeholder: 'Would you like something to drink?' }
         ]
     },
     {
-        id: 3,
-        emoji: "🧑",
-        label: "Cust. 3",
-        subtitle: "New client — referred by a friend",
-        background: {
-            name: "James",
-            from: "Moorestown",
-            area: "Moorestown",
-            areaFact: "Moorestown is a quiet, upscale town in Burlington County, just about 10 minutes from Pennsauken. It's known as one of the best places to live in New Jersey!",
-            firstTime: "yes",
-            appointment: "yes",
-            tags: ["#Moorestown", "#Referred", "#FirstTimer"]
-        },
-        dialogue: [
-            { speaker: "Nail Tech", text: "Hi there! Welcome in. What's your name?" },
-            { speaker: "Client", text: "I'm James." },
-            { speaker: "Nail Tech", text: "Nice to meet you, James! Is this your first time here?" },
-            { speaker: "Client", text: "Yes! My friend recommended this place." },
-            { speaker: "Nail Tech", text: "That's great! Do you have an appointment?" },
-            { speaker: "Client", text: "Yes, I called yesterday." },
-            { speaker: "Nail Tech", text: "Do you live close by?" },
-            { speaker: "Client", text: "Sort of — I live in Moorestown." },
-        ],
-        questions: [
-            {
-                id: "name",
-                icon: "👤",
-                label: "Name",
-                hint: 'Ask: "What is your name?" → Listen for the name.',
-                answers: ["james"],
-                placeholder: "Type the customer's name..."
-            },
-            {
-                id: "firstTime",
-                icon: "🆕",
-                label: "First time?",
-                hint: 'His friend recommended this place — first time?',
-                answers: ["yes"],
-                placeholder: "yes or no"
-            },
-            {
-                id: "appointment",
-                icon: "📅",
-                label: "Appointment?",
-                hint: 'He called yesterday — does he have an appointment?',
-                answers: ["yes"],
-                placeholder: "yes or no"
-            },
-            {
-                id: "area",
-                icon: "📍",
-                label: "What area do you live in?",
-                hint: 'He lives "sort of" close — what area did he say?',
-                answers: ["moorestown"],
-                placeholder: "Type the area..."
-            }
+        name: "Customer 3", avatar: "👱‍♀️", desc: "Chatty client — loves family talk!",
+        fields: [
+            { icon: "👤", label: "Name", vn: "Tên", answer: "emily", display: "Emily",
+              question: 'Ask: "What is your name?"', placeholder: 'What is your name?' },
+            { icon: "💍", label: "Married?", vn: "Kết hôn?", answer: "yes", display: "Yes",
+              question: 'Ask: "Are you married?"', placeholder: 'Are you married?' },
+            { icon: "👨", label: "Husband's name", vn: "Tên chồng", answer: "david", display: "David",
+              question: 'Ask: "What is your husband\'s name?"', placeholder: "What is your husband's name?" },
+            { icon: "👶", label: "Children?", vn: "Có con?", answer: "2", display: "Yes, 2 kids",
+              question: 'Ask: "Do you have children?"', placeholder: 'Do you have children?' },
+            { icon: "🏫", label: "Kids in school?", vn: "Con đi học?", answer: "yes", display: "Yes — primary school",
+              question: 'Ask: "Are they going to school?"', placeholder: 'Are they going to school?' },
+            { icon: "💅", label: "Service", vn: "Dịch vụ", answer: "gel", display: "Gel nails",
+              question: 'Ask: "What service would you like?"', placeholder: 'What service would you like?' },
+            { icon: "🎨", label: "Color", vn: "Màu", answer: "french", display: "French tips",
+              question: 'Ask: "What color would you like?"', placeholder: 'What color would you like?' },
+            { icon: "🥤", label: "Drink", vn: "Thức uống", answer: "tea", display: "Tea",
+              question: 'Ask: "Would you like something to drink?"', placeholder: 'Would you like something to drink?' }
         ]
     },
     {
-        id: 4,
-        emoji: "👩‍🦳",
-        label: "Cust. 4",
-        subtitle: "Occasional client — every few months",
-        background: {
-            name: "Linda",
-            from: "Haddonfield",
-            area: "Haddonfield",
-            areaFact: "Haddonfield is a charming historic borough just south of Pennsauken. It's known for its beautiful downtown, old Victorian homes, and being very family-friendly. Clients from there tend to love good service!",
-            firstTime: "no",
-            appointment: "no",
-            tags: ["#Haddonfield", "#Occasional", "#WalkIn"]
-        },
-        dialogue: [
-            { speaker: "Nail Tech", text: "Good afternoon! What's your name?" },
-            { speaker: "Client", text: "Linda." },
-            { speaker: "Nail Tech", text: "Have you been here before, Linda?" },
-            { speaker: "Client", text: "Yes, a couple of times." },
-            { speaker: "Nail Tech", text: "Do you have an appointment today?" },
-            { speaker: "Client", text: "No, I'm just walking in — is that okay?" },
-            { speaker: "Nail Tech", text: "Of course! Do you live around here?" },
-            { speaker: "Client", text: "I live in Haddonfield." },
-        ],
-        questions: [
-            {
-                id: "name",
-                icon: "👤",
-                label: "Name",
-                hint: 'Ask: "What is your name?" → Short answer!',
-                answers: ["linda"],
-                placeholder: "Type the customer's name..."
-            },
-            {
-                id: "firstTime",
-                icon: "🆕",
-                label: "First time?",
-                hint: 'She has been a couple of times — first time?',
-                answers: ["no"],
-                placeholder: "yes or no"
-            },
-            {
-                id: "appointment",
-                icon: "📅",
-                label: "Appointment?",
-                hint: 'She is walking in without calling — appointment?',
-                answers: ["no"],
-                placeholder: "yes or no"
-            },
-            {
-                id: "area",
-                icon: "📍",
-                label: "What area do you live in?",
-                hint: 'She lives in a historic borough nearby — what area?',
-                answers: ["haddonfield"],
-                placeholder: "Type the area..."
-            }
+        name: "Customer 4", avatar: "👩‍🦱", desc: "Shy new client — mom is a regular!",
+        fields: [
+            { icon: "👤", label: "Name", vn: "Tên", answer: "lisa", display: "Lisa",
+              question: 'Ask: "What is your name?"', placeholder: 'What is your name?' },
+            { icon: "🆕", label: "First time?", vn: "Lần đầu?", answer: "yes", display: "Yes",
+              question: 'Ask: "Is this your first time here?"', placeholder: 'Is this your first time here?' },
+            { icon: "👩‍👧", label: "Who recommended?", vn: "Ai giới thiệu?", answer: "mother", display: "Her mother",
+              question: 'Ask: "How did you hear about us?"', placeholder: 'How did you hear about us?' },
+            { icon: "📅", label: "Appointment?", vn: "Lịch hẹn?", answer: "no", display: "No — walk-in",
+              question: 'Ask: "Do you have an appointment?"', placeholder: 'Do you have an appointment?' },
+            { icon: "💅", label: "Service", vn: "Dịch vụ", answer: "manicure", display: "Manicure",
+              question: 'Ask: "What service would you like?"', placeholder: 'What service would you like?' },
+            { icon: "🔲", label: "Nail Shape", vn: "Hình dáng móng", answer: "oval", display: "Oval",
+              question: 'Ask: "What nail shape would you like?"', placeholder: 'What nail shape would you like?' },
+            { icon: "🎨", label: "Color", vn: "Màu", answer: "white", display: "White",
+              question: 'Ask: "What color would you like?"', placeholder: 'What color would you like?' },
+            { icon: "🥤", label: "Drink", vn: "Thức uống", answer: "juice", display: "Orange juice",
+              question: 'Ask: "Would you like something to drink?"', placeholder: 'Would you like something to drink?' }
         ]
     },
     {
-        id: 5,
-        emoji: "👩‍🦰",
-        label: "Cust. 5",
-        subtitle: "New client — moving to the area",
-        background: {
-            name: "Ashley",
-            from: "Collingswood",
-            area: "Collingswood",
-            areaFact: "Collingswood is a trendy, artsy borough just south of Pennsauken along the PATCO train line. It's known for great restaurants, festivals, and a growing young community. Very popular neighborhood!",
-            firstTime: "yes",
-            appointment: "no",
-            tags: ["#Collingswood", "#NewToArea", "#Trendy"]
-        },
-        dialogue: [
-            { speaker: "Nail Tech", text: "Hi! Welcome! What's your name?" },
-            { speaker: "Client", text: "Hi, I'm Ashley!" },
-            { speaker: "Nail Tech", text: "Is this your first time visiting us?" },
-            { speaker: "Client", text: "Yes! I just moved to the area." },
-            { speaker: "Nail Tech", text: "Oh how exciting! Do you have an appointment?" },
-            { speaker: "Client", text: "No, I just walked by and decided to come in." },
-            { speaker: "Nail Tech", text: "That's great! What area do you live in now?" },
-            { speaker: "Client", text: "I live in Collingswood." },
-        ],
-        questions: [
-            {
-                id: "name",
-                icon: "👤",
-                label: "Name",
-                hint: 'She introduces herself excitedly — what is her name?',
-                answers: ["ashley"],
-                placeholder: "Type the customer's name..."
-            },
-            {
-                id: "firstTime",
-                icon: "🆕",
-                label: "First time?",
-                hint: 'She just moved to the area — first time here?',
-                answers: ["yes"],
-                placeholder: "yes or no"
-            },
-            {
-                id: "appointment",
-                icon: "📅",
-                label: "Appointment?",
-                hint: 'She walked by and came in — did she call ahead?',
-                answers: ["no"],
-                placeholder: "yes or no"
-            },
-            {
-                id: "area",
-                icon: "📍",
-                label: "What area do you live in?",
-                hint: 'She just moved — what area did she say?',
-                answers: ["collingswood"],
-                placeholder: "Type the area..."
-            }
+        name: "Customer 5", avatar: "🧑‍🦳", desc: "Chatty grandma — big family!",
+        fields: [
+            { icon: "👤", label: "Name", vn: "Tên", answer: "margaret", display: "Margaret",
+              question: 'Ask: "What is your name?"', placeholder: 'What is your name?' },
+            { icon: "🆕", label: "First time?", vn: "Lần đầu?", answer: "no", display: "No — regular",
+              question: 'Ask: "Is this your first time here?"', placeholder: 'Is this your first time here?' },
+            { icon: "👶", label: "How many children?", vn: "Mấy con?", answer: "3", display: "3 children",
+              question: 'Ask: "Do you have children? How many?"', placeholder: 'Do you have children?' },
+            { icon: "👶", label: "How many grandchildren?", vn: "Mấy cháu?", answer: "5", display: "5 grandchildren",
+              question: 'Ask: "Do you have grandchildren?"', placeholder: 'Do you have grandchildren?' },
+            { icon: "💒", label: "Family event?", vn: "Sự kiện gia đình?", answer: "wedding", display: "Daughter's wedding",
+              question: 'Ask: "Any special occasion recently?"', placeholder: 'Any special occasion?' },
+            { icon: "💅", label: "Service", vn: "Dịch vụ", answer: "acrylic", display: "Acrylic nails",
+              question: 'Ask: "What service would you like?"', placeholder: 'What service would you like?' },
+            { icon: "🔲", label: "Nail Shape", vn: "Hình dáng móng", answer: "coffin", display: "Coffin",
+              question: 'Ask: "What nail shape would you like?"', placeholder: 'What nail shape would you like?' },
+            { icon: "🎨", label: "Color", vn: "Màu", answer: "gold", display: "Gold",
+              question: 'Ask: "What color would you like?"', placeholder: 'What color would you like?' },
+            { icon: "🥤", label: "Drink", vn: "Thức uống", answer: "wine", display: "Wine",
+              question: 'Ask: "Would you like something to drink?"', placeholder: 'Would you like something to drink?' }
         ]
     }
 ];
 
-// ============================================================
-// STATE
-// ============================================================
-let currentCustomer = 0;
-let scores = { correct: 0, streak: 0, wrong: 0 };
-let completedCustomers = [];
+let active = 0;
+let states = customers.map(c => ({
+    correct: 0, wrong: 0, streak: 0,
+    answered: new Array(c.fields.length).fill(false),
+    results: new Array(c.fields.length).fill(null),
+    done: false
+}));
 
-// ============================================================
-// BUILD TABS
-// ============================================================
-function buildTabs() {
-    const container = document.getElementById('customerTabs');
+function switchCustomer(idx) {
+    active = idx;
+    document.querySelectorAll('.customer-slot').forEach((s, i) =>
+        s.classList.toggle('active', i === idx)
+    );
+    render();
+}
+
+function toggleHint(link) {
+    const hintContent = link.nextElementSibling;
+    if (hintContent.classList.contains('show')) {
+        hintContent.classList.remove('show');
+        link.innerHTML = '💡 Show Hint';
+    } else {
+        hintContent.classList.add('show');
+        link.innerHTML = '💡 Hide Hint';
+    }
+}
+
+function render() {
+    const st = states[active];
+    const c = customers[active];
+
+    document.querySelectorAll('.customer-slot').forEach((s, i) => {
+        s.classList.remove('done', 'in-progress');
+        if (states[i].done) s.classList.add('done');
+        else if (states[i].answered.some(a => a)) s.classList.add('in-progress');
+    });
+
+    document.getElementById('numCorrect').textContent = st.correct;
+    document.getElementById('numWrong').textContent = st.wrong;
+    document.getElementById('numStreak').textContent = st.streak;
+
+    if (st.done) {
+        document.getElementById('infoCard').style.display = 'none';
+        showComplete(); return;
+    }
+    document.getElementById('infoCard').style.display = 'block';
+    document.getElementById('completeScreen').classList.remove('show');
+
+    document.getElementById('cardAvatar').textContent = c.avatar;
+    document.getElementById('cardTitle').textContent = c.name;
+    document.getElementById('cardDesc').textContent = c.desc;
+
+    const container = document.getElementById('fieldsContainer');
     container.innerHTML = '';
-    customers.forEach((c, i) => {
-        const tab = document.createElement('div');
-        tab.className = 'customer-tab' + (i === currentCustomer ? ' active' : '') + (completedCustomers.includes(i) ? ' completed' : '');
-        tab.innerHTML = `
-            <div class="emoji">${c.emoji}</div>
-            <div class="label">${c.label}</div>
-            <div class="dot"></div>
+
+    c.fields.forEach((f, i) => {
+        const row = document.createElement('div');
+        row.className = 'field-row' + (st.answered[i] ? (st.results[i] ? ' correct' : ' wrong') : '');
+        row.id = 'field-' + i;
+
+        let inputArea = '';
+        if (st.answered[i]) {
+            inputArea = `
+                <input type="text" class="field-input" value="${f.display}" disabled>
+                <span class="field-result">${st.results[i] ? '✅' : '❌'}</span>
+            `;
+        } else {
+            inputArea = `
+                <input type="text" class="field-input" id="input-${i}"
+                       placeholder="Type the answer..."
+                       onkeypress="if(event.key==='Enter')checkField(${i})"
+                       autocomplete="off">
+                <button class="btn-check" onclick="checkField(${i})">Check</button>
+            `;
+        }
+
+        // Build hint section (only for unanswered fields)
+        let hintSection = '';
+        if (!st.answered[i]) {
+            hintSection = `
+                <div class="hint-container">
+                    <a class="hint-link" onclick="toggleHint(this)">💡 Show Hint</a>
+                    <div class="hint-content">
+                        <div class="field-question">🗣️ ${f.question}</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        row.innerHTML = `
+            <div class="field-label">
+                <span class="icon">${f.icon}</span>
+                <span class="text">${f.label}</span>
+                <span class="vn">${f.vn}</span>
+            </div>
+            ${hintSection}
+            <div class="field-input-row">${inputArea}</div>
+            <div class="field-feedback" id="fb-${i}"></div>
         `;
-        tab.addEventListener('click', () => {
-            currentCustomer = i;
-            buildTabs();
-            buildCustomerCard();
-        });
-        container.appendChild(tab);
+        container.appendChild(row);
     });
 }
 
-// ============================================================
-// BUILD CUSTOMER CARD
-// ============================================================
-function buildCustomerCard() {
-    const c = customers[currentCustomer];
-    const bg = c.background;
-    const card = document.getElementById('customerCard');
+function checkField(idx) {
+    const st = states[active];
+    const f = customers[active].fields[idx];
+    const input = document.getElementById('input-' + idx);
+    const val = input.value.trim().toLowerCase();
 
-    // Dialogue HTML
-    let dialogueHTML = c.dialogue.map(line => `
-        <div class="dialogue-line">
-            <span class="speaker ${line.speaker === 'Client' ? 'client' : ''}">${line.speaker}:</span>
-            ${line.text}
-        </div>
-    `).join('');
+    if (!val) { input.focus(); return; }
 
-    // Tags HTML
-    let tagsHTML = bg.tags.map(t => `<span class="tag">${t}</span>`).join('');
+    const ansLower = f.answer.toLowerCase();
+    const isCorrect = val.includes(ansLower) || ansLower.includes(val);
 
-    // Questions HTML
-    let questionsHTML = c.questions.map((q, qi) => `
-        <div class="question-field" id="field-${qi}">
-            <div class="field-header">
-                <div class="field-title">
-                    <span class="icon">${q.icon}</span>
-                    ${q.label}
-                </div>
-                <button class="hint-btn" onclick="toggleHint(${qi})">💡 Show Hint</button>
-            </div>
-            <div class="hint-text" id="hint-${qi}">${q.hint}</div>
-            <div class="input-row">
-                <input 
-                    type="text" 
-                    class="answer-input" 
-                    id="input-${qi}" 
-                    placeholder="${q.placeholder}"
-                    onkeypress="if(event.key==='Enter') checkAnswer(${qi})"
-                />
-                <button class="check-btn" id="btn-${qi}" onclick="checkAnswer(${qi})">Check</button>
-            </div>
-            <div class="result-text" id="result-${qi}"></div>
-        </div>
-    `).join('');
+    st.answered[idx] = true;
+    st.results[idx] = isCorrect;
 
-    card.innerHTML = `
-        <div class="customer-header">
-            <div class="customer-avatar">${c.emoji}</div>
-            <div class="customer-info">
-                <h2>Customer ${c.id}</h2>
-                <p>${c.subtitle}</p>
-            </div>
-        </div>
+    if (isCorrect) { st.correct++; st.streak++; }
+    else { st.wrong++; st.streak = 0; }
 
-        <!-- Background Info -->
-        <div class="background-card">
-            <h3>📋 Customer Background (For Study)</h3>
-            <p>
-                <strong>Name:</strong> ${bg.name} &nbsp;|&nbsp;
-                <strong>Lives in:</strong> ${bg.area} &nbsp;|&nbsp;
-                <strong>First Time:</strong> ${bg.firstTime === 'yes' ? 'Yes ✅' : 'No — returning client'} &nbsp;|&nbsp;
-                <strong>Appointment:</strong> ${bg.appointment === 'yes' ? 'Yes ✅' : 'No — walk-in'}
-            </p>
-            <div style="margin-top:8px;">${tagsHTML}</div>
-        </div>
+    render();
 
-        <!-- Area Info -->
-        <div class="area-info">
-            <h3>📍 About This Area</h3>
-            <p>${bg.areaFact}</p>
-        </div>
-
-        <!-- Sample Dialogue -->
-        <div class="dialogue-box">
-            <h3>💬 Sample Conversation</h3>
-            ${dialogueHTML}
-        </div>
-
-        <!-- Questions -->
-        <div id="questionsContainer">
-            ${questionsHTML}
-        </div>
-
-        <button class="next-btn" onclick="nextCustomer()">
-            ${currentCustomer < customers.length - 1 ? 'Next Customer ➡️' : '🎉 Finish!'}
-        </button>
-    `;
-
-    document.getElementById('completionMsg').style.display = 'none';
-}
-
-// ============================================================
-// TOGGLE HINT
-// ============================================================
-function toggleHint(qi) {
-    const hint = document.getElementById(`hint-${qi}`);
-    const btn = hint.previousElementSibling.querySelector('.hint-btn');
-    hint.classList.toggle('visible');
-    btn.textContent = hint.classList.contains('visible') ? '💡 Hide Hint' : '💡 Show Hint';
-}
-
-// ============================================================
-// CHECK ANSWER
-// ============================================================
-function checkAnswer(qi) {
-    const c = customers[currentCustomer];
-    const q = c.questions[qi];
-    const input = document.getElementById(`input-${qi}`);
-    const result = document.getElementById(`result-${qi}`);
-    const btn = document.getElementById(`btn-${qi}`);
-
-    const userAnswer = input.value.trim().toLowerCase();
-
-    if (!userAnswer) return;
-
-    const isCorrect = q.answers.some(a => userAnswer === a.toLowerCase());
-
-    if (isCorrect) {
-        input.className = 'answer-input correct';
-        result.className = 'result-text correct';
-        result.textContent = '✅ Correct! Great job!';
-        btn.disabled = true;
-        scores.correct++;
-        scores.streak++;
-    } else {
-        input.className = 'answer-input wrong';
-        result.className = 'result-text wrong';
-        result.textContent = `❌ Not quite. The answer is: "${q.answers[0]}"`;
-        scores.wrong++;
-        scores.streak = 0;
+    const fb = document.getElementById('fb-' + idx);
+    if (fb) {
+        if (isCorrect) {
+            fb.className = 'field-feedback fb-correct';
+            fb.textContent = '✅ Correct!';
+        } else {
+            fb.className = 'field-feedback fb-wrong';
+            fb.textContent = '❌ Answer: ' + f.display;
+        }
     }
 
-    updateScores();
+    if (st.answered.every(a => a)) {
+        st.done = true;
+        setTimeout(() => {
+            document.getElementById('infoCard').style.display = 'none';
+            showComplete();
+        }, 1000);
+    }
 }
 
-// ============================================================
-// UPDATE SCORES
-// ============================================================
-function updateScores() {
-    document.getElementById('correctCount').textContent = scores.correct;
-    document.getElementById('streakCount').textContent = scores.streak;
-    document.getElementById('wrongCount').textContent = scores.wrong;
+function showComplete() {
+    const st = states[active];
+    const c = customers[active];
+    const total = c.fields.length;
+    const pct = total > 0 ? Math.round((st.correct / total) * 100) : 0;
+
+    document.getElementById('completeScreen').classList.add('show');
+    document.getElementById('cpTitle').textContent = c.name + ' — Complete!';
+    document.getElementById('cpScore').textContent = st.correct + ' / ' + total;
+
+    let stars = '', msg = '';
+    if (pct >= 100) { stars = '⭐⭐⭐'; msg = '🎉 PERFECT! Every detail correct!'; }
+    else if (pct >= 75) { stars = '⭐⭐'; msg = '👏 Great job! Almost perfect!'; }
+    else if (pct >= 50) { stars = '⭐'; msg = '💪 Good effort! Try again!'; }
+    else { stars = ''; msg = '📚 Keep practicing! Listen carefully!'; }
+
+    document.getElementById('cpStars').textContent = stars;
+    document.getElementById('cpMsg').textContent = msg;
+
+    document.querySelectorAll('.customer-slot').forEach((s, i) => {
+        s.classList.remove('done', 'in-progress');
+        if (states[i].done) s.classList.add('done');
+        else if (states[i].answered.some(a => a)) s.classList.add('in-progress');
+    });
 }
 
-// ============================================================
-// NEXT CUSTOMER
-// ============================================================
+function restartCustomer() {
+    const c = customers[active];
+    states[active] = {
+        correct: 0, wrong: 0, streak: 0,
+        answered: new Array(c.fields.length).fill(false),
+        results: new Array(c.fields.length).fill(null),
+        done: false
+    };
+    document.getElementById('completeScreen').classList.remove('show');
+    document.getElementById('infoCard').style.display = 'block';
+    render();
+}
+
 function nextCustomer() {
-    if (!completedCustomers.includes(currentCustomer)) {
-        completedCustomers.push(currentCustomer);
-    }
-
-    if (currentCustomer < customers.length - 1) {
-        currentCustomer++;
-        buildTabs();
-        buildCustomerCard();
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    } else {
-        // All done
-        buildTabs();
-        document.getElementById('customerCard').style.display = 'none';
-        document.getElementById('completionMsg').style.display = 'block';
-    }
+    let next = active + 1;
+    if (next >= customers.length) next = 0;
+    switchCustomer(next);
 }
 
-// ============================================================
-// INIT
-// ============================================================
-buildTabs();
-buildCustomerCard();
+render();
 </script>
-
 </body>
 </html>
