@@ -3,372 +3,949 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>👩 Teacher — Customer Info — Cửa 3</title>
+    <title>Teacher Mode · Star Nails</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
         body {
+            background: #1a1a2e;
+            color: white;
             font-family: 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, #e8e0ff, #f3e8ff);
-            min-height: 100vh; padding: 15px;
-            max-width: 700px; margin: 0 auto;
+            min-height: 100vh;
+            padding: 20px;
         }
-        .back-link {
-            display: inline-block; margin-bottom: 10px; color: #6f42c1;
-            text-decoration: none; font-size: 0.9rem; font-weight: bold;
-        }
-        .header {
-            text-align: center; padding: 18px;
-            background: linear-gradient(135deg, #6f42c1, #5a32a3);
-            color: white; border-radius: 20px; margin-bottom: 15px;
-        }
-        .header h1 { font-size: 1.3rem; margin-bottom: 4px; }
-        .header p { font-size: 0.85rem; opacity: 0.9; }
 
-        /* Instructions */
-        .instructions {
-            background: #fff3e0; border-left: 4px solid #ff9800;
-            border-radius: 12px; padding: 15px; margin-bottom: 15px;
-            font-size: 0.9rem; color: #e65100; line-height: 1.6;
+        /* ── TOP BAR ── */
+        .top-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
         }
-        .instructions strong { color: #bf360c; }
 
-        /* Customer Tabs */
-        .customer-row {
-            display: flex; gap: 8px; justify-content: center;
-            margin-bottom: 15px; flex-wrap: wrap;
+        .back-btn {
+            color: #a0a0c0;
+            text-decoration: none;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
-        .customer-tab {
-            display: flex; flex-direction: column; align-items: center;
-            background: white; border: 3px solid #e0e0e0; border-radius: 15px;
-            padding: 10px 8px; cursor: pointer; transition: all 0.3s;
-            min-width: 60px; flex: 1; max-width: 80px;
-        }
-        .customer-tab:hover { border-color: #6f42c1; transform: translateY(-2px); }
-        .customer-tab.active {
-            border-color: #6f42c1; background: #f3e8ff;
-            box-shadow: 0 4px 12px rgba(111,66,193,0.2);
-        }
-        .customer-tab .av { font-size: 1.8rem; }
-        .customer-tab .lb { font-size: 0.6rem; font-weight: bold; color: #888; margin-top: 3px; }
-        .customer-tab.active .lb { color: #6f42c1; }
 
-        /* Customer Card */
+        .back-btn:hover { color: #4dff9d; }
+
+        .top-title {
+            font-size: 1rem;
+            color: #e0e0ff;
+            font-weight: 600;
+        }
+
+        .top-badge {
+            background: #4dff9d22;
+            color: #4dff9d;
+            font-size: 0.78rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 99px;
+        }
+
+        /* ── PROGRESS BAR ── */
+        .progress-wrap {
+            max-width: 500px;
+            margin: 0 auto 28px;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: #a0a0c0;
+            margin-bottom: 8px;
+        }
+
+        .progress-track {
+            height: 8px;
+            background: #2a2a4a;
+            border-radius: 99px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4dff9d, #80ffbe);
+            border-radius: 99px;
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+
+        /* ── CUSTOMER PICKER ── */
+        #customerPicker {
+            max-width: 500px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        #customerPicker .picker-emoji {
+            font-size: 3.5rem;
+            margin-bottom: 16px;
+        }
+
+        #customerPicker h2 {
+            font-size: 1.6rem;
+            color: #4dff9d;
+            margin-bottom: 8px;
+        }
+
+        #customerPicker p {
+            color: #a0a0c0;
+            margin-bottom: 30px;
+            font-size: 0.95rem;
+        }
+
+        .teacher-intro {
+            background: #0a2e1a;
+            border: 1px solid #4dff9d33;
+            border-radius: 14px;
+            padding: 16px 18px;
+            margin-bottom: 24px;
+            text-align: left;
+            display: flex;
+            gap: 14px;
+            align-items: flex-start;
+        }
+
+        .teacher-intro .intro-icon {
+            font-size: 1.8rem;
+            flex-shrink: 0;
+        }
+
+        .teacher-intro .intro-text {
+            font-size: 0.88rem;
+            color: #a0ffc0;
+            line-height: 1.6;
+        }
+
+        .teacher-intro .intro-text strong {
+            color: #4dff9d;
+        }
+
+        .customer-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+            margin-bottom: 28px;
+        }
+
         .customer-card {
-            background: white; border-radius: 20px; padding: 25px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08); margin-bottom: 15px;
+            background: #16213e;
+            border: 2px solid #2a2a4a;
+            border-radius: 16px;
+            padding: 20px 10px;
+            cursor: pointer;
+            transition: all 0.25s;
+            text-align: center;
+        }
+
+        .customer-card:hover {
+            border-color: #4dff9d;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(77,255,157,0.2);
+        }
+
+        .customer-card.selected {
+            border-color: #4dff9d;
+            background: #0a2e1a;
+            box-shadow: 0 0 0 3px #4dff9d44;
+        }
+
+        .customer-card .cust-emoji { font-size: 2.4rem; margin-bottom: 8px; }
+        .customer-card .cust-name  { font-size: 0.9rem; font-weight: 700; color: #e0e0ff; margin-bottom: 4px; }
+        .customer-card .cust-hint  { font-size: 0.72rem; color: #606080; }
+
+        .start-btn {
+            background: linear-gradient(135deg, #4dff9d, #2db870);
+            color: #0a2e1a;
+            border: none;
+            padding: 16px 48px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.25s;
+            opacity: 0.35;
+            pointer-events: none;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .start-btn.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .start-btn.active:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(77,255,157,0.4);
+        }
+
+        /* ── GAME SCREEN ── */
+        #gameScreen {
             display: none;
-        }
-        .customer-card.active { display: block; }
-
-        .card-header {
-            display: flex; align-items: center; gap: 12px;
-            margin-bottom: 20px; padding-bottom: 15px;
-            border-bottom: 2px solid #f0f0f0;
-        }
-        .card-header .av { font-size: 2.5rem; }
-        .card-header .info h2 { font-size: 1.2rem; color: #6f42c1; }
-        .card-header .info p { font-size: 0.85rem; color: #999; }
-
-        /* Section Divider */
-        .section-title {
-            font-size: 0.8rem; font-weight: bold; color: #6f42c1;
-            text-transform: uppercase; letter-spacing: 1px;
-            margin: 20px 0 10px; padding-bottom: 5px;
-            border-bottom: 2px solid #ede0ff;
+            max-width: 500px;
+            margin: 0 auto;
         }
 
-        /* Info Row */
-        .info-row {
-            display: flex; align-items: center; gap: 12px;
-            padding: 12px 15px; margin-bottom: 8px;
-            background: #f8f0ff; border-radius: 12px;
-            border-left: 4px solid #6f42c1;
-        }
-        .info-row .icon { font-size: 1.3rem; flex-shrink: 0; }
-        .info-row .content { flex: 1; }
-        .info-row .label {
-            font-size: 0.75rem; color: #888; font-weight: bold;
-            text-transform: uppercase; letter-spacing: 0.5px;
-        }
-        .info-row .value {
-            font-size: 1.05rem; color: #333; font-weight: 600;
-        }
-        .info-row .value-vn {
-            font-size: 0.8rem; color: #999; font-style: italic;
+        /* Role card */
+        .role-card {
+            background: #0a2e1a;
+            border: 1px solid #4dff9d33;
+            border-radius: 20px;
+            padding: 18px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
         }
 
-        /* Script hint */
+        .role-card .role-emoji {
+            font-size: 2.6rem;
+            flex-shrink: 0;
+            background: #4dff9d18;
+            width: 60px;
+            height: 60px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .role-card .role-info .role-label {
+            font-size: 0.72rem;
+            color: #4dff9d;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 3px;
+        }
+
+        .role-card .role-info .role-name {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #e0e0ff;
+            margin-bottom: 2px;
+        }
+
+        .role-card .role-info .role-sub {
+            font-size: 0.8rem;
+            color: #a0a0c0;
+        }
+
+        /* Question card - what student will ask */
+        .question-card {
+            background: #16213e;
+            border: 1px solid #2a2a4a;
+            border-radius: 20px;
+            padding: 22px;
+            margin-bottom: 20px;
+        }
+
+        .step-badge {
+            display: inline-block;
+            background: #4dff9d22;
+            color: #4dff9d;
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 99px;
+            margin-bottom: 14px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .question-label {
+            font-size: 0.78rem;
+            color: #a0a0c0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+        }
+
+        .student-question {
+            background: #ffffff08;
+            border-radius: 12px;
+            padding: 14px 16px;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .student-question .q-icon { font-size: 1.6rem; flex-shrink: 0; }
+
+        .student-question .q-text {
+            font-size: 1.05rem;
+            color: #e0e0ff;
+            font-style: italic;
+        }
+
+        /* Answer reveal */
+        .answer-section {
+            border-top: 1px solid #2a2a4a;
+            padding-top: 18px;
+        }
+
+        .answer-label {
+            font-size: 0.78rem;
+            color: #a0a0c0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        /* Hidden answer - tap to reveal */
+        .answer-reveal {
+            background: #4dff9d18;
+            border: 2px dashed #4dff9d44;
+            border-radius: 14px;
+            padding: 18px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.25s;
+            margin-bottom: 14px;
+        }
+
+        .answer-reveal:hover {
+            background: #4dff9d28;
+            border-color: #4dff9d88;
+        }
+
+        .answer-reveal .reveal-hint {
+            font-size: 0.85rem;
+            color: #4dff9d88;
+            margin-bottom: 6px;
+        }
+
+        .answer-reveal .reveal-icon {
+            font-size: 1.8rem;
+        }
+
+        /* Shown answer */
+        .answer-shown {
+            display: none;
+            background: #0a2e1a;
+            border: 2px solid #4dff9d;
+            border-radius: 14px;
+            padding: 18px;
+            margin-bottom: 14px;
+        }
+
+        .answer-shown .answer-value {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #4dff9d;
+            text-align: center;
+            margin-bottom: 6px;
+        }
+
+        .answer-shown .answer-say {
+            font-size: 0.82rem;
+            color: #a0ffc0;
+            text-align: center;
+        }
+
+        /* Script helper */
         .script-box {
-            background: #e8f5e9; border-left: 4px solid #4caf50;
-            border-radius: 12px; padding: 15px; margin-top: 8px;
+            background: #ffffff06;
+            border-radius: 12px;
+            padding: 14px 16px;
+            margin-bottom: 16px;
         }
+
         .script-box .script-label {
-            font-size: 0.75rem; color: #2e7d32; font-weight: bold;
-            text-transform: uppercase; margin-bottom: 5px;
-        }
-        .script-box .script-text {
-            font-size: 0.95rem; color: #333; line-height: 1.5;
-        }
-        .script-box .script-vn {
-            font-size: 0.85rem; color: #888; font-style: italic; margin-top: 4px;
+            font-size: 0.72rem;
+            color: #606080;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
         }
 
-        /* Conversation Starters */
-        .convo-box {
-            background: #fff8e1; border-left: 4px solid #ffc107;
-            border-radius: 12px; padding: 15px; margin-top: 15px;
+        .script-line {
+            font-size: 0.88rem;
+            color: #c0c0e0;
+            line-height: 1.7;
+            padding: 4px 0;
+            border-bottom: 1px solid #ffffff08;
         }
-        .convo-box h4 { font-size: 0.85rem; color: #f57f17; margin-bottom: 8px; }
-        .convo-line {
-            padding: 8px 0; border-bottom: 1px solid #fff0c0;
-            font-size: 0.9rem; line-height: 1.5;
-        }
-        .convo-line:last-child { border-bottom: none; }
-        .convo-line .en { color: #333; font-weight: 500; }
-        .convo-line .vn { color: #999; font-size: 0.8rem; font-style: italic; }
 
-        @media (max-width: 400px) {
-            .customer-tab { min-width: 52px; padding: 8px 5px; }
-            .customer-tab .av { font-size: 1.5rem; }
+        .script-line:last-child { border-bottom: none; }
+
+        .script-line .who {
+            font-weight: 700;
+            margin-right: 6px;
         }
+
+        .script-line .who.student { color: #ff6b9d; }
+        .script-line .who.teacher { color: #4dff9d; }
+
+        /* Next button */
+        .next-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #4dff9d, #2db870);
+            color: #0a2e1a;
+            border: none;
+            padding: 16px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.25s;
+            margin-bottom: 20px;
+        }
+
+        .next-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(77,255,157,0.4);
+        }
+
+        /* ── SUMMARY SCREEN ── */
+        #summaryScreen {
+            display: none;
+            max-width: 500px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .summary-header .big-emoji {
+            font-size: 4.5rem;
+            margin-bottom: 16px;
+        }
+
+        .summary-header h2 {
+            font-size: 1.8rem;
+            color: #4dff9d;
+            margin-bottom: 8px;
+        }
+
+        .summary-header p {
+            color: #a0a0c0;
+            font-size: 0.95rem;
+            margin-bottom: 28px;
+        }
+
+        .full-summary {
+            background: #16213e;
+            border: 1px solid #2a2a4a;
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 24px;
+            text-align: left;
+        }
+
+        .summary-row {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 16px 18px;
+            border-bottom: 1px solid #2a2a4a;
+        }
+
+        .summary-row:last-child { border-bottom: none; }
+
+        .summary-row .row-icon { font-size: 1.6rem; flex-shrink: 0; }
+
+        .summary-row .row-label {
+            font-size: 0.75rem;
+            color: #a0a0c0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 3px;
+        }
+
+        .summary-row .row-value {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #4dff9d;
+        }
+
+        .summary-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .btn-restart {
+            background: linear-gradient(135deg, #4dff9d, #2db870);
+            color: #0a2e1a;
+            border: none;
+            padding: 16px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.25s;
+        }
+
+        .btn-restart:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(77,255,157,0.4);
+        }
+
+        .btn-student-mode {
+            background: transparent;
+            color: #ff6b9d;
+            border: 2px solid #ff6b9d;
+            padding: 14px;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: block;
+            transition: all 0.25s;
+        }
+
+        .btn-student-mode:hover { background: #ff6b9d18; }
+
+        .btn-home {
+            color: #606080;
+            text-decoration: none;
+            font-size: 0.85rem;
+            padding: 10px;
+            display: block;
+        }
+
+        .btn-home:hover { color: #a0a0c0; }
     </style>
 </head>
 <body>
 
-<a href="index.html" class="back-link">← Back to Menu</a>
-
-<div class="header">
-    <h1>👩 Teacher — Customer Information</h1>
-    <p>Cửa 3 — Read these details to your student!</p>
+<!-- ── TOP BAR ── -->
+<div class="top-bar">
+    <a href="index.html" class="back-btn">‹ Back</a>
+    <span class="top-title">👩‍🏫 Teacher Mode</span>
+    <span class="top-badge">TEACHER</span>
 </div>
 
-<div class="instructions">
-    <strong>📋 How to play:</strong><br>
-    1. Pick the same customer as the student<br>
-    2. Read each piece of information <strong>one at a time</strong> when the student asks<br>
-    3. The student types the answer on their device<br>
-    4. Use the <strong>conversation starters</strong> to sound natural!
-</div>
-
-<!-- Customer Tabs -->
-<div class="customer-row" id="teacherTabs">
-    <div class="customer-tab active" onclick="showCustomer(0)">
-        <div class="av">👩</div><div class="lb">Cust. 1</div>
+<!-- ── PROGRESS BAR ── -->
+<div class="progress-wrap">
+    <div class="progress-info">
+        <span id="progressLabel">Question 0 of 4</span>
+        <span id="progressPct">0%</span>
     </div>
-    <div class="customer-tab" onclick="showCustomer(1)">
-        <div class="av">👩‍🦰</div><div class="lb">Cust. 2</div>
-    </div>
-    <div class="customer-tab" onclick="showCustomer(2)">
-        <div class="av">👱‍♀️</div><div class="lb">Cust. 3</div>
-    </div>
-    <div class="customer-tab" onclick="showCustomer(3)">
-        <div class="av">👩‍🦱</div><div class="lb">Cust. 4</div>
-    </div>
-    <div class="customer-tab" onclick="showCustomer(4)">
-        <div class="av">🧑‍🦳</div><div class="lb">Cust. 5</div>
+    <div class="progress-track">
+        <div class="progress-fill" id="progressFill"></div>
     </div>
 </div>
 
-<!-- Customer Cards (generated by JS) -->
-<div id="cardsContainer"></div>
+<!-- ══════════════════════════════════════
+     SCREEN 1 · CUSTOMER PICKER
+══════════════════════════════════════ -->
+<div id="customerPicker">
+    <div class="picker-emoji">👩‍🏫</div>
+    <h2>Pick your character</h2>
+    <p>You will play as this customer</p>
+
+    <div class="teacher-intro">
+        <div class="intro-icon">💡</div>
+        <div class="intro-text">
+            <strong>How to play:</strong> The student will ask you questions in English.
+            You play the customer and answer out loud.
+            This screen shows you what to say!
+        </div>
+    </div>
+
+    <div class="customer-grid" id="customerGrid"></div>
+
+    <button class="start-btn" id="startBtn" onclick="startGame()">
+        Start as Customer →
+    </button>
+</div>
+
+<!-- ══════════════════════════════════════
+     SCREEN 2 · GAME
+══════════════════════════════════════ -->
+<div id="gameScreen">
+
+    <!-- Who you are playing as -->
+    <div class="role-card">
+        <div class="role-emoji" id="roleEmoji">👩</div>
+        <div class="role-info">
+            <div class="role-label">You are playing as</div>
+            <div class="role-name" id="roleName">Linda</div>
+            <div class="role-sub" id="roleSub">Customer at Star Nails</div>
+        </div>
+    </div>
+
+    <!-- Question card -->
+    <div class="question-card">
+        <div class="step-badge" id="stepBadge">Step 1 of 4</div>
+
+        <div class="question-label">The student will ask you 👇</div>
+        <div class="student-question">
+            <div class="q-icon" id="qIcon">🗣️</div>
+            <div class="q-text" id="qText"></div>
+        </div>
+
+        <!-- Answer section -->
+        <div class="answer-section">
+            <div class="answer-label">Your answer as the customer 👇</div>
+
+            <!-- Hidden state - tap to show -->
+            <div class="answer-reveal" id="answerReveal" onclick="revealAnswer()">
+                <div class="reveal-hint">Tap to see what to say</div>
+                <div class="reveal-icon">👁️</div>
+            </div>
+
+            <!-- Shown state -->
+            <div class="answer-shown" id="answerShown">
+                <div class="answer-value" id="answerValue"></div>
+                <div class="answer-say" id="answerSay"></div>
+            </div>
+        </div>
+
+        <!-- Script helper -->
+        <div class="script-box" id="scriptBox" style="display:none">
+            <div class="script-label">💬 Example conversation</div>
+            <div id="scriptLines"></div>
+        </div>
+    </div>
+
+    <!-- Next button -->
+    <button class="next-btn" id="nextBtn" onclick="nextQuestion()">
+        Next Question →
+    </button>
+
+</div>
+
+<!-- ══════════════════════════════════════
+     SCREEN 3 · SUMMARY
+══════════════════════════════════════ -->
+<div id="summaryScreen">
+    <div class="summary-header">
+        <div class="big-emoji">✅</div>
+        <h2>Session Complete!</h2>
+        <p id="summarySubtitle">The student collected all the info. Great teaching!</p>
+    </div>
+
+    <div class="full-summary" id="fullSummary"></div>
+
+    <div class="summary-actions">
+        <button class="btn-restart" onclick="restartGame()">
+            🔄 Try Another Customer
+        </button>
+        <a href="student.html" class="btn-student-mode">
+            ⌨️ Switch to Student Mode
+        </a>
+        <a href="index.html" class="btn-home">
+            ← Back to Lesson Menu
+        </a>
+    </div>
+</div>
+
 
 <script>
+// ══════════════════════════════════════
+//  CUSTOMER DATA
+// ══════════════════════════════════════
 const customers = [
     {
-        name: "Customer 1 — Sarah", avatar: "👩",
-        desc: "New client, first time visiting the salon",
-        fields: [
-            { icon: "👤", label: "Name", value: "Sarah", vn: "Tên: Sarah" },
-            { icon: "🆕", label: "First time?", value: "Yes — first time here!", vn: "Lần đầu: Có" },
-            { icon: "📅", label: "Appointment?", value: "No — walk-in", vn: "Lịch hẹn: Không" },
-            { icon: "💅", label: "Service", value: "Manicure", vn: "Dịch vụ: Làm móng tay" },
-            { icon: "🔲", label: "Nail Shape", value: "Round", vn: "Hình dáng: Tròn" },
-            { icon: "🎨", label: "Color", value: "Pink", vn: "Màu: Hồng" },
-            { icon: "🥤", label: "Drink", value: "Water", vn: "Thức uống: Nước lọc" },
-            { icon: "🗺️", label: "Area", value: "Cherry Hill", vn: "Khu" },
-            { icon: "⌛", label: "LivedHere", value: "3 years", vn: "Sống ở đây" }
-        ],
-        script: [
-            { en: "Hi! I'm new here. My name is Sarah.", vn: "Xin chào! Tôi mới đến đây. Tên tôi là Sarah." },
-            { en: "Yes, this is my first time!", vn: "Vâng, đây là lần đầu tiên!" },
-            { en: "No, I don't have an appointment.", vn: "Không, tôi không có lịch hẹn." },
-            { en: "I'd like a manicure please.", vn: "Tôi muốn làm móng tay." },
-            { en: "Round shape please.", vn: "Hình tròn nhé." },
-            { en: "Pink color please!", vn: "Màu hồng nhé!" },
-            { en: "Just water, thank you.", vn: "Nước lọc thôi, cám ơn." }
-        ]
+        id: 0,
+        name: "Linda",
+        emoji: "👩",
+        hint: "Regular customer",
+        appointment: "2:00 PM",
+        service: "Manicure",
+        comingFrom: "Cherry Hill"
     },
     {
-        name: "Customer 2 — Jessica", avatar: "👩‍🦰",
-        desc: "Returning client, brought her sister today",
-        fields: [
-            { icon: "👤", label: "Name", value: "Jessica", vn: "Tên: Jessica" },
-            { icon: "🆕", label: "First time?", value: "No — regular customer!", vn: "Lần đầu: Không, khách quen" },
-            { icon: "📅", label: "Appointment?", value: "Yes, at 2 o'clock", vn: "Lịch hẹn: Có, lúc 2 giờ" },
-            { icon: "👫", label: "Came with?", value: "Her sister", vn: "Đến cùng: Chị gái" },
-            { icon: "💅", label: "Service", value: "Pedicure", vn: "Dịch vụ: Làm móng chân" },
-            { icon: "🔲", label: "Nail Shape", value: "Square", vn: "Hình dáng: Vuông" },
-            { icon: "🎨", label: "Color", value: "Red", vn: "Màu: Đỏ" },
-            { icon: "🥤", label: "Drink", value: "Coffee", vn: "Thức uống: Cà phê" },
-            { icon: "🗺️", label: "Area", value: "Camden", vn: "Khu" },
-            { icon: "⌛", label: "LivedHere", value: "10 years", vn: "Sống ở đây" }
-        ],
-        script: [
-            { en: "Hi! I'm back! My name is Jessica.", vn: "Xin chào! Tôi trở lại! Tên tôi là Jessica." },
-            { en: "No, I come here every month!", vn: "Không, tôi đến đây mỗi tháng!" },
-            { en: "Yes, I have an appointment at 2 o'clock.", vn: "Vâng, tôi có lịch hẹn lúc 2 giờ." },
-            { en: "I brought my sister today!", vn: "Hôm nay tôi mang theo chị gái!" },
-            { en: "I'd like a pedicure please.", vn: "Tôi muốn làm móng chân." },
-            { en: "Square shape for me.", vn: "Hình vuông cho tôi." },
-            { en: "Red please!", vn: "Màu đỏ nhé!" },
-            { en: "Can I have coffee?", vn: "Cho tôi cà phê được không?" }
-        ]
+        id: 1,
+        name: "Maria",
+        emoji: "👩‍🦱",
+        hint: "New customer",
+        appointment: "3:30 PM",
+        service: "Pedicure",
+        comingFrom: "Camden"
     },
     {
-        name: "Customer 3 — Emily", avatar: "👱‍♀️",
-        desc: "Chatty client who loves talking about family",
-        fields: [
-            { icon: "👤", label: "Name", value: "Emily", vn: "Tên: Emily" },
-            { icon: "💍", label: "Married?", value: "Yes", vn: "Kết hôn: Có" },
-            { icon: "👨", label: "Husband's name", value: "David", vn: "Tên chồng: David" },
-            { icon: "👶", label: "Children?", value: "Yes, 2 kids", vn: "Con: Có, 2 đứa" },
-            { icon: "🏫", label: "Kids in school?", value: "Yes — primary school", vn: "Đi học: Có, tiểu học" },
-            { icon: "💅", label: "Service", value: "Gel nails", vn: "Dịch vụ: Gel" },
-            { icon: "🎨", label: "Color", value: "French tips", vn: "Màu: French" },
-            { icon: "🥤", label: "Drink", value: "Tea", vn: "Thức uống: Trà" },
-            { icon: "🗺️", label: "Area", value: "Collingswood", vn: "Khu" },
-            { icon: "⌛", label: "LivedHere", value: "1 years", vn: "Sống ở đây" }
-        ],
-        script: [
-            { en: "Hi! My name is Emily. Nice salon!", vn: "Xin chào! Tên tôi là Emily. Tiệm đẹp quá!" },
-            { en: "Yes, I'm married!", vn: "Vâng, tôi đã kết hôn!" },
-            { en: "My husband's name is David.", vn: "Chồng tôi tên là David." },
-            { en: "I have 2 kids.", vn: "Tôi có 2 đứa con." },
-            { en: "Yes, they go to primary school.", vn: "Có, chúng học tiểu học." },
-            { en: "I want gel nails please.", vn: "Tôi muốn làm gel." },
-            { en: "French tips, please!", vn: "Kiểu French nhé!" },
-            { en: "Tea for me, please.", vn: "Cho tôi trà nhé." }
-        ]
+        id: 2,
+        name: "Ashley",
+        emoji: "👱‍♀️",
+        hint: "Walk-in",
+        appointment: "No appointment",
+        service: "Gel Nails",
+        comingFrom: "Moorestown"
     },
     {
-        name: "Customer 4 — Lisa", avatar: "👩‍🦱",
-        desc: "Shy new client, her mother is a regular here",
-        fields: [
-            { icon: "👤", label: "Name", value: "Lisa", vn: "Tên: Lisa" },
-            { icon: "🆕", label: "First time?", value: "Yes — first time ever!", vn: "Lần đầu: Có, lần đầu tiên!" },
-            { icon: "👩‍👧", label: "Who recommended?", value: "Her mother", vn: "Ai giới thiệu: Mẹ" },
-            { icon: "📅", label: "Appointment?", value: "No — walk-in", vn: "Lịch hẹn: Không" },
-            { icon: "💅", label: "Service", value: "Manicure", vn: "Dịch vụ: Làm móng tay" },
-            { icon: "🔲", label: "Nail Shape", value: "Oval", vn: "Hình dáng: Oval" },
-            { icon: "🎨", label: "Color", value: "White", vn: "Màu: Trắng" },
-            { icon: "🥤", label: "Drink", value: "Orange juice", vn: "Thức uống: Nước cam" },
-            { icon: "🗺️", label: "Area", value: "Haddonfield", vn: "Khu" },
-            { icon: "⌛", label: "LivedHere", value: "7 years", vn: "Sống ở đây" }
-        ],
-        script: [
-            { en: "Um... hi... my name is Lisa.", vn: "Ừm... xin chào... tên tôi là Lisa." },
-            { en: "Yes, this is my first time getting nails done.", vn: "Vâng, đây là lần đầu tôi làm nail." },
-            { en: "My mother told me to come here.", vn: "Mẹ tôi bảo tôi đến đây." },
-            { en: "No, I don't have an appointment.", vn: "Không, tôi không có lịch hẹn." },
-            { en: "Just a manicure please.", vn: "Chỉ làm móng tay thôi." },
-            { en: "Oval shape please.", vn: "Hình oval nhé." },
-            { en: "White color please.", vn: "Màu trắng nhé." },
-            { en: "Can I have orange juice?", vn: "Cho tôi nước cam được không?" }
-        ]
+        id: 3,
+        name: "Tom",
+        emoji: "👨",
+        hint: "First time",
+        appointment: "1:00 PM",
+        service: "Manicure",
+        comingFrom: "Pennsauken"
     },
     {
-        name: "Customer 5 — Margaret", avatar: "🧑‍🦳",
-        desc: "Chatty grandma, regular client, big family!",
-        fields: [
-            { icon: "👤", label: "Name", value: "Margaret", vn: "Tên: Margaret" },
-            { icon: "🆕", label: "First time?", value: "No — regular client", vn: "Lần đầu: Không, khách quen" },
-            { icon: "👶", label: "Children?", value: "3 (2 daughters, 1 son)", vn: "Con: 3 (2 gái, 1 trai)" },
-            { icon: "👶", label: "Grandchildren?", value: "5 grandchildren", vn: "Cháu: 5 cháu" },
-            { icon: "💒", label: "Family event?", value: "Daughter's wedding", vn: "Sự kiện: Đám cưới con gái" },
-            { icon: "💅", label: "Service", value: "Acrylic nails", vn: "Dịch vụ: Acrylic" },
-            { icon: "🔲", label: "Nail Shape", value: "Coffin", vn: "Hình dáng: Coffin" },
-            { icon: "🎨", label: "Color", value: "Gold", vn: "Màu: Vàng gold" },
-            { icon: "🥤", label: "Drink", value: "Wine", vn: "Thức uống: Rượu" },
-            { icon: "🗺️", label: "Area", value: "Merchantville", vn: "Khu" },
-            { icon: "⌛", label: "LivedHere", value: "2 years", vn: "Sống ở đây" }
-        ],
-        script: [
-            { en: "Hello darling! I'm back! My name is Margaret.", vn: "Xin chào cưng! Tôi trở lại! Tên tôi là Margaret." },
-            { en: "No no, I come here all the time!", vn: "Không không, tôi đến đây hoài!" },
-            { en: "I have 3 children — 2 daughters and 1 son.", vn: "Tôi có 3 con — 2 gái và 1 trai." },
-            { en: "5 grandchildren! They're my world!", vn: "5 cháu! Các cháu là cả thế giới!" },
-            { en: "I just came from my daughter's wedding!", vn: "Tôi vừa đi đám cưới con gái!" },
-            { en: "Acrylic nails, please!", vn: "Làm acrylic nhé!" },
-            { en: "Coffin shape, darling.", vn: "Hình coffin nhé cưng." },
-            { en: "Gold! I want to sparkle!", vn: "Vàng gold! Tôi muốn lấp lánh!" },
-            { en: "A glass of wine would be lovely.", vn: "Một ly rượu thì tuyệt." }
-        ]
+        id: 4,
+        name: "Diane",
+        emoji: "👩‍🦳",
+        hint: "VIP customer",
+        appointment: "4:00 PM",
+        service: "Full Set Acrylic",
+        comingFrom: "Haddonfield"
     }
 ];
 
-function buildCards() {
-    const container = document.getElementById('cardsContainer');
-    customers.forEach((c, ci) => {
+// ══════════════════════════════════════
+//  QUESTIONS CONFIG
+// ══════════════════════════════════════
+function buildQuestions(c) {
+    return [
+        {
+            field: "appointment",
+            icon: "📅",
+            studentAsks: "Do you have an appointment?",
+            answer: c.appointment,
+            answerSay: c.appointment === "No appointment"
+                ? 'Say: "No, I don\'t have one. Can I walk in?"'
+                : `Say: "Yes, I have an appointment at ${c.appointment}."`,
+            scriptLines: [
+                { who: "Student", side: "student", text: "Hello! Do you have an appointment today?" },
+                { who: c.name,    side: "teacher", text: c.appointment === "No appointment"
+                    ? "No, I don't. Can I walk in?"
+                    : `Yes, I have an appointment at ${c.appointment}.` }
+            ]
+        },
+        {
+            field: "service",
+            icon: "💅",
+            studentAsks: "What service would you like today?",
+            answer: c.service,
+            answerSay: `Say: "I'd like a ${c.service} please."`,
+            scriptLines: [
+                { who: "Student", side: "student", text: "What service would you like today?" },
+                { who: c.name,    side: "teacher", text: `I'd like a ${c.service} please.` }
+            ]
+        },
+        {
+            field: "name",
+            icon: "👤",
+            studentAsks: "Can I get your name please?",
+            answer: c.name,
+            answerSay: `Say: "My name is ${c.name}."`,
+            scriptLines: [
+                { who: "Student", side: "student", text: "Can I get your name please?" },
+                { who: c.name,    side: "teacher", text: `My name is ${c.name}.` }
+            ]
+        },
+        {
+            field: "comingFrom",
+            icon: "📍",
+            studentAsks: "Where are you coming from today?",
+            answer: c.comingFrom,
+            answerSay: `Say: "I'm coming from ${c.comingFrom}."`,
+            scriptLines: [
+                { who: "Student", side: "student", text: "Where are you coming from today?" },
+                { who: c.name,    side: "teacher", text: `I'm coming from ${c.comingFrom}.` }
+            ]
+        }
+    ];
+}
+
+// ══════════════════════════════════════
+//  GAME STATE
+// ══════════════════════════════════════
+let selectedCustomer = null;
+let questions        = [];
+let currentQ         = 0;
+
+// ══════════════════════════════════════
+//  INIT CUSTOMER PICKER
+// ══════════════════════════════════════
+function init() {
+    const grid = document.getElementById('customerGrid');
+    grid.innerHTML = '';
+
+    customers.forEach(c => {
         const card = document.createElement('div');
-        card.className = 'customer-card' + (ci === 0 ? ' active' : '');
-        card.id = 'card-' + ci;
-
-        let fieldsHtml = '';
-        c.fields.forEach(f => {
-            fieldsHtml += `
-                <div class="info-row">
-                    <div class="icon">${f.icon}</div>
-                    <div class="content">
-                        <div class="label">${f.label}</div>
-                        <div class="value">${f.value}</div>
-                        <div class="value-vn">${f.vn}</div>
-                    </div>
-                </div>
-            `;
-        });
-
-        let scriptHtml = '';
-        c.script.forEach(s => {
-            scriptHtml += `
-                <div class="convo-line">
-                    <div class="en">🗣️ "${s.en}"</div>
-                    <div class="vn">${s.vn}</div>
-                </div>
-            `;
-        });
-
+        card.className = 'customer-card';
         card.innerHTML = `
-            <div class="card-header">
-                <div class="av">${c.avatar}</div>
-                <div class="info">
-                    <h2>${c.name}</h2>
-                    <p>${c.desc}</p>
-                </div>
-            </div>
-
-            <div class="section-title">📋 Customer Information (Answers)</div>
-            ${fieldsHtml}
-
-            <div class="convo-box">
-                <h4>🗣️ What to Say (Conversation Lines)</h4>
-                ${scriptHtml}
-            </div>
+            <div class="cust-emoji">${c.emoji}</div>
+            <div class="cust-name">${c.name}</div>
+            <div class="cust-hint">${c.hint}</div>
         `;
-
-        container.appendChild(card);
+        card.onclick = () => selectCustomer(c.id, card);
+        grid.appendChild(card);
     });
 }
 
-function showCustomer(idx) {
-    document.querySelectorAll('.customer-tab').forEach((t, i) =>
-        t.classList.toggle('active', i === idx)
-    );
-    document.querySelectorAll('.customer-card').forEach((c, i) =>
-        c.classList.toggle('active', i === idx)
-    );
+function selectCustomer(id, cardEl) {
+    selectedCustomer = customers[id];
+    document.querySelectorAll('.customer-card').forEach(c => c.classList.remove('selected'));
+    cardEl.classList.add('selected');
+
+    const btn = document.getElementById('startBtn');
+    btn.classList.add('active');
+    btn.textContent = `Play as ${selectedCustomer.name} →`;
 }
 
-buildCards();
+// ══════════════════════════════════════
+//  START GAME
+// ══════════════════════════════════════
+function startGame() {
+    if (!selectedCustomer) return;
+
+    questions = buildQuestions(selectedCustomer);
+    currentQ  = 0;
+
+    document.getElementById('customerPicker').style.display = 'none';
+    document.getElementById('gameScreen').style.display     = 'block';
+
+    // set role card
+    document.getElementById('roleEmoji').textContent = selectedCustomer.emoji;
+    document.getElementById('roleName').textContent  = selectedCustomer.name;
+    document.getElementById('roleSub').textContent   = `${selectedCustomer.hint} · Star Nails`;
+
+    updateProgress();
+    renderQuestion();
+}
+
+// ══════════════════════════════════════
+//  RENDER QUESTION
+// ══════════════════════════════════════
+function renderQuestion() {
+    const q = questions[currentQ];
+
+    document.getElementById('stepBadge').textContent = `Step ${currentQ + 1} of ${questions.length}`;
+    document.getElementById('qIcon').textContent     = q.icon;
+    document.getElementById('qText').textContent     = `"${q.studentAsks}"`;
+
+    // reset answer reveal
+    document.getElementById('answerReveal').style.display = 'flex';
+    document.getElementById('answerReveal').style.flexDirection = 'column';
+    document.getElementById('answerReveal').style.alignItems = 'center';
+    document.getElementById('answerShown').style.display  = 'none';
+    document.getElementById('scriptBox').style.display    = 'none';
+
+    document.getElementById('answerValue').textContent = q.answer;
+    document.getElementById('answerSay').textContent   = q.answerSay;
+
+    // build script lines
+    const scriptContainer = document.getElementById('scriptLines');
+    scriptContainer.innerHTML = '';
+    q.scriptLines.forEach(line => {
+        const div = document.createElement('div');
+        div.className = 'script-line';
+        div.innerHTML = `<span class="who ${line.side}">${line.who}:</span>${line.text}`;
+        scriptContainer.appendChild(div);
+    });
+
+    // update next button label
+    const isLast = currentQ === questions.length - 1;
+    document.getElementById('nextBtn').textContent = isLast
+        ? 'See Summary →'
+        : 'Next Question →';
+}
+
+// ══════════════════════════════════════
+//  REVEAL ANSWER
+// ══════════════════════════════════════
+function revealAnswer() {
+    document.getElementById('answerReveal').style.display = 'none';
+    document.getElementById('answerShown').style.display  = 'block';
+    document.getElementById('scriptBox').style.display    = 'block';
+}
+
+// ══════════════════════════════════════
+//  NEXT QUESTION
+// ══════════════════════════════════════
+function nextQuestion() {
+    currentQ++;
+
+    if (currentQ >= questions.length) {
+        showSummary();
+        return;
+    }
+
+    updateProgress();
+    renderQuestion();
+}
+
+// ══════════════════════════════════════
+//  PROGRESS
+// ══════════════════════════════════════
+function updateProgress() {
+    const total = questions.length;
+    const done  = currentQ;
+    const pct   = Math.round((done / total) * 100);
+
+    document.getElementById('progressLabel').textContent = `Question ${done} of ${total}`;
+    document.getElementById('progressPct').textContent   = `${pct}%`;
+    document.getElementById('progressFill').style.width  = `${pct}%`;
+}
+
+// ══════════════════════════════════════
+//  SUMMARY
+// ══════════════════════════════════════
+function showSummary() {
+    document.getElementById('gameScreen').style.display    = 'none';
+    document.getElementById('summaryScreen').style.display = 'block';
+
+    document.getElementById('progressLabel').textContent = `Question ${questions.length} of ${questions.length}`;
+    document.getElementById('progressPct').textContent   = '100%';
+    document.getElementById('progressFill').style.width  = '100%';
+
+    document.getElementById('summarySubtitle').textContent =
+        `You played as ${selectedCustomer.name}. The student practiced asking all 4 questions!`;
+
+    const rows = [
+        { icon: "📅", label: "Appointment", value: selectedCustomer.appointment },
+        { icon: "💅", label: "Service",     value: selectedCustomer.service     },
+        { icon: "👤", label: "Name",        value: selectedCustomer.name        },
+        { icon: "📍", label: "Coming From", value: selectedCustomer.comingFrom  }
+    ];
+
+    const container = document.getElementById('fullSummary');
+    container.innerHTML = '';
+
+    rows.forEach(row => {
+        const div = document.createElement('div');
+        div.className = 'summary-row';
+        div.innerHTML = `
+            <div class="row-icon">${row.icon}</div>
+            <div>
+                <div class="row-label">${row.label}</div>
+                <div class="row-value">${row.value}</div>
+            </div>
+        `;
+        container.appendChild(div);
+    });
+}
+
+// ══════════════════════════════════════
+//  RESTART
+// ══════════════════════════════════════
+function restartGame() {
+    selectedCustomer = null;
+    currentQ = 0;
+
+    document.getElementById('summaryScreen').style.display  = 'none';
+    document.getElementById('customerPicker').style.display = 'block';
+
+    document.getElementById('progressLabel').textContent = 'Question 0 of 4';
+    document.getElementById('progressPct').textContent   = '0%';
+    document.getElementById('progressFill').style.width  = '0%';
+
+    const btn = document.getElementById('startBtn');
+    btn.classList.remove('active');
+    btn.textContent = 'Start as Customer →';
+
+    document.querySelectorAll('.customer-card').forEach(c => c.classList.remove('selected'));
+}
+
+// ── Boot ──
+init();
 </script>
 </body>
 </html>

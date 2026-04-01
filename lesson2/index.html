@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lesson 2 · Star Nails English</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: #1a1a2e;
+            color: white;
+            font-family: 'Segoe UI', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .salon-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .salon-header .emoji { font-size: 60px; margin-bottom: 15px; }
+
+        .salon-header h1 {
+            font-size: 2.2rem;
+            color: #ff6b9d;
+            margin-bottom: 8px;
+        }
+
+        .salon-header p { color: #a0a0c0; font-size: 1rem; }
+
+        .lesson-title {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .lesson-title h2 {
+            font-size: 1.4rem;
+            color: #e0e0ff;
+            margin-bottom: 6px;
+        }
+
+        .lesson-title p { color: #a0a0c0; font-size: 0.9rem; }
+
+        .mode-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .mode-btn {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            padding: 22px 28px;
+            border-radius: 16px;
+            border: 2px solid transparent;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .mode-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .btn-easy {
+            background: linear-gradient(135deg, #1e3a5f, #162d4a);
+            border-color: #4db8ff;
+        }
+
+        .btn-easy:hover {
+            border-color: #80ccff;
+            box-shadow: 0 10px 30px rgba(77,184,255,0.25);
+        }
+
+        .btn-easy .btn-icon {
+            font-size: 2.4rem;
+            background: #4db8ff22;
+            width: 60px; height: 60px;
+            border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .btn-easy .btn-label { color: #4db8ff; }
+
+        .btn-teacher {
+            background: linear-gradient(135deg, #1e5f3a, #164d2d);
+            border-color: #4dff9d;
+        }
+
+        .btn-teacher:hover {
+            border-color: #80ffbe;
+            box-shadow: 0 10px 30px rgba(77,255,157,0.25);
+        }
+
+        .btn-teacher .btn-icon {
+            font-size: 2.4rem;
+            background: #4dff9d22;
+            width: 60px; height: 60px;
+            border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .btn-teacher .btn-label { color: #4dff9d; }
+
+        .btn-text { display: flex; flex-direction: column; gap: 4px; }
+        .btn-label { font-size: 1.15rem; font-weight: 700; }
+        .btn-desc { color: #a0a0c0; font-size: 0.82rem; line-height: 1.4; }
+        .btn-arrow { margin-left: auto; color: #a0a0c0; font-size: 1.2rem; }
+
+        .footer {
+            margin-top: 50px;
+            color: #606080;
+            font-size: 0.8rem;
+            text-align: center;
+        }
+
+        .nav-lessons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .nav-lessons a {
+            color: #606080;
+            text-decoration: none;
+            font-size: 0.82rem;
+            padding: 6px 14px;
+            border: 1px solid #2a2a4a;
+            border-radius: 99px;
+            transition: all 0.2s;
+        }
+
+        .nav-lessons a:hover { color: #ff6b9d; border-color: #ff6b9d; }
+        .nav-lessons a.current { color: #ff6b9d; border-color: #ff6b9d; }
+    </style>
+</head>
+<body>
+
+    <div class="salon-header">
+        <div class="emoji">💅</div>
+        <h1>Star Nails</h1>
+        <p>Pennsauken, NJ · English Practice Game</p>
+    </div>
+
+    <div class="lesson-title">
+        <h2>Lesson 2 · Small Talk</h2>
+        <p>Practice chatting with your customers</p>
+    </div>
+
+    <div class="mode-grid">
+
+        <a href="easy.html" class="mode-btn btn-easy">
+            <div class="btn-icon">🖼️</div>
+            <div class="btn-text">
+                <span class="btn-label">Practice Mode</span>
+                <span class="btn-desc">Tap the picture · learn the conversation</span>
+            </div>
+            <span class="btn-arrow">›</span>
+        </a>
+
+        <a href="teacher.html" class="mode-btn btn-teacher">
+            <div class="btn-icon">👩‍🏫</div>
+            <div class="btn-text">
+                <span class="btn-label">Teacher Mode</span>
+                <span class="btn-desc">Play as the customer · guide the student</span>
+            </div>
+            <span class="btn-arrow">›</span>
+        </a>
+
+    </div>
+
+    <div class="footer">
+        <div>Star Nails ESL Training · Lesson 2 of 4</div>
+        <div class="nav-lessons">
+            <a href="../lesson3/index.html">Lesson 3</a>
+            <a href="../lesson4/index.html">Lesson 4</a>
+        </div>
+    </div>
+
+</body>
+</html>

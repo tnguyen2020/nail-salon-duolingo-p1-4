@@ -1,0 +1,1157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Easy Mode · Star Nails English</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #1a1a2e;
+            color: white;
+            font-family: 'Segoe UI', sans-serif;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* ── TOP BAR ── */
+        .top-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .back-btn {
+            color: #a0a0c0;
+            text-decoration: none;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .back-btn:hover { color: #ff6b9d; }
+
+        .top-title {
+            font-size: 1rem;
+            color: #e0e0ff;
+            font-weight: 600;
+        }
+
+        .top-score {
+            font-size: 0.9rem;
+            color: #ff6b9d;
+            font-weight: 700;
+        }
+
+        /* ── PROGRESS BAR ── */
+        .progress-wrap {
+            max-width: 500px;
+            margin: 0 auto 28px;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: #a0a0c0;
+            margin-bottom: 8px;
+        }
+
+        .progress-track {
+            height: 8px;
+            background: #2a2a4a;
+            border-radius: 99px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff6b9d, #ff9dbf);
+            border-radius: 99px;
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+
+        /* ── CUSTOMER PICKER ── */
+        #customerPicker {
+            max-width: 500px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        #customerPicker .picker-emoji {
+            font-size: 3.5rem;
+            margin-bottom: 16px;
+        }
+
+        #customerPicker h2 {
+            font-size: 1.6rem;
+            color: #ff6b9d;
+            margin-bottom: 8px;
+        }
+
+        #customerPicker p {
+            color: #a0a0c0;
+            margin-bottom: 30px;
+            font-size: 0.95rem;
+        }
+
+        .customer-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+            margin-bottom: 28px;
+        }
+
+        .customer-card {
+            background: #16213e;
+            border: 2px solid #2a2a4a;
+            border-radius: 16px;
+            padding: 20px 10px;
+            cursor: pointer;
+            transition: all 0.25s;
+            text-align: center;
+        }
+
+        .customer-card:hover {
+            border-color: #ff6b9d;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(255,107,157,0.2);
+        }
+
+        .customer-card.selected {
+            border-color: #ff6b9d;
+            background: #2a1a2e;
+            box-shadow: 0 0 0 3px #ff6b9d44;
+        }
+
+        .customer-card .cust-emoji {
+            font-size: 2.4rem;
+            margin-bottom: 8px;
+        }
+
+        .customer-card .cust-name {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #e0e0ff;
+            margin-bottom: 4px;
+        }
+
+        .customer-card .cust-hint {
+            font-size: 0.72rem;
+            color: #606080;
+        }
+
+        .start-btn {
+            background: linear-gradient(135deg, #ff6b9d, #d44d7a);
+            color: white;
+            border: none;
+            padding: 16px 48px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.25s;
+            opacity: 0.35;
+            pointer-events: none;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .start-btn.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .start-btn.active:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(255,107,157,0.4);
+        }
+
+        /* ── GAME SCREEN ── */
+        #gameScreen {
+            display: none;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* Situation card */
+        .situation-card {
+            background: #16213e;
+            border: 1px solid #2a2a4a;
+            border-radius: 20px;
+            padding: 22px;
+            margin-bottom: 20px;
+        }
+
+        .step-badge {
+            display: inline-block;
+            background: #ff6b9d22;
+            color: #ff6b9d;
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 99px;
+            margin-bottom: 14px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .situation-scene {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 14px;
+        }
+
+        .scene-emoji {
+            font-size: 2.8rem;
+            flex-shrink: 0;
+            background: #ffffff08;
+            width: 64px;
+            height: 64px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .scene-text .what-happened {
+            font-size: 0.72rem;
+            color: #a0a0c0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .scene-text .situation {
+            font-size: 1rem;
+            color: #e0e0ff;
+            line-height: 1.5;
+        }
+
+        .speech-bubble {
+            background: #ff6b9d14;
+            border-left: 3px solid #ff6b9d;
+            border-radius: 0 10px 10px 0;
+            padding: 10px 14px;
+        }
+
+        .speech-bubble .bubble-label {
+            font-size: 0.72rem;
+            color: #ff6b9d;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 3px;
+        }
+
+        .speech-bubble .bubble-text {
+            font-size: 0.95rem;
+            color: #ffe0ee;
+            font-style: italic;
+        }
+
+        /* Question prompt */
+        .question-prompt {
+            text-align: center;
+            margin-bottom: 18px;
+        }
+
+        .question-prompt h3 {
+            font-size: 1.05rem;
+            color: #e0e0ff;
+            margin-bottom: 4px;
+        }
+
+        .question-prompt p {
+            font-size: 0.82rem;
+            color: #a0a0c0;
+        }
+
+        /* Answer choices */
+        .choices-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .choice-btn {
+            background: #16213e;
+            border: 2px solid #2a2a4a;
+            border-radius: 16px;
+            padding: 18px 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .choice-btn:hover:not(:disabled) {
+            border-color: #ff6b9d;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255,107,157,0.2);
+        }
+
+        .choice-btn:disabled {
+            cursor: not-allowed;
+        }
+
+        .choice-btn .choice-emoji {
+            font-size: 2rem;
+            line-height: 1;
+        }
+
+        .choice-btn .choice-text {
+            font-size: 0.85rem;
+            color: #c0c0e0;
+            line-height: 1.4;
+            font-weight: 500;
+        }
+
+        .choice-btn.correct {
+            border-color: #4dff9d;
+            background: #0a2e1a;
+            animation: correctPop 0.4s ease;
+        }
+
+        .choice-btn.correct .choice-text {
+            color: #4dff9d;
+            font-weight: 700;
+        }
+
+        @keyframes correctPop {
+            0%   { transform: scale(1); }
+            40%  { transform: scale(1.07); }
+            100% { transform: scale(1); }
+        }
+
+        .choice-btn.wrong {
+            border-color: #ff4d6d;
+            background: #2e0a14;
+            animation: wrongShake 0.45s ease;
+        }
+
+        .choice-btn.wrong .choice-text {
+            color: #ff4d6d;
+        }
+
+        @keyframes wrongShake {
+            0%   { transform: translateX(0); }
+            20%  { transform: translateX(-8px); }
+            40%  { transform: translateX(8px); }
+            60%  { transform: translateX(-5px); }
+            80%  { transform: translateX(5px); }
+            100% { transform: translateX(0); }
+        }
+
+        /* Feedback banner */
+        .feedback-banner {
+            border-radius: 12px;
+            padding: 14px 18px;
+            margin-bottom: 16px;
+            display: none;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .feedback-banner.show {
+            display: flex;
+        }
+
+        .feedback-banner.correct-fb {
+            background: #0a2e1a;
+            border: 1px solid #4dff9d55;
+        }
+
+        .feedback-banner.wrong-fb {
+            background: #2e0a14;
+            border: 1px solid #ff4d6d55;
+        }
+
+        .fb-icon { font-size: 1.6rem; flex-shrink: 0; }
+
+        .fb-text .fb-title {
+            font-weight: 700;
+            font-size: 0.95rem;
+            margin-bottom: 2px;
+        }
+
+        .correct-fb .fb-title { color: #4dff9d; }
+        .wrong-fb .fb-title { color: #ff4d6d; }
+
+        .fb-text .fb-sub {
+            font-size: 0.82rem;
+            color: #a0a0c0;
+            line-height: 1.4;
+        }
+
+        /* Next button */
+        .next-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #ff6b9d, #d44d7a);
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: none;
+            transition: all 0.25s;
+            margin-bottom: 20px;
+        }
+
+        .next-btn.show {
+            display: block;
+        }
+
+        .next-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(255,107,157,0.4);
+        }
+
+        /* ── SUMMARY SCREEN ── */
+        #summaryScreen {
+            display: none;
+            max-width: 500px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .summary-header .big-emoji {
+            font-size: 4.5rem;
+            margin-bottom: 16px;
+        }
+
+        .summary-header h2 {
+            font-size: 1.8rem;
+            color: #ff6b9d;
+            margin-bottom: 8px;
+        }
+
+        .summary-header p {
+            color: #a0a0c0;
+            font-size: 0.95rem;
+            margin-bottom: 28px;
+        }
+
+        .summary-score {
+            background: #16213e;
+            border: 1px solid #ff6b9d33;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .score-item .score-num {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #ff6b9d;
+        }
+
+        .score-item .score-label {
+            font-size: 0.78rem;
+            color: #a0a0c0;
+            margin-top: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Info collected cards */
+        .info-collected {
+            text-align: left;
+            margin-bottom: 28px;
+        }
+
+        .info-collected h3 {
+            font-size: 0.8rem;
+            color: #a0a0c0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 14px;
+        }
+
+        .info-card {
+            background: #16213e;
+            border: 1px solid #2a2a4a;
+            border-radius: 14px;
+            padding: 16px 18px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .info-card .info-icon {
+            font-size: 1.8rem;
+            flex-shrink: 0;
+        }
+
+        .info-card .info-label {
+            font-size: 0.75rem;
+            color: #a0a0c0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 3px;
+        }
+
+        .info-card .info-value {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #e0e0ff;
+        }
+
+        /* Summary action buttons */
+        .summary-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .btn-restart {
+            background: linear-gradient(135deg, #ff6b9d, #d44d7a);
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.25s;
+        }
+
+        .btn-restart:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(255,107,157,0.4);
+        }
+
+        .btn-typing-mode {
+            background: transparent;
+            color: #ff6b9d;
+            border: 2px solid #ff6b9d;
+            padding: 14px;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: block;
+            transition: all 0.25s;
+        }
+
+        .btn-typing-mode:hover {
+            background: #ff6b9d18;
+        }
+
+        .btn-home {
+            color: #606080;
+            text-decoration: none;
+            font-size: 0.85rem;
+            padding: 10px;
+            display: block;
+        }
+
+        .btn-home:hover { color: #a0a0c0; }
+    </style>
+</head>
+<body>
+
+<!-- ── TOP BAR ── -->
+<div class="top-bar">
+    <a href="index.html" class="back-btn">‹ Back</a>
+    <span class="top-title">💅 Easy Mode</span>
+    <span class="top-score" id="topScore">⭐ 0</span>
+</div>
+
+<!-- ── PROGRESS BAR ── -->
+<div class="progress-wrap">
+    <div class="progress-info">
+        <span id="progressLabel">Question 0 of 4</span>
+        <span id="progressPct">0%</span>
+    </div>
+    <div class="progress-track">
+        <div class="progress-fill" id="progressFill"></div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SCREEN 1 · CUSTOMER PICKER
+══════════════════════════════════════ -->
+<div id="customerPicker">
+    <div class="picker-emoji">💅</div>
+    <h2>Who is your customer?</h2>
+    <p>Pick a customer to practice with</p>
+
+    <div class="customer-grid" id="customerGrid">
+        <!-- filled by JS -->
+    </div>
+
+    <button class="start-btn" id="startBtn" onclick="startGame()">
+        Start Practice →
+    </button>
+</div>
+
+<!-- ══════════════════════════════════════
+     SCREEN 2 · GAME
+══════════════════════════════════════ -->
+<div id="gameScreen">
+
+    <!-- Situation card -->
+    <div class="situation-card">
+        <div class="step-badge" id="stepBadge">Step 1 of 4</div>
+        <div class="situation-scene">
+            <div class="scene-emoji" id="sceneEmoji">🚪</div>
+            <div class="scene-text">
+                <div class="what-happened">What just happened</div>
+                <div class="situation" id="situationText"></div>
+            </div>
+        </div>
+        <div class="speech-bubble">
+            <div class="bubble-label">You asked 👇</div>
+            <div class="bubble-text" id="bubbleText"></div>
+        </div>
+    </div>
+
+    <!-- Question prompt -->
+    <div class="question-prompt">
+        <h3 id="questionText"></h3>
+        <p>Tap the correct answer</p>
+    </div>
+
+    <!-- Answer choices -->
+    <div class="choices-grid" id="choicesGrid">
+        <!-- filled by JS -->
+    </div>
+
+    <!-- Feedback -->
+    <div class="feedback-banner" id="feedbackBanner">
+        <div class="fb-icon" id="fbIcon"></div>
+        <div class="fb-text">
+            <div class="fb-title" id="fbTitle"></div>
+            <div class="fb-sub" id="fbSub"></div>
+        </div>
+    </div>
+
+    <!-- Next button -->
+    <button class="next-btn" id="nextBtn" onclick="nextQuestion()">
+        Next Question →
+    </button>
+
+</div>
+
+<!-- ══════════════════════════════════════
+     SCREEN 3 · SUMMARY
+══════════════════════════════════════ -->
+<div id="summaryScreen">
+    <div class="summary-header">
+        <div class="big-emoji">🎉</div>
+        <h2>Great job!</h2>
+        <p id="summarySubtitle">You collected all the info from your customer.</p>
+    </div>
+
+    <div class="summary-score">
+        <div class="score-item">
+            <div class="score-num" id="finalScore">0</div>
+            <div class="score-label">Score</div>
+        </div>
+        <div class="score-item">
+            <div class="score-num" id="finalCorrect">0</div>
+            <div class="score-label">Correct</div>
+        </div>
+        <div class="score-item">
+            <div class="score-num" id="finalStreak">0</div>
+            <div class="score-label">Best Streak</div>
+        </div>
+    </div>
+
+    <div class="info-collected">
+        <h3>📋 Info you collected</h3>
+        <div id="infoCards">
+            <!-- filled by JS -->
+        </div>
+    </div>
+
+    <div class="summary-actions">
+        <button class="btn-restart" onclick="restartGame()">
+            🔄 Try Another Customer
+        </button>
+        <a href="student.html" class="btn-typing-mode">
+            ⌨️ Ready for Typing Mode?
+        </a>
+        <a href="index.html" class="btn-home">
+            ← Back to Lesson Menu
+        </a>
+    </div>
+</div>
+
+
+<script>
+// ══════════════════════════════════════
+//  CUSTOMER DATA
+// ══════════════════════════════════════
+const customers = [
+    {
+        id: 0,
+        name: "Linda",
+        emoji: "👩",
+        hint: "Regular customer",
+        appointment: "2:00 PM",
+        service: "Manicure",
+        comingFrom: "Cherry Hill"
+    },
+    {
+        id: 1,
+        name: "Maria",
+        emoji: "👩‍🦱",
+        hint: "New customer",
+        appointment: "3:30 PM",
+        service: "Pedicure",
+        comingFrom: "Camden"
+    },
+    {
+        id: 2,
+        name: "Ashley",
+        emoji: "👱‍♀️",
+        hint: "Walk-in",
+        appointment: "No appointment",
+        service: "Gel Nails",
+        comingFrom: "Moorestown"
+    },
+    {
+        id: 3,
+        name: "Tom",
+        emoji: "👨",
+        hint: "First time",
+        appointment: "1:00 PM",
+        service: "Manicure",
+        comingFrom: "Pennsauken"
+    },
+    {
+        id: 4,
+        name: "Diane",
+        emoji: "👩‍🦳",
+        hint: "VIP customer",
+        appointment: "4:00 PM",
+        service: "Full Set Acrylic",
+        comingFrom: "Haddonfield"
+    }
+];
+
+// ══════════════════════════════════════
+//  QUESTIONS CONFIG
+// ══════════════════════════════════════
+function buildQuestions(customer) {
+    return [
+        {
+            field: "appointment",
+            sceneEmoji: "🚪",
+            situation: `${customer.name} just walked into Star Nails and smiled at you.`,
+            youAsked: "Do you have an appointment?",
+            question: `What time is ${customer.name}'s appointment?`,
+            correct: customer.appointment,
+            wrongChoices: getWrongAppointments(customer.appointment),
+            icon: "🕐",
+            label: "Appointment"
+        },
+        {
+            field: "service",
+            sceneEmoji: "💅",
+            situation: `${customer.name} sat down at your nail station.`,
+            youAsked: "What service would you like today?",
+            question: `What service does ${customer.name} want?`,
+            correct: customer.service,
+            wrongChoices: getWrongServices(customer.service),
+            icon: "💅",
+            label: "Service"
+        },
+        {
+            field: "name",
+            sceneEmoji: "📋",
+            situation: `You need to write ${customer.name}'s name in the appointment book.`,
+            youAsked: "Can I get your name please?",
+            question: `What is the customer's name?`,
+            correct: customer.name,
+            wrongChoices: getWrongNames(customer.name),
+            icon: "👤",
+            label: "Name"
+        },
+        {
+            field: "comingFrom",
+            sceneEmoji: "🗺️",
+            situation: `You are making friendly small talk with ${customer.name}.`,
+            youAsked: "Where are you coming from today?",
+            question: `Where is ${customer.name} coming from?`,
+            correct: customer.comingFrom,
+            wrongChoices: getWrongLocations(customer.comingFrom),
+            icon: "📍",
+            label: "Coming From"
+        }
+    ];
+}
+
+// ── Wrong answer pools ──
+function getWrongAppointments(correct) {
+    const all = ["1:00 PM", "2:00 PM", "3:30 PM", "4:00 PM", "No appointment", "11:00 AM", "5:00 PM"];
+    return all.filter(a => a !== correct).sort(() => Math.random() - 0.5).slice(0, 3);
+}
+
+function getWrongServices(correct) {
+    const all = ["Manicure", "Pedicure", "Gel Nails", "Full Set Acrylic", "Nail Repair", "Dip Powder", "French Tips"];
+    return all.filter(s => s !== correct).sort(() => Math.random() - 0.5).slice(0, 3);
+}
+
+function getWrongNames(correct) {
+    const all = ["Linda", "Maria", "Ashley", "Tom", "Diane"];
+    return all.filter(n => n !== correct).sort(() => Math.random() - 0.5).slice(0, 3);
+}
+
+function getWrongLocations(correct) {
+    const all = ["Cherry Hill", "Camden", "Moorestown", "Pennsauken", "Haddonfield", "Marlton", "Voorhees"];
+    return all.filter(l => l !== correct).sort(() => Math.random() - 0.5).slice(0, 3);
+}
+
+// Service emojis
+const serviceEmojis = {
+    "Manicure": "✋",
+    "Pedicure": "🦶",
+    "Gel Nails": "💎",
+    "Full Set Acrylic": "💅",
+    "Nail Repair": "🔧",
+    "Dip Powder": "🌈",
+    "French Tips": "🤍"
+};
+
+const locationEmojis = {
+    "Cherry Hill": "🍒",
+    "Camden": "🌉",
+    "Moorestown": "🌳",
+    "Pennsauken": "⭐",
+    "Haddonfield": "🏡",
+    "Marlton": "🌿",
+    "Voorhees": "🏘️"
+};
+
+const nameEmojis = {
+    "Linda": "👩",
+    "Maria": "👩‍🦱",
+    "Ashley": "👱‍♀️",
+    "Tom": "👨",
+    "Diane": "👩‍🦳"
+};
+
+const appointmentEmojis = {
+    "1:00 PM": "🕐",
+    "2:00 PM": "🕑",
+    "3:30 PM": "🕞",
+    "4:00 PM": "🕓",
+    "No appointment": "🚶",
+    "11:00 AM": "🕚",
+    "5:00 PM": "🕔"
+};
+
+function getChoiceEmoji(field, value) {
+    if (field === "appointment") return appointmentEmojis[value] || "🕐";
+    if (field === "service")     return serviceEmojis[value]     || "💅";
+    if (field === "name")        return nameEmojis[value]        || "👤";
+    if (field === "comingFrom")  return locationEmojis[value]    || "📍";
+    return "❓";
+}
+
+// ══════════════════════════════════════
+//  GAME STATE
+// ══════════════════════════════════════
+let selectedCustomer  = null;
+let questions         = [];
+let currentQ          = 0;
+let score             = 0;
+let correctCount      = 0;
+let streak            = 0;
+let bestStreak        = 0;
+let collectedInfo     = {};
+let answered          = false;
+
+// ══════════════════════════════════════
+//  INIT · BUILD CUSTOMER PICKER
+// ══════════════════════════════════════
+function init() {
+    const grid = document.getElementById('customerGrid');
+    grid.innerHTML = '';
+
+    customers.forEach(c => {
+        const card = document.createElement('div');
+        card.className = 'customer-card';
+        card.innerHTML = `
+            <div class="cust-emoji">${c.emoji}</div>
+            <div class="cust-name">${c.name}</div>
+            <div class="cust-hint">${c.hint}</div>
+        `;
+        card.onclick = () => selectCustomer(c.id, card);
+        grid.appendChild(card);
+    });
+}
+
+function selectCustomer(id, cardEl) {
+    selectedCustomer = customers[id];
+
+    // highlight selected
+    document.querySelectorAll('.customer-card').forEach(c => c.classList.remove('selected'));
+    cardEl.classList.add('selected');
+
+    // activate start button
+    const btn = document.getElementById('startBtn');
+    btn.classList.add('active');
+    btn.textContent = `Practice with ${selectedCustomer.name} →`;
+}
+
+// ══════════════════════════════════════
+//  START GAME
+// ══════════════════════════════════════
+function startGame() {
+    if (!selectedCustomer) return;
+
+    questions    = buildQuestions(selectedCustomer);
+    currentQ     = 0;
+    score        = 0;
+    correctCount = 0;
+    streak       = 0;
+    bestStreak   = 0;
+    collectedInfo = {};
+    answered     = false;
+
+    // switch screens
+    document.getElementById('customerPicker').style.display = 'none';
+    document.getElementById('gameScreen').style.display     = 'block';
+
+    updateProgress();
+    renderQuestion();
+}
+
+// ══════════════════════════════════════
+//  RENDER QUESTION
+// ══════════════════════════════════════
+function renderQuestion() {
+    answered = false;
+    const q  = questions[currentQ];
+
+    // situation card
+    document.getElementById('stepBadge').textContent    = `Step ${currentQ + 1} of ${questions.length}`;
+    document.getElementById('sceneEmoji').textContent   = q.sceneEmoji;
+    document.getElementById('situationText').textContent = q.situation;
+    document.getElementById('bubbleText').textContent   = `"${q.youAsked}"`;
+    document.getElementById('questionText').textContent = q.question;
+
+    // hide feedback & next
+    const fb   = document.getElementById('feedbackBanner');
+    const next = document.getElementById('nextBtn');
+    fb.className   = 'feedback-banner';
+    next.className = 'next-btn';
+
+    // build choices (correct + wrong, shuffled)
+    const choices = [q.correct, ...q.wrongChoices].sort(() => Math.random() - 0.5);
+    const grid    = document.getElementById('choicesGrid');
+    grid.innerHTML = '';
+
+    choices.forEach(choice => {
+        const btn = document.createElement('button');
+        btn.className = 'choice-btn';
+        btn.innerHTML = `
+            <div class="choice-emoji">${getChoiceEmoji(q.field, choice)}</div>
+            <div class="choice-text">${choice}</div>
+        `;
+        btn.onclick = () => handleAnswer(choice, btn, q);
+        grid.appendChild(btn);
+    });
+}
+
+// ══════════════════════════════════════
+//  HANDLE ANSWER
+// ══════════════════════════════════════
+function handleAnswer(choice, btnEl, q) {
+    if (answered) return;
+    answered = true;
+
+    // disable all buttons
+    document.querySelectorAll('.choice-btn').forEach(b => b.disabled = true);
+
+    const isCorrect = choice === q.correct;
+
+    if (isCorrect) {
+        btnEl.classList.add('correct');
+        streak++;
+        correctCount++;
+        score += streak > 1 ? 15 : 10;   // streak bonus
+        if (streak > bestStreak) bestStreak = streak;
+
+        collectedInfo[q.field] = {
+            label: q.label,
+            value: q.correct,
+            icon:  q.icon
+        };
+
+        showFeedback(true, q.correct, streak);
+    } else {
+        btnEl.classList.add('wrong');
+        streak = 0;
+
+        // show correct answer
+        document.querySelectorAll('.choice-btn').forEach(b => {
+            if (b.querySelector('.choice-text').textContent === q.correct) {
+                b.classList.add('correct');
+            }
+        });
+
+        showFeedback(false, q.correct, 0);
+    }
+
+    document.getElementById('topScore').textContent = `⭐ ${score}`;
+    document.getElementById('nextBtn').className = 'next-btn show';
+}
+
+// ══════════════════════════════════════
+//  SHOW FEEDBACK
+// ══════════════════════════════════════
+function showFeedback(isCorrect, correctAnswer, streak) {
+    const banner = document.getElementById('feedbackBanner');
+    const icon   = document.getElementById('fbIcon');
+    const title  = document.getElementById('fbTitle');
+    const sub    = document.getElementById('fbSub');
+
+    if (isCorrect) {
+        banner.className = 'feedback-banner correct-fb show';
+        icon.textContent = '✅';
+        title.textContent = streak > 1 ? `🔥 ${streak}x Streak! +15 points` : 'Correct! +10 points';
+        sub.textContent  = `The answer is: "${correctAnswer}"`;
+    } else {
+        banner.className = 'feedback-banner wrong-fb show';
+        icon.textContent = '❌';
+        title.textContent = 'Not quite!';
+        sub.textContent  = `The correct answer is: "${correctAnswer}"`;
+    }
+}
+
+// ══════════════════════════════════════
+//  NEXT QUESTION
+// ══════════════════════════════════════
+function nextQuestion() {
+    currentQ++;
+
+    if (currentQ >= questions.length) {
+        showSummary();
+        return;
+    }
+
+    updateProgress();
+    renderQuestion();
+}
+
+// ══════════════════════════════════════
+//  PROGRESS BAR
+// ══════════════════════════════════════
+function updateProgress() {
+    const total  = questions.length;
+    const done   = currentQ;
+    const pct    = Math.round((done / total) * 100);
+
+    document.getElementById('progressLabel').textContent = `Question ${done} of ${total}`;
+    document.getElementById('progressPct').textContent   = `${pct}%`;
+    document.getElementById('progressFill').style.width  = `${pct}%`;
+}
+
+// ══════════════════════════════════════
+//  SUMMARY SCREEN
+// ══════════════════════════════════════
+function showSummary() {
+    document.getElementById('gameScreen').style.display    = 'none';
+    document.getElementById('summaryScreen').style.display = 'block';
+
+    // update progress to 100%
+    document.getElementById('progressLabel').textContent = `Question ${questions.length} of ${questions.length}`;
+    document.getElementById('progressPct').textContent   = '100%';
+    document.getElementById('progressFill').style.width  = '100%';
+
+    // scores
+    document.getElementById('finalScore').textContent   = score;
+    document.getElementById('finalCorrect').textContent = `${correctCount}/${questions.length}`;
+    document.getElementById('finalStreak').textContent  = bestStreak;
+
+    // subtitle
+    const allCorrect = correctCount === questions.length;
+    document.getElementById('summarySubtitle').textContent = allCorrect
+        ? `Perfect score! ${selectedCustomer.name} is very happy! 🌟`
+        : `You got ${correctCount} out of ${questions.length} correct. Keep practicing!`;
+
+    // info cards
+    const infoOrder  = ["appointment", "service", "name", "comingFrom"];
+    const infoLabels = {
+        appointment: { label: "Appointment", icon: "🕐" },
+        service:     { label: "Service",     icon: "💅" },
+        name:        { label: "Name",        icon: "👤" },
+        comingFrom:  { label: "Coming From", icon: "📍" }
+    };
+
+    const container = document.getElementById('infoCards');
+    container.innerHTML = '';
+
+    infoOrder.forEach(field => {
+        const meta      = infoLabels[field];
+        const collected = collectedInfo[field];
+        const card      = document.createElement('div');
+        card.className  = 'info-card';
+        card.innerHTML  = `
+            <div class="info-icon">${meta.icon}</div>
+            <div>
+                <div class="info-label">${meta.label}</div>
+                <div class="info-value" style="color: ${collected ? '#e0e0ff' : '#ff4d6d'}">
+                    ${collected ? collected.value : '✗ Missed — ' + questions.find(q => q.field === field).correct}
+                </div>
+            </div>
+        `;
+        container.appendChild(card);
+    });
+}
+
+// ══════════════════════════════════════
+//  RESTART
+// ══════════════════════════════════════
+function restartGame() {
+    selectedCustomer = null;
+
+    document.getElementById('summaryScreen').style.display = 'none';
+    document.getElementById('customerPicker').style.display = 'block';
+
+    // reset progress bar
+    document.getElementById('progressLabel').textContent = 'Question 0 of 4';
+    document.getElementById('progressPct').textContent   = '0%';
+    document.getElementById('progressFill').style.width  = '0%';
+    document.getElementById('topScore').textContent      = '⭐ 0';
+
+    // reset start button
+    const btn = document.getElementById('startBtn');
+    btn.classList.remove('active');
+    btn.textContent = 'Start Practice →';
+
+    // deselect cards
+    document.querySelectorAll('.customer-card').forEach(c => c.classList.remove('selected'));
+}
+
+// ── Boot ──
+init();
+</script>
+</body>
+</html>
