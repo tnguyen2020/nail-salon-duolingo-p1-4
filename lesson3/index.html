@@ -14,42 +14,88 @@
             align-items: center; justify-content: center;
             padding: 20px;
         }
-        .container { text-align: center; max-width: 600px; width: 100%; }
+        .container { text-align: center; max-width: 700px; width: 100%; }
         h1 { font-size: 2rem; color: #d63384; margin-bottom: 5px; }
         .subtitle { font-size: 1rem; color: #888; margin-bottom: 8px; }
         .topic-badge {
-            display: inline-block; background: linear-gradient(135deg, #ff69b4, #ff1493);
-            color: white; padding: 6px 18px; border-radius: 20px;
-            font-size: 0.85rem; font-weight: bold; margin-bottom: 35px;
+            display: inline-block;
+            background: linear-gradient(135deg, #ff69b4, #ff1493);
+            color: white;
+            padding: 6px 18px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-bottom: 25px;
         }
         .emoji-header { font-size: 4rem; margin-bottom: 20px; }
-        .role-cards { display: flex; flex-direction: column; gap: 20px; align-items: center; }
+        .section-title {
+            margin: 25px 0 15px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #b03060;
+        }
+        .role-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+        }
         .role-card {
-            display: flex; align-items: center; gap: 20px;
-            background: white; border-radius: 20px; padding: 25px 30px;
-            width: 100%; max-width: 450px; text-decoration: none; color: inherit;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background: white;
+            border-radius: 20px;
+            padding: 25px 30px;
+            width: 100%;
+            max-width: 500px;
+            text-decoration: none;
+            color: inherit;
             box-shadow: 0 6px 20px rgba(0,0,0,0.08);
             transition: transform 0.3s, box-shadow 0.3s;
             border: 3px solid transparent;
         }
-        .role-card:hover { transform: translateY(-5px); box-shadow: 0 12px 30px rgba(0,0,0,0.15); }
+        .role-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+        }
         .role-card.student { border-color: #ff69b4; }
         .role-card.student:hover { background: linear-gradient(135deg, #fff0f5, #ffe0f0); }
         .role-card.teacher { border-color: #6f42c1; }
         .role-card.teacher:hover { background: linear-gradient(135deg, #f3e8ff, #ede0ff); }
+        .role-card.extra { border-color: #20c997; }
+        .role-card.extra:hover { background: linear-gradient(135deg, #e8fff8, #dcfff4); }
         .role-icon { font-size: 3.5rem; flex-shrink: 0; }
         .role-info { text-align: left; }
         .role-info h2 { font-size: 1.4rem; margin-bottom: 5px; }
         .role-card.student .role-info h2 { color: #d63384; }
         .role-card.teacher .role-info h2 { color: #6f42c1; }
+        .role-card.extra .role-info h2 { color: #198754; }
         .role-info p { font-size: 0.95rem; color: #777; line-height: 1.4; }
         .role-badge {
-            display: inline-block; font-size: 0.75rem; font-weight: bold;
-            padding: 3px 10px; border-radius: 20px; margin-bottom: 6px; color: white;
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: bold;
+            padding: 3px 10px;
+            border-radius: 20px;
+            margin-bottom: 6px;
+            color: white;
         }
         .role-card.student .role-badge { background: #ff69b4; }
         .role-card.teacher .role-badge { background: #6f42c1; }
-        .footer { margin-top: 50px; font-size: 0.85rem; color: #aaa; }
+        .role-card.extra .role-badge { background: #20c997; }
+        .back-btn {
+            display:inline-block;
+            margin-top:25px;
+            background: linear-gradient(135deg, #ff6b9d, #c44569);
+            color:white;
+            padding:14px 32px;
+            border-radius:30px;
+            text-decoration:none;
+            font-weight:700;
+            font-size:1em;
+        }
+        .footer { margin-top: 40px; font-size: 0.85rem; color: #aaa; }
     </style>
 </head>
 <body>
@@ -58,8 +104,10 @@
         <h1>Nail Salon English</h1>
         <p class="subtitle">Cửa 3 — Introducing Yourself & Family</p>
         <div class="topic-badge">🚪 CỬA 3 — Giới Thiệu Bản Thân và Gia Đình</div>
+
+        <div class="section-title">Game 1</div>
         <div class="role-cards">
-            <a href="student.html" class="role-card student">
+            <a href="game1/student.html" class="role-card student">
                 <div class="role-icon">💁‍♀️</div>
                 <div class="role-info">
                     <span class="role-badge">STUDENT</span>
@@ -67,7 +115,8 @@
                     <p>Listen to the customer and type the correct English responses! 💅</p>
                 </div>
             </a>
-            <a href="teacher.html" class="role-card teacher">
+
+            <a href="game1/teacher.html" class="role-card teacher">
                 <div class="role-icon">👩</div>
                 <div class="role-info">
                     <span class="role-badge">TEACHER</span>
@@ -75,18 +124,31 @@
                     <p>Read the customer lines to your student and check their answers! 📋</p>
                 </div>
             </a>
-            <a href="../index.html" style="
-  display:inline-block;
-  margin-top:20px;
-  background: linear-gradient(135deg, #ff6b9d, #c44569);
-  color:white;
-  padding:14px 32px;
-  border-radius:30px;
-  text-decoration:none;
-  font-weight:700;
-  font-size:1em;
-">🏠 Back to All Lessons</a>
         </div>
+
+        <div class="section-title">Game 2</div>
+        <div class="role-cards">
+            <a href="game2/student.html" class="role-card extra">
+                <div class="role-icon">🗣️</div>
+                <div class="role-info">
+                    <span class="role-badge">STUDENT</span>
+                    <h2>Conversation Practice</h2>
+                    <p>Practice salon conversation with question and answer speaking drills. 🎧</p>
+                </div>
+            </a>
+
+            <a href="game2/teacher.html" class="role-card teacher">
+                <div class="role-icon">📖</div>
+                <div class="role-info">
+                    <span class="role-badge">TEACHER</span>
+                    <h2>Conversation Script</h2>
+                    <p>Guide the student with the Lesson 3 conversation and answer key. 📝</p>
+                </div>
+            </a>
+        </div>
+
+        <a href="../index.html" class="back-btn">🏠 Back to All Lessons</a>
+
         <p class="footer">TeeTalk English — Learn English through Real-Life Scenarios</p>
     </div>
 </body>
