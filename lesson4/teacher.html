@@ -1,601 +1,431 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Teacher Mode – Lesson 4 | TeeTalk English</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lesson 4 Game 2 - Nail Customer</title>
+  <link rel="stylesheet" href="style.css" />
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: #1a1a2e;
-      min-height: 100vh;
-      color: white;
-      padding-bottom: 60px;
-    }
-    .top-bar {
-      background: #0f3460;
-      padding: 12px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 2px solid #64b5f6;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-    .back-btn { color: #64b5f6; text-decoration: none; font-size: 0.9em; font-weight: 700; }
-    .teacher-badge {
-      background: rgba(100,181,246,0.2);
-      border: 1px solid #64b5f6;
-      border-radius: 20px;
-      padding: 5px 14px;
-      font-size: 0.78em;
-      color: #64b5f6;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 1px;
+    .game-container {
+      max-width: 680px;
+      margin: 0 auto;
     }
 
-    /* PICKER */
-    .picker-screen { display: block; }
-    .picker-screen.hide { display: none; }
-
-    .picker-header {
-      background: linear-gradient(135deg, #0f3460, #1a2a4e);
-      padding: 28px 20px;
-      text-align: center;
-      border-bottom: 1px solid #1e2a4a;
-    }
-    .picker-header .icon { font-size: 44px; margin-bottom: 10px; }
-    .picker-header h1 { font-size: 1.3em; font-weight: 900; margin-bottom: 4px; }
-    .picker-header h1 span { color: #64b5f6; }
-    .picker-header p { font-size: 0.85em; color: #8892b0; }
-
-    .picker-area { max-width: 500px; margin: 24px auto; padding: 0 20px; }
-
-    .picker-label {
-      font-size: 0.78em;
-      color: #8892b0;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      font-weight: 700;
-      margin-bottom: 14px;
-      text-align: center;
-    }
-
-    .customer-list { display: flex; flex-direction: column; gap: 10px; }
-
-    .customer-pick-card {
-      background: #16213e;
-      border: 2px solid #0f3460;
+    .script-card {
+      background: var(--surface-soft);
+      border: 1px solid var(--border);
       border-radius: 16px;
-      padding: 14px 16px;
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      cursor: pointer;
-      transition: border-color 0.2s, transform 0.15s, box-shadow 0.2s;
-    }
-    .customer-pick-card:hover {
-      border-color: #64b5f6;
-      transform: translateX(4px);
-      box-shadow: 0 0 16px rgba(100,181,246,0.15);
-    }
-    .customer-pick-card.selected {
-      border-color: #64b5f6;
-      background: rgba(100,181,246,0.08);
+      padding: 20px;
+      margin-bottom: 20px;
     }
 
-    .pick-avatar {
-      width: 54px; height: 54px; border-radius: 50%;
-      background: rgba(100,181,246,0.1);
-      border: 2px solid rgba(100,181,246,0.3);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 28px; flex-shrink: 0;
-    }
-    .pick-info { flex: 1; }
-    .pick-info h3 { font-size: 0.98em; font-weight: 800; color: white; margin-bottom: 5px; }
-    .pick-tags { display: flex; flex-wrap: wrap; gap: 5px; }
-    .pick-tag {
-      background: rgba(100,181,246,0.1);
-      border: 1px solid rgba(100,181,246,0.2);
-      border-radius: 20px;
-      padding: 2px 9px;
-      font-size: 0.72em;
-      color: #64b5f6;
-    }
-    .pick-arrow { color: #4a5568; font-size: 1.2em; transition: color 0.2s; }
-    .customer-pick-card:hover .pick-arrow { color: #64b5f6; }
-
-    .start-btn {
-      display: block; width: 100%; margin-top: 20px;
-      padding: 15px;
-      background: linear-gradient(135deg, #64b5f6, #1565c0);
-      color: white; border: none; border-radius: 14px;
-      font-size: 1em; font-weight: 700; cursor: pointer;
-      opacity: 0.4; pointer-events: none;
-      transition: opacity 0.2s;
-    }
-    .start-btn.ready { opacity: 1; pointer-events: all; }
-
-    /* SECRET CARD SCREEN */
-    .card-screen { display: none; }
-    .card-screen.show { display: block; }
-
-    /* Active bar */
-    .active-customer-bar {
-      background: #0f3460;
-      border-bottom: 1px solid rgba(100,181,246,0.2);
-      padding: 10px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .active-customer-info { display: flex; align-items: center; gap: 10px; }
-    .active-avatar {
-      width: 36px; height: 36px; border-radius: 50%;
-      background: rgba(100,181,246,0.1);
-      border: 1px solid rgba(100,181,246,0.3);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 18px;
-    }
-    .active-name { font-size: 0.88em; font-weight: 700; color: white; }
-    .active-sub  { font-size: 0.72em; color: #8892b0; }
-    .change-btn {
-      font-size: 0.75em; color: #64b5f6;
-      background: rgba(100,181,246,0.1);
-      border: 1px solid rgba(100,181,246,0.3);
-      border-radius: 20px; padding: 4px 12px;
-      cursor: pointer; font-weight: 700;
-    }
-    .change-btn:hover { background: rgba(100,181,246,0.2); }
-
-    /* HOW TO */
-    .how-to {
-      background: rgba(100,181,246,0.06);
-      border: 1px solid rgba(100,181,246,0.2);
-      border-radius: 14px;
-      padding: 14px 18px;
-      margin: 16px 20px;
-      max-width: 520px;
-      margin-left: auto;
-      margin-right: auto;
-      font-size: 0.85em;
-      color: #c8d3f5;
-      line-height: 1.6;
-    }
-    .how-to strong { color: #64b5f6; }
-    .how-to ol { padding-left: 18px; margin-top: 6px; }
-    .how-to ol li { margin-bottom: 4px; }
-
-    /* SECRET CARD */
-    .secret-card {
-      background: linear-gradient(135deg, #0f3460, #1a2a4e);
-      border: 2px solid #64b5f6;
-      border-radius: 20px;
-      margin: 0 20px 20px;
-      max-width: 520px;
-      margin-left: auto;
-      margin-right: auto;
-      overflow: hidden;
-      box-shadow: 0 0 30px rgba(100,181,246,0.15);
-    }
-    .card-top {
-      background: rgba(100,181,246,0.12);
-      padding: 14px 20px;
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      border-bottom: 1px solid rgba(100,181,246,0.2);
-    }
-    .client-avatar {
-      width: 60px; height: 60px; border-radius: 50%;
-      background: rgba(100,181,246,0.15);
-      border: 2px solid #64b5f6;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 32px; flex-shrink: 0;
-    }
-    .client-meta h2 { font-size: 1.2em; font-weight: 800; color: white; }
-    .client-meta p  { font-size: 0.8em; color: #8892b0; }
-    .secret-badge {
-      margin-left: auto;
-      background: rgba(100,181,246,0.15);
-      border: 1px solid #64b5f6;
-      border-radius: 20px;
-      padding: 4px 12px;
-      font-size: 0.7em;
-      color: #64b5f6;
+    .say-badge {
+      display: inline-block;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 0.78rem;
       font-weight: 700;
-      text-transform: uppercase;
+      color: white;
+      background: linear-gradient(135deg, #7c3aed, #9333ea);
+      margin-bottom: 14px;
     }
 
-    .info-rows { padding: 16px 20px; display: flex; flex-direction: column; gap: 12px; }
-    .info-row {
-      display: flex; align-items: flex-start; gap: 14px;
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 12px;
-      padding: 12px 16px;
+    .customer-line {
+      font-size: 1.4rem;
+      line-height: 1.5;
+      color: var(--text);
+      margin-bottom: 16px;
     }
-    .info-icon { font-size: 24px; flex-shrink: 0; margin-top: 2px; }
-    .info-question {
-      font-size: 0.72em; color: #8892b0;
-      text-transform: uppercase; letter-spacing: 1px;
-      font-weight: 700; margin-bottom: 3px;
-    }
-    .info-answer { font-size: 1em; color: white; font-weight: 700; }
-    .info-say { margin-top: 6px; font-size: 0.85em; color: #64b5f6; font-style: italic; }
 
-    /* Bottom btn */
-    .bottom-btns {
-      display: flex; flex-direction: column; gap: 12px;
-      padding: 20px; max-width: 520px; margin: 0 auto;
+    .answer-panel {
+      background: #f0fdf9;
+      border: 1px solid #c9f7ea;
+      border-left: 5px solid var(--success);
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 14px;
+      line-height: 1.5;
     }
-    .btn-secondary {
-      padding: 13px; background: transparent; color: #8892b0;
-      border: 2px solid #1e2a4a; border-radius: 14px;
-      font-size: 0.9em; font-weight: 700; cursor: pointer;
-      text-decoration: none; text-align: center; display: block;
+
+    .note-panel {
+      background: #fff8e8;
+      border: 1px solid #fde7b1;
+      border-left: 5px solid #f59e0b;
+      border-radius: 14px;
+      padding: 14px;
+      line-height: 1.6;
+      color: #7c5a10;
     }
-    .btn-secondary:hover { border-color: #8892b0; }
+
+    .salon-section {
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+
+    .salon-label {
+      font-size: 1rem;
+      font-weight: 800;
+      color: #334155;
+      margin-bottom: 14px;
+    }
+
+    .teacher-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+
+    .teacher-spot {
+      position: relative;
+      border: 3px solid #e2e8f0;
+      border-radius: 16px;
+      overflow: hidden;
+      background: white;
+    }
+
+    .teacher-spot img {
+      width: 100%;
+      height: 130px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .teacher-spot .t-name {
+      padding: 8px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #334155;
+      text-align: center;
+      background: #f8fafc;
+    }
+
+    .teacher-spot.highlight {
+      border-color: var(--success);
+      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.15);
+    }
+
+    .teacher-spot.highlight::after {
+      content: '✅';
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      font-size: 1.3rem;
+      background: white;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+    }
+
+    .number-badge {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      width: 30px;
+      height: 30px;
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.95rem;
+      font-weight: 800;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+      z-index: 2;
+    }
+
+    .game-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: center;
+      margin-top: 20px;
+    }
+
+    .game-controls .btn {
+      width: 100%;
+      max-width: 320px;
+    }
+
+    @media (min-width: 700px) {
+      .teacher-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .teacher-spot img {
+        height: 150px;
+      }
+
+      .game-controls {
+        flex-direction: row;
+        justify-content: center;
+      }
+
+      .game-controls .btn {
+        width: auto;
+      }
+    }
+
+    @media (max-width: 380px) {
+      .teacher-spot img {
+        height: 100px;
+      }
+    }
   </style>
 </head>
 <body>
-
-  <!-- TOP BAR -->
-  <div class="top-bar">
-    <a href="index.html" class="back-btn">← Back</a>
-    <div class="teacher-badge">👩‍🏫 Teacher Mode</div>
-  </div>
-
-  <!-- ══════════════════════════════════════════ -->
-  <!-- PICKER SCREEN                              -->
-  <!-- ══════════════════════════════════════════ -->
-  <div class="picker-screen" id="picker-screen">
-
-    <div class="picker-header">
-      <div class="icon">👥</div>
-      <h1>Choose a <span>Customer</span></h1>
-      <p>Pick the same customer as your student!</p>
-    </div>
-
-    <div class="picker-area">
-      <div class="picker-label">👇 Pick who you will play today</div>
-
-      <div class="customer-list" id="customer-list">
-        <!-- Rendered by JS -->
+  <div class="page-wrap">
+    <div class="app-shell">
+      <div class="page-header teacher">
+        <h1>👩 Nail Customer</h1>
+        <p>Read the line to the nail tech. Check if they click the correct place.</p>
       </div>
 
-      <button class="start-btn" id="start-btn" onclick="startCard()">
-        See My Script →
-      </button>
-    </div>
+      <div class="page-body">
+        <div class="game-container">
+          <div class="top-info">
+            <span id="progressText">Card 1 of 15</span>
+            <span>Lesson 4 • Game 2</span>
+          </div>
 
-  </div>
+          <div class="progress-bar">
+            <div class="progress-fill teacher" id="progressFill"></div>
+          </div>
 
-  <!-- ══════════════════════════════════════════ -->
-  <!-- SECRET CARD SCREEN                         -->
-  <!-- ══════════════════════════════════════════ -->
-  <div class="card-screen" id="card-screen">
+          <div id="cardScreen">
+            <div class="script-card">
+              <div class="say-badge">SAY THIS</div>
+              <div class="customer-line" id="customerLine"></div>
 
-    <!-- Active bar -->
-    <div class="active-customer-bar">
-      <div class="active-customer-info">
-        <div class="active-avatar" id="active-avatar"></div>
-        <div>
-          <div class="active-name" id="active-name"></div>
-          <div class="active-sub"  id="active-sub"></div>
+              <div class="answer-panel">
+                <strong>Correct place:</strong>
+                <div id="correctAnswer" style="margin-top:8px; font-size:1.05rem;"></div>
+              </div>
+
+            </div>
+
+            <div class="salon-section">
+              <div class="salon-label">Salon Layout</div>
+              <div class="teacher-grid" id="mapGrid"></div>
+            </div>
+
+            <div class="game-controls">
+              <button id="nextBtn" class="btn btn-teacher">Next</button>
+              <a href="index.html" class="btn btn-secondary">← Back</a>
+              <a href="../../index.html" class="btn btn-home">🏠 Home</a>
+            </div>
+          </div>
+
+          <div id="doneScreen" class="center-screen hidden">
+            <h2>Lesson Complete 🎉</h2>
+            <p>You finished the nail customer role-play for Lesson 4 Game 2.</p>
+
+            <ul class="tips-list">
+              <li>Read the line naturally and clearly.</li>
+              <li>Wait for the nail tech to click before showing the answer.</li>
+              <li>If they click wrong, say: "Can you repeat it again?"</li>
+              <li>After correct, ask them to say a full sentence.</li>
+              <li>Use hand gestures for extra practice.</li>
+            </ul>
+
+            <div class="game-controls">
+              <button class="btn btn-teacher" onclick="restartCards()">Play Again</button>
+              <a href="index.html" class="btn btn-secondary">← Back</a>
+              <a href="../../index.html" class="btn btn-home">🏠 Home</a>
+            </div>
+          </div>
         </div>
       </div>
-      <button class="change-btn" onclick="changePerson()">
-        ↩ Change
-      </button>
     </div>
-
-    <!-- How to use -->
-    <div class="how-to">
-      <strong>👩‍🏫 How to use:</strong>
-      <ol>
-        <li><strong>Don't show</strong> this screen to the student!</li>
-        <li>Wait for the student to <strong>ask you in English</strong></li>
-        <li>Answer using the <strong>blue "Say:" lines</strong> below</li>
-        <li>If they type wrong — <strong>say your line again slowly</strong></li>
-      </ol>
-    </div>
-
-    <!-- Secret card -->
-    <div class="secret-card" id="secret-card">
-      <!-- Filled by JS -->
-    </div>
-
-    <!-- Bottom -->
-    <div class="bottom-btns">
-      <a href="student.html" class="btn-secondary">
-        👨‍🎓 Switch to Student Mode
-      </a>
-    </div>
-
   </div>
 
-<script>
-  const customers = [
-    {
-      id: 0, avatar: "👩", name: "Linda Johnson",
-      tag1: "Cherry Hill, NJ", tag2: "First visit",
-      fields: {
-        1: {
-          // ✅ helps ask the question, not reveal answer
-          hints: ["Hello!", "Do you have...?", "appointment?"],
-          accepted: ["no","no i dont","no i don't","no appointment",
-                     "no i don't have one","no i dont have one"],
-          display: "No appointment", summary: "No appointment"
-        },
-        2: {
-          // ✅ menu options are OK — nail tech already knows the menu
-          hints: ["Which service...?", "would you like", "basic / spa / deluxe"],
-          accepted: ["spa","spa pedicure","the spa pedicure",
-                     "i would like spa","i want spa","spa please"],
-          display: "Spa pedicure", summary: "Spa Pedicure"
-        },
-        3: {
-          // ✅ helps ask for name, no name given
-          hints: ["May I have...?", "your name?", "for our records"],
-          accepted: ["linda","my name is linda","im linda","i'm linda","linda johnson"],
-          display: "Linda", summary: "Linda"
-        },
-        4: {
-          // ✅ NO location name in hints
-          hints: ["Did you drive far?", "Where are you coming from?", "today?"],
-          accepted: ["cherry hill","from cherry hill","i came from cherry hill",
-                     "cherry hill nj","drove from cherry hill"],
-          display: "Cherry Hill, NJ", summary: "Cherry Hill, NJ"
+  <script>
+ const spots = [
+  { id: "table1", name: "Table 1", img: "images/chair1.jpg", num: "1" },
+  { id: "table2", name: "Table 2", img: "images/chair2.jpg", num: "2" },
+  { id: "pedicure1", name: "Pedicure 1", img: "images/pedicure1.jpg", num: "1" },
+  { id: "pedicure2", name: "Pedicure 2", img: "images/pedicure2.jpg", num: "2" },
+  { id: "colorwall", name: "Color Wall", img: "images/colorwall.jpg", num: "" },
+  { id: "handwash", name: "Hand Wash", img: "images/handwash.jpg", num: "" },
+  { id: "waiting", name: "Waiting Area", img: "images/waiting.jpg", num: "" },
+  { id: "restroom", name: "Restroom", img: "images/restroom.jpg", num: "" },
+  { id: "frontdesk", name: "Front Desk", img: "images/frontdesk.jpg", num: "" },
+  { id: "dryer", name: "Dryer Station", img: "images/dryer.jpg", num: "" }
+];
+const cards = [
+  {
+    customer: "Hi, where should I sit for my manicure?",
+    answerId: "table1",
+    answerText: "Table 1 — Manicure"
+  },
+  {
+    customer: "Can you take me to the first pedicure chair?",
+    answerId: "pedicure1",
+    answerText: "Pedicure Chair 1"
+  },
+  {
+    customer: "Where can I choose my nail color?",
+    answerId: "colorwall",
+    answerText: "Color Wall"
+  },
+  {
+    customer: "Where should I wash my hands?",
+    answerId: "handwash",
+    answerText: "Hand Wash Station"
+  },
+  {
+    customer: "Should I wait here first?",
+    answerId: "waiting",
+    answerText: "Waiting Area"
+  },
+  {
+    customer: "Is this the table for my manicure?",
+    answerId: "table2",
+    answerText: "Table 2 — Manicure"
+  },
+  {
+    customer: "Where is the restroom?",
+    answerId: "restroom",
+    answerText: "Restroom"
+  },
+  {
+    customer: "Where do I go for my pedicure?",
+    answerId: "pedicure2",
+    answerText: "Pedicure Chair 2"
+  },
+  {
+    customer: "Where do I check in?",
+    answerId: "frontdesk",
+    answerText: "Front Desk"
+  },
+  {
+    customer: "Where can I dry my nails?",
+    answerId: "dryer",
+    answerText: "Dryer Station"
+  },
+  {
+    customer: "Please show me the color wall.",
+    answerId: "colorwall",
+    answerText: "Color Wall"
+  },
+  {
+    customer: "Can I sit in the waiting area?",
+    answerId: "waiting",
+    answerText: "Waiting Area"
+  },
+  {
+    customer: "Where do I clean my hands first?",
+    answerId: "handwash",
+    answerText: "Hand Wash Station"
+  },
+  {
+    customer: "Can I use the bathroom?",
+    answerId: "restroom",
+    answerText: "Restroom"
+  },
+  {
+    customer: "Please take me to the first table.",
+    answerId: "table1",
+    answerText: "Table 1"
+  },
+  {
+    customer: "Where do I pay?",
+    answerId: "frontdesk",
+    answerText: "Front Desk"
+  },
+  {
+    customer: "Where is the nail dryer?",
+    answerId: "dryer",
+    answerText: "Dryer Station"
+  },
+  {
+    customer: "Can you show me the second table?",
+    answerId: "table2",
+    answerText: "Table 2"
+  },
+  {
+    customer: "Where is the first pedicure chair?",
+    answerId: "pedicure1",
+    answerText: "Pedicure Chair 1"
+  },
+  {
+    customer: "Do I wait here before my service starts?",
+    answerId: "waiting",
+    answerText: "Waiting Area"
+  }
+];
+
+let currentCard = 0;
+
+    const customerLine = document.getElementById("customerLine");
+    const correctAnswer = document.getElementById("correctAnswer");
+    const progressText = document.getElementById("progressText");
+    const progressFill = document.getElementById("progressFill");
+    const nextBtn = document.getElementById("nextBtn");
+    const mapGrid = document.getElementById("mapGrid");
+    const cardScreen = document.getElementById("cardScreen");
+    const doneScreen = document.getElementById("doneScreen");
+
+    function buildMap(correctId) {
+      mapGrid.innerHTML = "";
+      spots.forEach(spot => {
+        const div = document.createElement("div");
+        div.className = "teacher-spot";
+        if (spot.id === correctId) div.classList.add("highlight");
+
+        let badgeHTML = "";
+        if (spot.num) {
+          badgeHTML = `<div class="number-badge">${spot.num}</div>`;
         }
-      }
-    },
-    {
-      id: 1, avatar: "👩‍🦱", name: "Maria Rodriguez",
-      tag1: "Camden, NJ", tag2: "Has a dog 🐶",
-      fields: {
-        1: {
-          hints: ["Hello!", "Do you have...?", "appointment?"],
-          accepted: ["yes","yes i do","i have an appointment","yes i have","yes at 2"],
-          display: "Yes – 2pm", summary: "Has appointment – 2pm"
-        },
-        2: {
-          hints: ["Which service...?", "would you like", "manicure / pedicure?"],
-          accepted: ["gel","gel nails","gel manicure","i want gel",
-                     "i would like gel","gel please"],
-          display: "Gel manicure", summary: "Gel Manicure"
-        },
-        3: {
-          // ✅ no name given
-          hints: ["May I have...?", "your name?", "please"],
-          accepted: ["maria","my name is maria","im maria","i'm maria","maria rodriguez"],
-          display: "Maria", summary: "Maria"
-        },
-        4: {
-          // ✅ NO "Camden" in hints
-          hints: ["Did you drive far?", "Where are you coming from?", "today?"],
-          accepted: ["camden","from camden","i came from camden",
-                     "camden nj","i live in camden"],
-          display: "Camden, NJ", summary: "Camden, NJ"
-        }
-      }
-    },
-    {
-      id: 2, avatar: "👩‍⚕️", name: "Ashley Kim",
-      tag1: "Cooper Hospital", tag2: "Nurse 🏥",
-      fields: {
-        1: {
-          hints: ["Hello!", "Do you have...?", "appointment?"],
-          accepted: ["no","no i dont","no i don't","no appointment",
-                     "i dont have one","walk in","just walked in"],
-          display: "No appointment", summary: "No appointment"
-        },
-        2: {
-          hints: ["Which service...?", "would you like", "manicure / pedicure?"],
-          accepted: ["basic pedicure","basic","pedicure","just basic",
-                     "i want basic","i would like basic pedicure","basic ped"],
-          display: "Basic pedicure", summary: "Basic Pedicure"
-        },
-        3: {
-          // ✅ no name given
-          hints: ["May I have...?", "your name?", "please"],
-          accepted: ["ashley","my name is ashley","im ashley","i'm ashley","ashley kim"],
-          display: "Ashley", summary: "Ashley"
-        },
-        4: {
-          // ✅ NO "Cooper Hospital" in hints
-          hints: ["Did you drive far?", "Where are you coming from?", "today?"],
-          accepted: ["cooper hospital","hospital","cooper",
-                     "from the hospital","i work at cooper","came from hospital"],
-          display: "Cooper Hospital", summary: "Cooper Hospital, Camden"
-        }
-      }
-    },
-    {
-      id: 3, avatar: "👴", name: "Tom Williams",
-      tag1: "Moorestown, NJ", tag2: "First time 😅",
-      fields: {
-        1: {
-          hints: ["Hello!", "Do you have...?", "appointment?"],
-          accepted: ["no","no i dont","no i don't","first time","no appointment",
-                     "i don't have one","i dont have one"],
-          display: "No appointment", summary: "No appointment"
-        },
-        2: {
-          hints: ["Which service...?", "would you like", "manicure / pedicure?"],
-          accepted: ["manicure","basic manicure","just a manicure","i want a manicure",
-                     "i would like a manicure","manicure please"],
-          display: "Basic manicure", summary: "Basic Manicure"
-        },
-        3: {
-          // ✅ no name given
-          hints: ["May I have...?", "your name?", "please"],
-          accepted: ["tom","my name is tom","im tom","i'm tom","tom williams"],
-          display: "Tom", summary: "Tom"
-        },
-        4: {
-          // ✅ NO "Moorestown" in hints
-          hints: ["Did you drive far?", "Where are you coming from?", "today?"],
-          accepted: ["moorestown","from moorestown","i came from moorestown",
-                     "moorestown nj","i live in moorestown"],
-          display: "Moorestown, NJ", summary: "Moorestown, NJ"
-        }
-      }
-    },
-    {
-      id: 4, avatar: "👩‍🦳", name: "Diane Carter",
-      tag1: "Haddonfield, NJ", tag2: "Regular ⭐",
-      fields: {
-        1: {
-          hints: ["Hello!", "Do you have...?", "appointment?"],
-          accepted: ["yes","yes i do","i have an appointment","yes i have",
-                     "yes at 3","yes appointment"],
-          display: "Yes – 3pm", summary: "Has appointment – 3pm"
-        },
-        2: {
-          hints: ["Which service...?", "would you like", "basic / spa / deluxe?"],
-          accepted: ["deluxe","deluxe pedicure","the deluxe","i want deluxe",
-                     "i would like deluxe","deluxe please"],
-          display: "Deluxe pedicure", summary: "Deluxe Pedicure"
-        },
-        3: {
-          // ✅ no name given
-          hints: ["May I have...?", "your name?", "please"],
-          accepted: ["diane","my name is diane","im diane","i'm diane","diane carter"],
-          display: "Diane", summary: "Diane"
-        },
-        4: {
-          // ✅ NO "Haddonfield" in hints
-          hints: ["Did you drive far?", "Where are you coming from?", "today?"],
-          accepted: ["haddonfield","from haddonfield","i came from haddonfield",
-                     "haddonfield nj","i live in haddonfield"],
-          display: "Haddonfield, NJ", summary: "Haddonfield, NJ"
-        }
-      }
+
+        div.innerHTML = `
+          ${badgeHTML}
+          <img src="${spot.img}" alt="${spot.name}" />
+          <div class="t-name">${spot.name}</div>
+        `;
+        mapGrid.appendChild(div);
+      });
     }
-  ];
-  let selectedId = null;
 
-  // ── RENDER PICKER ──────────────────────────────────────────────────
-  function renderPicker() {
-    const list = document.getElementById('customer-list');
-    list.innerHTML = '';
-    customers.forEach(c => {
-      const card = document.createElement('div');
-      card.className = 'customer-pick-card';
-      card.id = `pick-${c.id}`;
-      card.onclick = () => selectCustomer(c.id);
-      card.innerHTML = `
-        <div class="pick-avatar">${c.avatar}</div>
-        <div class="pick-info">
-          <h3>${c.name}</h3>
-          <div class="pick-tags">
-            <span class="pick-tag">📍 ${c.tag1}</span>
-            <span class="pick-tag">${c.tag2}</span>
-          </div>
-        </div>
-        <div class="pick-arrow">›</div>
-      `;
-      list.appendChild(card);
+    function renderCard() {
+      const item = cards[currentCard];
+      customerLine.textContent = item.customer;
+      correctAnswer.textContent = item.answerText;
+
+      progressText.textContent = `Card ${currentCard + 1} of ${cards.length}`;
+      progressFill.style.width = `${(currentCard / cards.length) * 100}%`;
+      nextBtn.textContent = currentCard === cards.length - 1 ? "Finish" : "Next";
+
+      buildMap(item.answerId);
+    }
+
+    nextBtn.addEventListener("click", () => {
+      currentCard++;
+      if (currentCard < cards.length) {
+        renderCard();
+      } else {
+        showDone();
+      }
     });
-  }
 
-  // ── SELECT ─────────────────────────────────────────────────────────
-  function selectCustomer(id) {
-    selectedId = id;
-    customers.forEach(c => {
-      document.getElementById(`pick-${c.id}`)
-        .classList.toggle('selected', c.id === id);
-    });
-    document.getElementById('start-btn').classList.add('ready');
-  }
+    function showDone() {
+      cardScreen.classList.add("hidden");
+      doneScreen.classList.remove("hidden");
+      progressFill.style.width = "100%";
+    }
 
-  // ── START ──────────────────────────────────────────────────────────
-   function startCard() {
-    if (selectedId === null) return;
-    const c = customers[selectedId];
+    function restartCards() {
+      currentCard = 0;
+      cardScreen.classList.remove("hidden");
+      doneScreen.classList.add("hidden");
+      renderCard();
+    }
 
-    // Switch screens
-    document.getElementById('picker-screen').classList.add('hide');
-    document.getElementById('card-screen').classList.add('show');
-
-    // Update mini bar
-    document.getElementById('active-avatar').textContent = c.avatar;
-    document.getElementById('active-name').textContent   = c.name;
-    document.getElementById('active-sub').textContent    = `📍 ${c.tag1} · ${c.tag2}`;
-
-    // ── Render secret card ──
-    const card = document.getElementById('secret-card');
-    card.innerHTML = `
-      <div class="card-top">
-        <div class="client-avatar">${c.avatar}</div>
-        <div class="client-meta">
-          <h2>${c.name}</h2>
-          <p>${c.tag1} · ${c.tag2}</p>
-        </div>
-        <div class="secret-badge">🔒 Secret Info</div>
-      </div>
-      <div class="info-rows">
-        <div class="info-row">
-          <div class="info-icon">📅</div>
-          <div class="info-content">
-            <div class="info-question">Do you have an appointment?</div>
-            <div class="info-answer">${c.fields[1].display}</div>
-            <div class="info-say">Say: "${c.fields[1].say}"</div>
-          </div>
-        </div>
-        <div class="info-row">
-          <div class="info-icon">💅</div>
-          <div class="info-content">
-            <div class="info-question">Which service do you want?</div>
-            <div class="info-answer">${c.fields[2].display}</div>
-            <div class="info-say">Say: "${c.fields[2].say}"</div>
-          </div>
-        </div>
-        <div class="info-row">
-          <div class="info-icon">🪪</div>
-          <div class="info-content">
-            <div class="info-question">What is your name?</div>
-            <div class="info-answer">${c.fields[3].display}</div>
-            <div class="info-say">Say: "${c.fields[3].say}"</div>
-          </div>
-        </div>
-        <div class="info-row">
-          <div class="info-icon">📍</div>
-          <div class="info-content">
-            <div class="info-question">Where are you coming from?</div>
-            <div class="info-answer">${c.fields[4].display}</div>
-            <div class="info-say">Say: "${c.fields[4].say}"</div>
-          </div>
-        </div>
-      </div>
-    `;
-
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-  // ── CHANGE PERSON ──────────────────────────────────────────────────
-  function changePerson() {
-    selectedId = null;
-
-    // Reset picker highlights
-    customers.forEach(c => {
-      document.getElementById(`pick-${c.id}`)
-        .classList.remove('selected');
-    });
-    document.getElementById('start-btn').classList.remove('ready');
-
-    // Switch screens
-    document.getElementById('card-screen').classList.remove('show');
-    document.getElementById('picker-screen').classList.remove('hide');
-
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-
-  // ── INIT ──────────────────────────────────────────────────────────
-  renderPicker();
-</script>
+    renderCard();
+  </script>
 </body>
 </html>

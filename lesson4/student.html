@@ -1,1026 +1,384 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Student Mode – Lesson 4 | TeeTalk English</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lesson 4 Game 2 - Nail Tech</title>
+  <link rel="stylesheet" href="style.css" />
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: #1a1a2e;
-      min-height: 100vh;
-      color: white;
-      padding-bottom: 60px;
-    }
-
-    .top-bar {
-      background: #16213e;
-      padding: 12px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 2px solid #ff6b9d;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-
-    .back-btn {
-      color: #ff6b9d;
-      text-decoration: none;
-      font-size: 0.9em;
-      font-weight: 700;
-    }
-
-    .mode-badge {
-      background: rgba(255,107,157,0.2);
-      border: 1px solid #ff6b9d;
-      border-radius: 20px;
-      padding: 5px 14px;
-      font-size: 0.78em;
-      color: #ff6b9d;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    /* CUSTOMER REVEAL CARD */
-    .customer-reveal {
-      background: linear-gradient(135deg, #16213e, #1a1a3e);
-      padding: 24px 20px;
-      text-align: center;
-      border-bottom: 2px solid #1e2a4a;
-    }
-
-    .customer-reveal p {
-      font-size: 0.78em;
-      color: #8892b0;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 14px;
-      font-weight: 700;
-    }
-
-    .customer-card {
-      background: #0f3460;
-      border: 2px solid #ff6b9d;
-      border-radius: 20px;
-      padding: 18px;
-      max-width: 480px;
+    .game-container {
+      max-width: 680px;
       margin: 0 auto;
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      text-align: left;
-      box-shadow: 0 0 24px rgba(255,107,157,0.15);
-      animation: popIn 0.4s ease;
     }
 
-    @keyframes popIn {
-      from { opacity:0; transform: scale(0.95); }
-      to   { opacity:1; transform: scale(1); }
-    }
-
-    .customer-avatar {
-      width: 72px;
-      height: 72px;
-      border-radius: 50%;
-      background: rgba(255,107,157,0.15);
-      border: 2px solid #ff6b9d;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 38px;
-      flex-shrink: 0;
-    }
-
-    .customer-info h2 {
-      font-size: 1.2em;
-      font-weight: 800;
-      color: white;
-      margin-bottom: 2px;
-    }
-
-    .customer-info .customer-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-top: 6px;
-    }
-
-    .customer-tag {
-      background: rgba(255,107,157,0.12);
-      border: 1px solid rgba(255,107,157,0.25);
-      border-radius: 20px;
-      padding: 2px 10px;
-      font-size: 0.75em;
-      color: #ff6b9d;
-    }
-
-    .customer-tag.blue {
-      background: rgba(100,181,246,0.12);
-      border-color: rgba(100,181,246,0.25);
-      color: #64b5f6;
-    }
-
-    /* Teacher link button */
-    .teacher-link-wrap {
-      max-width: 480px;
-      margin: 12px auto 0;
-      padding: 0 20px;
-      text-align: right;
-    }
-
-    .teacher-link {
-      font-size: 0.78em;
-      color: #64b5f6;
-      text-decoration: none;
-      font-weight: 700;
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      opacity: 0.8;
-      transition: opacity 0.2s;
-    }
-
-    .teacher-link:hover { opacity: 1; }
-
-    /* PROGRESS */
-    .progress-wrap {
-      max-width: 480px;
-      margin: 20px auto;
-      padding: 0 20px;
-    }
-
-    .progress-label-row {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.78em;
-      color: #8892b0;
-      margin-bottom: 6px;
-    }
-
-    .progress-track {
-      background: #0f3460;
-      border-radius: 20px;
-      height: 8px;
-      overflow: hidden;
-    }
-
-    .progress-fill {
-      background: linear-gradient(90deg, #ff6b9d, #c44569);
-      height: 100%;
-      border-radius: 20px;
-      transition: width 0.5s ease;
-      box-shadow: 0 0 8px rgba(255,107,157,0.5);
-    }
-
-    /* SURVEY FORM */
-    .survey-form {
-      max-width: 480px;
-      margin: 0 auto;
-      padding: 0 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .form-title {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 12px 16px;
-      background: #16213e;
-      border-radius: 14px;
-      border: 1px solid #0f3460;
-    }
-
-    .form-title .form-icon { font-size: 26px; }
-
-    .form-title .form-text h2 {
-      font-size: 0.95em;
-      font-weight: 800;
-      color: white;
-      margin-bottom: 2px;
-    }
-
-    .form-title .form-text p {
-      font-size: 0.75em;
-      color: #8892b0;
-    }
-
-    /* FIELD ROW */
-    .field-row {
-      background: #16213e;
-      border: 2px solid #0f3460;
+    .listen-box {
+      background: var(--surface-soft);
+      border: 1px solid var(--border);
       border-radius: 16px;
-      padding: 14px 16px;
-      transition: border-color 0.3s, box-shadow 0.3s;
+      padding: 18px;
+      text-align: center;
+      margin-bottom: 20px;
     }
 
-    .field-row.active {
-      border-color: #ff6b9d;
-      box-shadow: 0 0 16px rgba(255,107,157,0.12);
+    .listen-box .round-num {
+      font-size: 0.8rem;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      font-weight: 700;
+      margin-bottom: 8px;
     }
 
-    .field-row.done {
-      border-color: #4caf50;
-    }
-
-    .field-row.locked {
-      opacity: 0.35;
-      pointer-events: none;
-    }
-
-    .field-label-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 10px;
-    }
-
-    .field-label {
-      font-size: 0.95em;
-      font-weight: 800;
-      color: white;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .field-status { font-size: 1.1em; }
-
-    .hint-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-bottom: 10px;
-    }
-
-    .hint-chip {
-      background: rgba(255,213,79,0.10);
-      border: 1px solid rgba(255,213,79,0.30);
-      border-radius: 20px;
-      padding: 3px 10px;
-      font-size: 0.76em;
-      color: #ffd54f;
+    .listen-box .listen-text {
+      font-size: 1.15rem;
+      color: var(--text);
       font-weight: 600;
-    }
-
-    .input-row {
-      display: flex;
-      gap: 8px;
-    }
-
-    .answer-input {
-      flex: 1;
-      background: #0f3460;
-      border: 2px solid #1e3a6a;
-      border-radius: 12px;
-      padding: 10px 14px;
-      color: white;
-      font-size: 0.92em;
-      font-family: 'Segoe UI', sans-serif;
-      outline: none;
-      transition: border-color 0.2s;
-    }
-
-    .answer-input::placeholder { color: #4a5568; }
-    .answer-input:focus { border-color: #ff6b9d; }
-    .answer-input:disabled { opacity: 0.7; }
-
-    .answer-input.correct-input {
-      border-color: #4caf50;
-      background: rgba(76,175,80,0.08);
-      color: #66bb6a;
-      font-weight: 700;
-    }
-
-    .answer-input.wrong-input {
-      border-color: #f44336;
-      animation: shake 0.35s ease;
-    }
-
-    @keyframes shake {
-      0%,100% { transform: translateX(0); }
-      25% { transform: translateX(-5px); }
-      75% { transform: translateX(5px); }
-    }
-
-    .check-btn {
-      background: linear-gradient(135deg, #ff6b9d, #c44569);
-      border: none;
-      border-radius: 12px;
-      padding: 10px 16px;
-      color: white;
-      font-size: 0.85em;
-      font-weight: 700;
-      cursor: pointer;
-      white-space: nowrap;
-      transition: opacity 0.2s;
-      box-shadow: 0 4px 12px rgba(255,107,157,0.25);
-    }
-
-    .check-btn:hover { opacity: 0.9; }
-    .check-btn:disabled { opacity: 0.3; cursor: not-allowed; }
-
-    .field-feedback {
-      font-size: 0.82em;
-      margin-top: 8px;
-      padding: 8px 12px;
-      border-radius: 10px;
-      display: none;
       line-height: 1.5;
-      animation: fadeUp 0.25s ease;
     }
 
-    @keyframes fadeUp {
-      from { opacity:0; transform:translateY(4px); }
-      to   { opacity:1; transform:translateY(0); }
-    }
-
-    .field-feedback.show { display: block; }
-    .field-feedback.ok {
-      background: rgba(76,175,80,0.10);
-      border: 1px solid rgba(76,175,80,0.30);
-      color: #66bb6a;
-    }
-    .field-feedback.no {
-      background: rgba(244,67,54,0.08);
-      border: 1px solid rgba(244,67,54,0.25);
-      color: #ef9a9a;
-    }
-    .field-feedback .correct-ans {
+    .listen-box .listen-sub {
+      font-size: 0.95rem;
+      color: var(--muted);
       margin-top: 4px;
-      color: #66bb6a;
-      font-style: italic;
     }
 
-    /* RESULT SCREEN */
-    .result-screen {
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      padding: 40px 24px;
-      max-width: 480px;
-      margin: 0 auto;
-      animation: fadeUp 0.5s ease;
-    }
-
-    .result-screen.show { display: flex; }
-
-    .result-trophy { font-size: 72px; margin-bottom: 16px; }
-
-    .result-screen h2 {
-      font-size: 1.8em;
-      font-weight: 900;
-      margin-bottom: 6px;
-    }
-
-    .result-screen .result-sub {
-      color: #8892b0;
-      font-size: 0.9em;
-      margin-bottom: 24px;
-    }
-
-    .score-row {
-      display: flex;
+    .image-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
       gap: 14px;
-      margin-bottom: 24px;
-      flex-wrap: wrap;
-      justify-content: center;
+      margin-bottom: 18px;
     }
 
-    .score-pill {
-      background: #16213e;
-      border: 2px solid #ff6b9d;
-      border-radius: 30px;
-      padding: 10px 22px;
-      font-weight: 700;
-      color: #ff6b9d;
-    }
-
-    .summary-card {
-      background: #16213e;
-      border: 1px solid #0f3460;
+    .image-card {
+      position: relative;
+      border: 3px solid #e2e8f0;
       border-radius: 16px;
-      padding: 18px;
-      width: 100%;
-      text-align: left;
-      margin-bottom: 24px;
+      overflow: hidden;
+      cursor: pointer;
+      background: white;
+      transition: 0.2s ease;
+      -webkit-tap-highlight-color: transparent;
     }
 
-    .summary-card h3 {
-      font-size: 0.78em;
-      color: #ff6b9d;
-      text-transform: uppercase;
-      letter-spacing: 1px;
+    .image-card:active {
+      transform: scale(0.97);
+    }
+
+    .image-card img {
+      width: 100%;
+      height: 140px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .image-card.correct {
+      border-color: #10b981;
+      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.2);
+    }
+
+    .image-card.correct::after {
+      content: '✅';
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      font-size: 1.5rem;
+      background: white;
+      border-radius: 50%;
+      width: 34px;
+      height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+
+    .image-card.wrong {
+      border-color: #ef4444;
+      background: #fef2f2;
+    }
+
+    .image-card.wrong::after {
+      content: '❌';
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      font-size: 1.3rem;
+      background: white;
+      border-radius: 50%;
+      width: 34px;
+      height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+
+    .image-card.disabled {
+      pointer-events: none;
+      opacity: 0.4;
+    }
+
+    .feedback-bar {
+      text-align: center;
+      font-size: 1.05rem;
       font-weight: 700;
+      min-height: 28px;
       margin-bottom: 14px;
     }
 
-    .summary-row {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 8px 0;
-      border-bottom: 1px solid #1e2a4a;
-      font-size: 0.88em;
-    }
+    .feedback-bar.correct { color: #047857; }
+    .feedback-bar.wrong { color: #dc2626; }
 
-    .summary-row:last-child { border-bottom: none; }
-    .summary-row .s-icon { font-size: 1.1em; width: 24px; text-align: center; }
-    .summary-row .s-label { color: #8892b0; width: 130px; flex-shrink: 0; }
-    .summary-row .s-value { color: #66bb6a; font-weight: 700; }
-
-    .result-btns {
+    .game-controls {
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .game-controls .btn {
       width: 100%;
+      max-width: 320px;
     }
 
-    .btn-primary {
-      padding: 15px;
-      background: linear-gradient(135deg, #ff6b9d, #c44569);
-      color: white;
-      border: none;
-      border-radius: 14px;
-      font-size: 1em;
-      font-weight: 700;
-      cursor: pointer;
-      text-decoration: none;
-      text-align: center;
-      display: block;
-      transition: opacity 0.2s;
+    @media (min-width: 700px) {
+      .image-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .image-card img {
+        height: 160px;
+      }
+
+      .game-controls {
+        flex-direction: row;
+        justify-content: center;
+      }
+
+      .game-controls .btn {
+        width: auto;
+      }
     }
 
-    .btn-primary:hover { opacity: 0.9; }
+    @media (max-width: 380px) {
+      .image-card img {
+        height: 110px;
+      }
 
-    .btn-secondary {
-      padding: 13px;
-      background: transparent;
-      color: #8892b0;
-      border: 2px solid #1e2a4a;
-      border-radius: 14px;
-      font-size: 0.9em;
-      font-weight: 700;
-      cursor: pointer;
-      text-decoration: none;
-      text-align: center;
-      display: block;
-      transition: border-color 0.2s;
+      .image-grid {
+        gap: 10px;
+      }
     }
-
-    .btn-secondary:hover { border-color: #8892b0; }
   </style>
 </head>
 <body>
-
-  <!-- TOP BAR -->
-  <div class="top-bar">
-    <a href="index.html" class="back-btn">← Back</a>
-    <div class="mode-badge">💅 Student Mode</div>
-  </div>
-
-  <!-- CUSTOMER CARD -->
-  <div class="customer-reveal">
-    <p>👇 Today's walk-in customer</p>
-    <div class="customer-card" id="customer-card">
-      <!-- Filled by JS -->
-    </div>
-  </div>
-
-  <!-- Teacher link -->
-  <div class="teacher-link-wrap">
-    <a href="#" id="teacher-link" class="teacher-link">
-      👩‍🏫 Send to teacher →
-    </a>
-  </div>
-
-  <!-- PROGRESS -->
-  <div class="progress-wrap">
-    <div class="progress-label-row">
-      <span>Information collected</span>
-      <span id="progress-text">0 / 4</span>
-    </div>
-    <div class="progress-track">
-      <div class="progress-fill" id="progress-fill" style="width:0%"></div>
-    </div>
-  </div>
-
-  <!-- SURVEY FORM -->
-  <div class="survey-form" id="survey-form">
-
-    <div class="form-title">
-      <div class="form-icon">📋</div>
-      <div class="form-text">
-        <h2>Star Nails – New Client Form</h2>
-        <p>📍 Pennsauken, NJ · Ask the client and fill in their answers</p>
+  <div class="page-wrap">
+    <div class="app-shell">
+      <div class="page-header student">
+        <h1>💅 Nail Tech</h1>
+        <p>Listen and click the correct place.</p>
       </div>
-    </div>
 
-    <!-- Field 1 -->
-    <div class="field-row active" id="field-1">
-      <div class="field-label-row">
-        <div class="field-label"><span>📅</span> Appointment?</div>
-        <span class="field-status" id="status-1">💬</span>
-      </div>
-      <div class="hint-row" id="hints-1"></div>
-      <div class="input-row">
-        <input class="answer-input" id="input-1" type="text"
-          placeholder="What did the client say?"
-          onkeydown="if(event.key==='Enter') checkAnswer(1)"/>
-        <button class="check-btn" id="btn-1" onclick="checkAnswer(1)">Check ✓</button>
-      </div>
-      <div class="field-feedback" id="feedback-1"></div>
-    </div>
+      <div class="page-body">
+        <div class="game-container">
+          <div class="top-info">
+            <span id="progressText">Question 1 of 15</span>
+            <span id="scoreText">Score: 0</span>
+          </div>
 
-    <!-- Field 2 -->
-    <div class="field-row locked" id="field-2">
-      <div class="field-label-row">
-        <div class="field-label"><span>💅</span> Service?</div>
-        <span class="field-status" id="status-2">🔒</span>
-      </div>
-      <div class="hint-row" id="hints-2"></div>
-      <div class="input-row">
-        <input class="answer-input" id="input-2" type="text"
-          placeholder="What did the client say?"
-          onkeydown="if(event.key==='Enter') checkAnswer(2)"/>
-        <button class="check-btn" id="btn-2" onclick="checkAnswer(2)">Check ✓</button>
-      </div>
-      <div class="field-feedback" id="feedback-2"></div>
-    </div>
+          <div class="progress-bar">
+            <div class="progress-fill student" id="progressFill"></div>
+          </div>
 
-    <!-- Field 3 -->
-    <div class="field-row locked" id="field-3">
-      <div class="field-label-row">
-        <div class="field-label"><span>🪪</span> Client Name?</div>
-        <span class="field-status" id="status-3">🔒</span>
-      </div>
-      <div class="hint-row" id="hints-3"></div>
-      <div class="input-row">
-        <input class="answer-input" id="input-3" type="text"
-          placeholder="What did the client say?"
-          onkeydown="if(event.key==='Enter') checkAnswer(3)"/>
-        <button class="check-btn" id="btn-3" onclick="checkAnswer(3)">Check ✓</button>
-      </div>
-      <div class="field-feedback" id="feedback-3"></div>
-    </div>
+          <div id="gameScreen">
+           <div class="listen-box">
+  <div class="round-num" id="roundLabel">ROUND 1</div>
+  <div id="sentenceBox" class="sentence-box"></div>
+</div>
 
-    <!-- Field 4 -->
-    <div class="field-row locked" id="field-4">
-      <div class="field-label-row">
-        <div class="field-label"><span>📍</span> Coming From?</div>
-        <span class="field-status" id="status-4">🔒</span>
-      </div>
-      <div class="hint-row" id="hints-4"></div>
-      <div class="input-row">
-        <input class="answer-input" id="input-4" type="text"
-          placeholder="What did the client say?"
-          onkeydown="if(event.key==='Enter') checkAnswer(4)"/>
-        <button class="check-btn" id="btn-4" onclick="checkAnswer(4)">Check ✓</button>
-      </div>
-      <div class="field-feedback" id="feedback-4"></div>
-    </div>
 
-  </div>
 
-  <!-- RESULT SCREEN -->
-  <div class="result-screen" id="result-screen">
-    <div class="result-trophy">🎉</div>
-    <h2>Form Complete!</h2>
-    <p class="result-sub">You collected all client info in English!</p>
+            <div class="image-grid" id="imageGrid"></div>
 
-    <div class="score-row">
-      <div class="score-pill">⭐ +100 XP</div>
-      <div class="score-pill">✅ 4 / 4 done</div>
-    </div>
+            <div id="feedback" class="feedback-bar"></div>
 
-    <div class="summary-card">
-      <h3>📋 Star Nails – Client Record</h3>
-      <div class="summary-row">
-        <span class="s-icon">📅</span>
-        <span class="s-label">Appointment</span>
-        <span class="s-value" id="summary-1">–</span>
-      </div>
-      <div class="summary-row">
-        <span class="s-icon">💅</span>
-        <span class="s-label">Service</span>
-        <span class="s-value" id="summary-2">–</span>
-      </div>
-      <div class="summary-row">
-        <span class="s-icon">🪪</span>
-        <span class="s-label">Client Name</span>
-        <span class="s-value" id="summary-3">–</span>
-      </div>
-      <div class="summary-row">
-        <span class="s-icon">📍</span>
-        <span class="s-label">Coming From</span>
-        <span class="s-value" id="summary-4">–</span>
-      </div>
-    </div>
 
-    <div class="result-btns">
-      <button class="btn-primary" onclick="newCustomer()">
-        👤 New Customer
-      </button>
-      <a href="../index.html" class="btn-secondary">
-        🏠 Back to All Lessons
-      </a>
-    </div>
-  </div>
+            <div class="game-controls">
+              <button id="nextBtn" class="btn btn-student hidden">Next</button>
+              <a href="index.html" class="btn btn-secondary">← Back</a>
+              <a href="../../index.html" class="btn btn-home">🏠 Home</a>
+            </div>
+          </div>
 
-<script>
-  // ── ALL CUSTOMERS ─────────────────────────────────────────────────
-const customers = [
-    {
-      id: 0,
-      avatar: "👩",
-      name: "Linda Johnson",
-      tag1: "Cherry Hill, NJ",
-      tag2: "First visit",
-      fields: {
-        1: {
-          hints: ["Hello!", "Do you have...?", "appointment?"],
-          accepted: ["no","no i dont","no i don't","no appointment",
-                     "no i don't have one","no i dont have one"],
-          display: "No appointment",
-          summary: "No appointment"
-        },
-        2: {
-          hints: ["Which service...?", "would you like?", "basic / spa / deluxe"],
-          accepted: ["spa","spa pedicure","the spa pedicure",
-                     "i would like spa","i want spa","spa please"],
-          display: "Spa pedicure",
-          summary: "Spa Pedicure"
-        },
-        3: {
-          hints: ["May I have...?", "your name?", "for our records"],
-          accepted: ["linda","my name is linda","im linda",
-                     "i'm linda","linda johnson"],
-          display: "Linda",
-          summary: "Linda"
-        },
-        4: {
-          hints: ["Did you drive far?", "Where are you coming from?", "today?"],
-          accepted: ["cherry hill","from cherry hill","i came from cherry hill",
-                     "cherry hill nj","drove from cherry hill"],
-          display: "Cherry Hill, NJ",
-          summary: "Cherry Hill, NJ"
-        }
-      }
-    },
-    {
-      id: 1,
-      avatar: "👩‍🦱",
-      name: "Maria Rodriguez",
-      tag1: "Camden, NJ",
-      tag2: "Has a dog 🐶",
-      fields: {
-        1: {
-          hints: ["Hello!", "Do you have...?", "appointment?"],
-          accepted: ["yes","yes i do","i have an appointment",
-                     "yes i have","yes at 2"],
-          display: "Yes – 2pm",
-          summary: "Has appointment – 2pm"
-        },
-        2: {
-          hints: ["Which service...?", "would you like?", "manicure / pedicure"],
-          accepted: ["gel","gel nails","gel manicure","i want gel",
-                     "i would like gel","gel please"],
-          display: "Gel manicure",
-          summary: "Gel Manicure"
-        },
-        3: {
-          hints: ["May I have...?", "your name?", "please"],
-          accepted: ["maria","my name is maria","im maria",
-                     "i'm maria","maria rodriguez"],
-          display: "Maria",
-          summary: "Maria"
-        },
-        4: {
-          hints: ["Did you drive far?", "Where are you coming from?", "today?"],
-          accepted: ["camden","from camden","i came from camden",
-                     "camden nj","i live in camden"],
-          display: "Camden, NJ",
-          summary: "Camden, NJ"
-        }
-      }
-    },
-    {
-      id: 2,
-      avatar: "👩‍⚕️",
-      name: "Ashley Kim",
-      tag1: "Cooper Hospital",
-      tag2: "Nurse 🏥",
-      fields: {
-        1: {
-          hints: ["Hello!", "Do you have...?", "appointment?"],
-          accepted: ["no","no i dont","no i don't","no appointment",
-                     "i dont have one","walk in","just walked in"],
-          display: "No appointment",
-          summary: "No appointment"
-        },
-        2: {
-          hints: ["Which service...?", "would you like?", "manicure / pedicure"],
-          accepted: ["basic pedicure","basic","pedicure","just basic",
-                     "i want basic","i would like basic pedicure","basic ped"],
-          display: "Basic pedicure",
-          summary: "Basic Pedicure"
-        },
-        3: {
-          hints: ["May I have...?", "your name?", "please"],
-          accepted: ["ashley","my name is ashley","im ashley",
-                     "i'm ashley","ashley kim"],
-          display: "Ashley",
-          summary: "Ashley"
-        },
-        4: {
-          hints: ["Did you drive far?", "Where are you coming from?", "today?"],
-          accepted: ["cooper hospital","hospital","cooper",
-                     "from the hospital","i work at cooper",
-                     "came from hospital"],
-          display: "Cooper Hospital",
-          summary: "Cooper Hospital, Camden"
-        }
-      }
-    },
-    {
-      id: 3,
-      avatar: "👴",
-      name: "Tom Williams",
-      tag1: "Moorestown, NJ",
-      tag2: "First time 😅",
-      fields: {
-        1: {
-          hints: ["Hello!", "Do you have...?", "appointment?"],
-          accepted: ["no","no i dont","no i don't","first time",
-                     "no appointment","i don't have one","i dont have one"],
-          display: "No appointment",
-          summary: "No appointment"
-        },
-        2: {
-          hints: ["Which service...?", "would you like?", "manicure / pedicure"],
-          accepted: ["manicure","basic manicure","just a manicure",
-                     "i want a manicure","i would like a manicure",
-                     "manicure please"],
-          display: "Basic manicure",
-          summary: "Basic Manicure"
-        },
-        3: {
-          hints: ["May I have...?", "your name?", "please"],
-          accepted: ["tom","my name is tom","im tom",
-                     "i'm tom","tom williams"],
-          display: "Tom",
-          summary: "Tom"
-        },
-        4: {
-          hints: ["Did you drive far?", "Where are you coming from?", "today?"],
-          accepted: ["moorestown","from moorestown","i came from moorestown",
-                     "moorestown nj","i live in moorestown"],
-          display: "Moorestown, NJ",
-          summary: "Moorestown, NJ"
-        }
-      }
-    },
-    {
-      id: 4,
-      avatar: "👩‍🦳",
-      name: "Diane Carter",
-      tag1: "Haddonfield, NJ",
-      tag2: "Regular ⭐",
-      fields: {
-        1: {
-          hints: ["Hello!", "Do you have...?", "appointment?"],
-          accepted: ["yes","yes i do","i have an appointment",
-                     "yes i have","yes at 3","yes appointment"],
-          display: "Yes – 3pm",
-          summary: "Has appointment – 3pm"
-        },
-        2: {
-          hints: ["Which service...?", "would you like?", "basic / spa / deluxe"],
-          accepted: ["deluxe","deluxe pedicure","the deluxe","i want deluxe",
-                     "i would like deluxe","deluxe please"],
-          display: "Deluxe pedicure",
-          summary: "Deluxe Pedicure"
-        },
-        3: {
-          hints: ["May I have...?", "your name?", "please"],
-          accepted: ["diane","my name is diane","im diane",
-                     "i'm diane","diane carter"],
-          display: "Diane",
-          summary: "Diane"
-        },
-        4: {
-          hints: ["Did you drive far?", "Where are you coming from?", "today?"],
-          accepted: ["haddonfield","from haddonfield","i came from haddonfield",
-                     "haddonfield nj","i live in haddonfield"],
-          display: "Haddonfield, NJ",
-          summary: "Haddonfield, NJ"
-        }
-      }
-    }
-  ];
-  // ── STATE ─────────────────────────────────────────────────────────
-  let currentCustomer = null;
-  let completed = 0;
-  const total = 4;
+          <div id="resultScreen" class="center-screen hidden">
+            <h2>Great job! 🎉</h2>
+            <p>You finished the salon direction practice.</p>
+            <div class="final-score" id="finalScore"></div>
 
-  // ── INIT ──────────────────────────────────────────────────────────
-  function init() {
-    // Check URL for customer id (so teacher can match)
-    const params = new URLSearchParams(window.location.search);
-    const cid = params.get('c');
-
-    if (cid !== null && customers[cid]) {
-      currentCustomer = customers[parseInt(cid)];
-    } else {
-      // Pick random
-      const idx = Math.floor(Math.random() * customers.length);
-      currentCustomer = customers[idx];
-      // Update URL without reload
-      history.replaceState(null, '', `?c=${currentCustomer.id}`);
-    }
-
-    renderCustomerCard();
-    renderHints();
-    updateTeacherLink();
-    resetFields();
-  }
-
-  // ── RENDER CUSTOMER CARD ──────────────────────────────────────────
-  function renderCustomerCard() {
-    const c = currentCustomer;
-    document.getElementById('customer-card').innerHTML = `
-      <div class="customer-avatar">${c.avatar}</div>
-      <div class="customer-info">
-        <h2>${c.name}</h2>
-        <div class="customer-tags">
-          <span class="customer-tag blue">📍 ${c.tag1}</span>
-          <span class="customer-tag">${c.tag2}</span>
+            <div class="game-controls">
+              <button class="btn btn-student" onclick="restartGame()">Play Again</button>
+              <a href="index.html" class="btn btn-secondary">← Back</a>
+              <a href="../../index.html" class="btn btn-home">🏠 Home</a>
+            </div>
+          </div>
         </div>
       </div>
+    </div>
+  </div>
+
+  <script>
+const spots = [
+  { id: "table1", img: "images/chair1.jpg", num: "1" },
+  { id: "table2", img: "images/chair2.jpg", num: "2" },
+  { id: "pedicure1", img: "images/pedicure1.jpg", num: "1" },
+  { id: "pedicure2", img: "images/pedicure2.jpg", num: "2" },
+  { id: "colorwall", img: "images/colorwall.jpg", num: "" },
+  { id: "handwash", img: "images/handwash.jpg", num: "" },
+  { id: "waiting", img: "images/waiting.jpg", num: "" },
+  { id: "restroom", img: "images/restroom.jpg", num: "" },
+  { id: "dryer", img: "images/dryer.jpg", num: "" },
+  { id: "frontdesk", img: "images/frontdesk.jpg", num: "" }
+];
+
+const questions = [
+  { answer: "table1", sentence: "Please have a seat _______." },
+  { answer: "pedicure1", sentence: "Please _______ with me." },
+  { answer: "colorwall", sentence: "The _______ is over here." },
+  { answer: "handwash", sentence: "Please wash your hands _______." },
+  { answer: "waiting", sentence: "Yes, please wait here for a _______." },
+  { answer: "table2", sentence: "Yes, this _______ is for you." },
+  { answer: "restroom", sentence: "The restroom is _______ there." },
+  { answer: "pedicure2", sentence: "The _______ chair is over there." },
+  { answer: "frontdesk", sentence: "Please go to the _______ to check in." },
+  { answer: "dryer", sentence: "Please put your hands under the _______." },
+  { answer: "colorwall", sentence: "The color wall is over _______." },
+  { answer: "waiting", sentence: "Yes, please _______ here." },
+  { answer: "handwash", sentence: "Please _______ your hands over there." },
+  { answer: "restroom", sentence: "The _______ is down the hall." },
+  { answer: "table1", sentence: "Please come _______ me." },
+  { answer: "frontdesk", sentence: "You can _______ at the front desk." },
+  { answer: "dryer", sentence: "The dryer _______ is right here." },
+  { answer: "table2", sentence: "The second _______ is over here." },
+  { answer: "pedicure1", sentence: "The pedicure _______ is over there." },
+  { answer: "waiting", sentence: "Please wait here for a _______." }
+];
+
+    let current = 0;
+    let score = 0;
+    let done = false;
+
+    const imageGrid = document.getElementById("imageGrid");
+    const feedback = document.getElementById("feedback");
+    const nextBtn = document.getElementById("nextBtn");
+    const progressText = document.getElementById("progressText");
+    const scoreText = document.getElementById("scoreText");
+    const progressFill = document.getElementById("progressFill");
+    const roundLabel = document.getElementById("roundLabel");
+    const gameScreen = document.getElementById("gameScreen");
+    const resultScreen = document.getElementById("resultScreen");
+    const finalScore = document.getElementById("finalScore");
+
+    function shuffle(arr) {
+      const a = [...arr];
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+   function buildGrid() {
+  imageGrid.innerHTML = "";
+  const shuffled = shuffle(spots);
+
+  shuffled.forEach(spot => {
+    const card = document.createElement("div");
+    card.className = "image-card";
+    card.dataset.id = spot.id;
+
+    let badgeHTML = "";
+    if (spot.num) {
+      badgeHTML = `<div class="number-badge">${spot.num}</div>`;
+    }
+
+    card.innerHTML = `
+      ${badgeHTML}
+      <img src="${spot.img}" alt="salon area" />
     `;
+
+    card.addEventListener("click", () => handleTap(card, spot.id));
+    imageGrid.appendChild(card);
+  });
+}
+  function render() {
+  done = false;
+  feedback.textContent = "";
+  feedback.className = "feedback-bar";
+  nextBtn.classList.add("hidden");
+
+  // Show sentence at the top
+  document.getElementById("sentenceBox").textContent = questions[current].sentence;
+
+  progressText.textContent = `Question ${current + 1} of ${questions.length}`;
+  scoreText.textContent = `Score: ${score}`;
+  progressFill.style.width = `${(current / questions.length) * 100}%`;
+  roundLabel.textContent = `ROUND ${current + 1}`;
+
+  buildGrid();
+}
+
+    function handleTap(card, selectedId) {
+  if (done) return;
+
+  const correctId = questions[current].answer;
+
+  if (selectedId === correctId) {
+    done = true;
+    score++;
+
+    document.querySelectorAll(".image-card").forEach(c => {
+      c.classList.add("disabled");
+      if (c.dataset.id === correctId) c.classList.add("correct");
+    });
+
+    feedback.textContent = "Correct!";
+    feedback.className = "feedback-bar correct";
+    scoreText.textContent = `Score: ${score}`;
+    nextBtn.classList.remove("hidden");
+
+    // Show fill-in-the-blank sentence
+  } else {
+    card.classList.add("wrong");
+    setTimeout(() => {
+      card.classList.remove("wrong");
+      card.classList.add("disabled");
+    }, 500);
+    feedback.textContent = "Can you repeat it again?";
+    feedback.className = "feedback-bar wrong";
   }
+}
 
-  // ── RENDER HINTS ──────────────────────────────────────────────────
-  function renderHints() {
-    for (let i = 1; i <= 4; i++) {
-      const hintRow = document.getElementById(`hints-${i}`);
-      const field = currentCustomer.fields[i];
-      hintRow.innerHTML = field.hints
-        .map(h => `<span class="hint-chip">${h}</span>`)
-        .join('');
-    }
-  }
-
-  // ── TEACHER LINK ──────────────────────────────────────────────────
-  function updateTeacherLink() {
-    const link = document.getElementById('teacher-link');
-    link.href = `teacher.html?c=${currentCustomer.id}`;
-  }
-
-  // ── CHECK ANSWER ──────────────────────────────────────────────────
-  function checkAnswer(num) {
-    const input    = document.getElementById(`input-${num}`);
-    const feedback = document.getElementById(`feedback-${num}`);
-    const field    = document.getElementById(`field-${num}`);
-    const status   = document.getElementById(`status-${num}`);
-    const btn      = document.getElementById(`btn-${num}`);
-    const data     = currentCustomer.fields[num];
-
-    const raw   = input.value.trim();
-    if (!raw) return;
-
-    const clean = raw.toLowerCase().replace(/[.,!?'"]/g, '').trim();
-    const isOK  = data.accepted.some(a =>
-      clean.includes(a) || a.includes(clean)
-    );
-
-    if (isOK) {
-      input.classList.add('correct-input');
-      input.disabled = true;
-      btn.disabled   = true;
-
-      feedback.className = 'field-feedback show ok';
-      feedback.innerHTML = `✅ Got it!`;
-
-      field.classList.remove('active');
-      field.classList.add('done');
-      status.textContent = '✅';
-
-      document.getElementById(`summary-${num}`).textContent = data.summary;
-
-      completed++;
-      updateProgress();
-
-      const next = document.getElementById(`field-${num + 1}`);
-      if (next) {
-        next.classList.remove('locked');
-        next.classList.add('active');
-        document.getElementById(`status-${num + 1}`).textContent = '💬';
-        setTimeout(() => {
-          next.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }, 400);
-      }
-
-      if (completed === total) {
-        setTimeout(showResults, 700);
-      }
-
-    } else {
-      input.classList.add('wrong-input');
-      feedback.className = 'field-feedback show no';
-      feedback.innerHTML = `
-        ❌ Ask your teacher again and listen carefully.
-        <div class="correct-ans">Expected: "${data.display}"</div>
-      `;
-      setTimeout(() => input.classList.remove('wrong-input'), 400);
-    }
-  }
-
-  // ── PROGRESS ─────────────────────────────────────────────────────
-  function updateProgress() {
-    const pct = (completed / total) * 100;
-    document.getElementById('progress-fill').style.width = pct + '%';
-    document.getElementById('progress-text').textContent =
-      `${completed} / ${total}`;
-  }
-
-  // ── RESULTS ──────────────────────────────────────────────────────
-  function showResults() {
-    document.getElementById('survey-form').style.display  = 'none';
-    document.querySelector('.progress-wrap').style.display = 'none';
-    document.getElementById('result-screen').classList.add('show');
-
-    let xp = parseInt(localStorage.getItem('nailXP') || '0');
-    localStorage.setItem('nailXP', xp + 100);
-
-    let done = JSON.parse(localStorage.getItem('nailCompleted') || '[]');
-    if (!done.includes(4)) { done.push(4); }
-    localStorage.setItem('nailCompleted', JSON.stringify(done));
-
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-
-  // ── NEW CUSTOMER ──────────────────────────────────────────────────
-  function newCustomer() {
-    // Pick a different customer
-    let newIdx;
-    do {
-      newIdx = Math.floor(Math.random() * customers.length);
-    } while (customers[newIdx].id === currentCustomer.id);
-
-    currentCustomer = customers[newIdx];
-    history.replaceState(null, '', `?c=${currentCustomer.id}`);
-
-    completed = 0;
-    resetFields();
-    renderCustomerCard();
-    renderHints();
-    updateTeacherLink();
-
-    document.getElementById('survey-form').style.display  = 'flex';
-    document.querySelector('.progress-wrap').style.display = 'block';
-    document.getElementById('result-screen').classList.remove('show');
-    updateProgress();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-
-  // ── RESET FIELDS ─────────────────────────────────────────────────
-  function resetFields() {
-    for (let i = 1; i <= total; i++) {
-      const field    = document.getElementById(`field-${i}`);
-      const input    = document.getElementById(`input-${i}`);
-      const feedback = document.getElementById(`feedback-${i}`);
-      const status   = document.getElementById(`status-${i}`);
-      const btn      = document.getElementById(`btn-${i}`);
-
-      field.classList.remove('active','done','locked');
-      input.classList.remove('correct-input','wrong-input');
-      input.disabled    = false;
-      input.value       = '';
-      btn.disabled      = false;
-      feedback.className = 'field-feedback';
-      feedback.innerHTML = '';
-      document.getElementById(`summary-${i}`).textContent = '–';
-
-      if (i === 1) {
-        field.classList.add('active');
-        status.textContent = '💬';
+    nextBtn.addEventListener("click", () => {
+      current++;
+      if (current < questions.length) {
+        render();
       } else {
-        field.classList.add('locked');
-        status.textContent = '🔒';
+        gameScreen.classList.add("hidden");
+        resultScreen.classList.remove("hidden");
+        progressFill.style.width = "100%";
+        finalScore.textContent = `Your score: ${score} / ${questions.length}`;
       }
-    }
-  }
+    });
 
-  // ── START ─────────────────────────────────────────────────────────
-  init();
-</script>
+    function restartGame() {
+      current = 0;
+      score = 0;
+      gameScreen.classList.remove("hidden");
+      resultScreen.classList.add("hidden");
+      render();
+    }
+
+    render();
+  </script>
 </body>
 </html>
