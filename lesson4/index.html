@@ -1,284 +1,670 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Lesson 4 – Walk-In Client | TeeTalk English</title>
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lesson 4 - Direction to Nail Salon | TeeTalkEnglish</title>
+    <style>
+        /* ========== RESET & BASE ========== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: #1a1a2e;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
-      color: white;
-    }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0e2a;
+            min-height: 100vh;
+            color: #e0e0e0;
+            overflow-x: hidden;
+        }
 
-    .back-btn {
-      position: fixed;
-      top: 16px;
-      left: 16px;
-      color: #ff6b9d;
-      text-decoration: none;
-      font-size: 0.9em;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
+        /* ========== NAVBAR ========== */
+        .navbar {
+            background: #111540;
+            padding: 14px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 2px solid #1a1f4e;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
 
-    .back-btn:hover { opacity: 0.7; }
+        .navbar .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
 
-    .lesson-badge {
-      background: rgba(255,107,157,0.15);
-      border: 1px solid rgba(255,107,157,0.3);
-      border-radius: 20px;
-      padding: 6px 16px;
-      font-size: 0.78em;
-      color: #ff6b9d;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 16px;
-    }
+        .navbar .logo-icon {
+            font-size: 28px;
+        }
 
-    .scene-icon { font-size: 64px; margin-bottom: 16px; }
+        .navbar .logo-text {
+            font-size: 1.2em;
+            font-weight: 700;
+            color: #ff4d94;
+        }
 
-    h1 {
-      font-size: 1.8em;
-      font-weight: 900;
-      margin-bottom: 8px;
-      text-align: center;
-    }
+        .navbar .back-link {
+            text-decoration: none;
+            color: #ff4d94;
+            font-weight: 600;
+            font-size: 0.95em;
+            padding: 8px 18px;
+            border: 2px solid #ff4d94;
+            border-radius: 10px;
+            transition: all 0.3s;
+        }
 
-    h1 span { color: #ff6b9d; }
+        .navbar .back-link:hover {
+            background: #ff4d94;
+            color: white;
+        }
 
-    .location {
-      font-size: 0.85em;
-      color: #8892b0;
-      margin-bottom: 8px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
+        /* ========== HERO SECTION ========== */
+        .hero {
+            text-align: center;
+            padding: 50px 20px 30px;
+            position: relative;
+        }
 
-    /* Conversation preview */
-    .preview-box {
-      background: #16213e;
-      border: 1px solid #0f3460;
-      border-radius: 16px;
-      padding: 18px;
-      width: 100%;
-      max-width: 480px;
-      margin: 20px 0 28px;
-      text-align: left;
-    }
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(255, 77, 148, 0.08) 0%, transparent 70%);
+            pointer-events: none;
+        }
 
-    .preview-box h3 {
-      font-size: 0.75em;
-      color: #ff6b9d;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      font-weight: 700;
-      margin-bottom: 12px;
-    }
+        .lesson-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #ff4d94, #ff1a6c);
+            color: white;
+            padding: 6px 20px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+        }
 
-    .preview-line {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 8px;
-      font-size: 0.85em;
-      align-items: flex-start;
-    }
+        .hero h1 {
+            font-size: 2.5em;
+            color: white;
+            margin-bottom: 10px;
+            line-height: 1.2;
+        }
 
-    .preview-line .who {
-      flex-shrink: 0;
-      font-weight: 700;
-      font-size: 0.78em;
-      text-transform: uppercase;
-      padding-top: 2px;
-    }
+        .hero h1 span {
+            color: #ff4d94;
+        }
 
-    .preview-line .who.nt { color: #ff6b9d; }
-    .preview-line .who.cl { color: #64b5f6; }
-    .preview-line .said { color: #c8d3f5; line-height: 1.5; }
+        .hero .subtitle {
+            font-size: 1.15em;
+            color: #8888aa;
+            margin-bottom: 8px;
+        }
 
-    /* Mode cards */
-    .mode-title {
-      font-size: 0.8em;
-      color: #8892b0;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 14px;
-      font-weight: 700;
-    }
+        .hero .description {
+            font-size: 1em;
+            color: #666688;
+            max-width: 500px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
 
-    .mode-cards {
-      display: flex;
-      gap: 16px;
-      width: 100%;
-      max-width: 480px;
-      flex-wrap: wrap;
-    }
+        /* ========== FLOATING EMOJIS ========== */
+        .floating-emojis {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 25px 0 10px;
+            font-size: 2.5em;
+        }
 
-    .mode-card {
-      flex: 1;
-      min-width: 180px;
-      background: #16213e;
-      border: 2px solid #0f3460;
-      border-radius: 20px;
-      padding: 24px 18px;
-      text-align: center;
-      text-decoration: none;
-      color: white;
-      cursor: pointer;
-      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 10px;
-    }
+        .floating-emojis span {
+            animation: float 3s ease-in-out infinite;
+            display: inline-block;
+        }
 
-    .mode-card:hover {
-      transform: translateY(-4px);
-    }
+        .floating-emojis span:nth-child(1) { animation-delay: 0s; }
+        .floating-emojis span:nth-child(2) { animation-delay: 0.4s; }
+        .floating-emojis span:nth-child(3) { animation-delay: 0.8s; }
+        .floating-emojis span:nth-child(4) { animation-delay: 1.2s; }
 
-    .mode-card.student {
-      border-color: #ff6b9d;
-      background: linear-gradient(135deg, #1a1a3e, #2d1b4e);
-    }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-12px); }
+        }
 
-    .mode-card.student:hover {
-      box-shadow: 0 8px 25px rgba(255,107,157,0.3);
-      border-color: #ff6b9d;
-    }
+        /* ========== GAMES SECTION ========== */
+        .games-section {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 30px 20px 60px;
+        }
 
-    .mode-card.teacher {
-      border-color: #64b5f6;
-      background: linear-gradient(135deg, #1a2a3e, #1b2d4e);
-    }
+        .section-title {
+            text-align: center;
+            font-size: 1.3em;
+            color: #ff4d94;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
 
-    .mode-card.teacher:hover {
-      box-shadow: 0 8px 25px rgba(100,181,246,0.3);
-      border-color: #64b5f6;
-    }
+        .section-subtitle {
+            text-align: center;
+            font-size: 0.95em;
+            color: #666688;
+            margin-bottom: 35px;
+        }
 
-    .mode-card .mode-icon { font-size: 44px; }
+        /* ========== GAME CARDS ========== */
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+            gap: 25px;
+        }
 
-    .mode-card .mode-name {
-      font-size: 1em;
-      font-weight: 800;
-    }
+        .game-card {
+            background: #111540;
+            border: 2px solid #1e2460;
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            position: relative;
+        }
 
-    .mode-card.student .mode-name { color: #ff6b9d; }
-    .mode-card.teacher .mode-name { color: #64b5f6; }
+        .game-card:hover {
+            border-color: #ff4d94;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(255, 77, 148, 0.15);
+        }
 
-    .mode-card .mode-desc {
-      font-size: 0.78em;
-      color: #8892b0;
-      line-height: 1.4;
-    }
+        /* Card Header (colored banner) */
+        .card-header {
+            padding: 25px 25px 20px;
+            position: relative;
+            overflow: hidden;
+        }
 
-    .mode-card .mode-tag {
-      font-size: 0.7em;
-      font-weight: 700;
-      padding: 4px 12px;
-      border-radius: 20px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
+        .game-card:nth-child(1) .card-header {
+            background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+        }
 
-    .mode-card.student .mode-tag {
-      background: rgba(255,107,157,0.15);
-      color: #ff6b9d;
-    }
+        .game-card:nth-child(2) .card-header {
+            background: linear-gradient(135deg, #880e4f 0%, #ad1457 100%);
+        }
 
-    .mode-card.teacher .mode-tag {
-      background: rgba(100,181,246,0.15);
-      color: #64b5f6;
-    }
+        .card-header::after {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            right: -20px;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+        }
 
-    @media (max-width: 400px) {
-      .mode-cards { flex-direction: column; }
-    }
-  </style>
+        .game-number {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.15);
+            color: rgba(255, 255, 255, 0.9);
+            padding: 4px 14px;
+            border-radius: 15px;
+            font-size: 0.75em;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        .card-header .game-icon {
+            font-size: 50px;
+            display: block;
+            margin-bottom: 12px;
+        }
+
+        .card-header h2 {
+            color: white;
+            font-size: 1.4em;
+            margin-bottom: 6px;
+        }
+
+        .card-header .card-tagline {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9em;
+        }
+
+        /* Card Body */
+        .card-body {
+            padding: 22px 25px;
+        }
+
+        .skill-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 18px;
+        }
+
+        .skill-tag {
+            background: #1a1f4e;
+            color: #8888cc;
+            padding: 5px 12px;
+            border-radius: 8px;
+            font-size: 0.8em;
+            font-weight: 600;
+        }
+
+        .game-card:nth-child(1) .skill-tag {
+            border: 1px solid #283593;
+        }
+
+        .game-card:nth-child(2) .skill-tag {
+            border: 1px solid #ad1457;
+        }
+
+        .card-details {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .detail-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9em;
+            color: #9999bb;
+        }
+
+        .detail-row .detail-icon {
+            font-size: 1.1em;
+            width: 22px;
+            text-align: center;
+        }
+
+        /* Card Buttons */
+        .card-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .card-btn {
+            flex: 1;
+            padding: 12px 16px;
+            border: none;
+            border-radius: 12px;
+            font-size: 0.95em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .btn-play {
+            background: linear-gradient(135deg, #ff4d94, #ff1a6c);
+            color: white;
+        }
+
+        .btn-play:hover {
+            transform: scale(1.03);
+            box-shadow: 0 5px 20px rgba(255, 77, 148, 0.3);
+        }
+
+        .btn-teacher {
+            background: #1a1f4e;
+            color: #8888cc;
+            border: 1px solid #2a2f6e;
+        }
+
+        .btn-teacher:hover {
+            background: #222870;
+            color: #aaaaee;
+        }
+
+        /* ========== DIALOG PREVIEW ========== */
+        .preview-section {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 0 20px 50px;
+        }
+
+        .preview-box {
+            background: #111540;
+            border: 2px solid #1e2460;
+            border-radius: 20px;
+            padding: 30px;
+        }
+
+        .preview-box h3 {
+            color: #ff4d94;
+            font-size: 1.15em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .preview-dialog {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .preview-line {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .preview-line.tech {
+            justify-content: flex-end;
+        }
+
+        .preview-line.client {
+            justify-content: flex-start;
+        }
+
+        .preview-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .preview-line.tech .preview-avatar {
+            background: #880e4f;
+            order: 2;
+        }
+
+        .preview-line.client .preview-avatar {
+            background: #1a237e;
+        }
+
+        .preview-bubble {
+            max-width: 75%;
+            padding: 10px 16px;
+            border-radius: 14px;
+            font-size: 0.92em;
+            line-height: 1.5;
+        }
+
+        .preview-line.tech .preview-bubble {
+            background: #2a1535;
+            color: #f48fb1;
+            border-bottom-right-radius: 4px;
+        }
+
+        .preview-line.client .preview-bubble {
+            background: #152040;
+            color: #90caf9;
+            border-bottom-left-radius: 4px;
+        }
+
+        .preview-speaker {
+            font-size: 0.7em;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 3px;
+            display: block;
+            opacity: 0.6;
+        }
+
+        /* ========== CONNECTOR LINE (between cards) ========== */
+        .connector {
+            display: flex;
+            justify-content: center;
+            padding: 5px 0;
+        }
+
+        .connector-line {
+            width: 3px;
+            height: 30px;
+            background: linear-gradient(180deg, #1e2460, #ff4d94, #1e2460);
+            border-radius: 3px;
+        }
+
+        /* ========== FOOTER ========== */
+        footer {
+            text-align: center;
+            padding: 30px 20px;
+            color: #444466;
+            font-size: 0.85em;
+            border-top: 1px solid #1a1f4e;
+        }
+
+        footer a {
+            color: #ff4d94;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 1.8em;
+            }
+
+            .games-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .card-buttons {
+                flex-direction: column;
+            }
+
+            .floating-emojis {
+                font-size: 2em;
+                gap: 20px;
+            }
+
+            .preview-bubble {
+                max-width: 85%;
+            }
+        }
+    </style>
 </head>
 <body>
 
-  <a href="../index.html" class="back-btn">← All Lessons</a>
+    <!-- ===== NAVBAR ===== -->
+    <nav class="navbar">
+        <a href="../index.html" class="logo">
+            <span class="logo-icon">💅</span>
+            <span class="logo-text">NailShop TeeTalkEnglish</span>
+        </a>
+        <a href="../index.html" class="back-link">← All Lessons</a>
+    </nav>
 
-  <div class="lesson-badge">Lesson 4 · Walk-In Client</div>
-  <div class="scene-icon">💅</div>
-  <h1>Nail Service <span>Intro</span></h1>
-  <div class="location">📍 Star Nails · Pennsauken, NJ</div>
+    <!-- ===== HERO ===== -->
+    <section class="hero">
+        <div class="lesson-badge">Lesson 4</div>
+        <h1>Direction to <span>Nail Salon</span></h1>
+        <p class="subtitle">👋 Direct Customers to Their Chair</p>
+        <p class="description">
+            Learn how to greet walk-in clients, explain your pedicure services, 
+            and guide them to the right chair — all in English!
+        </p>
+        <div class="floating-emojis">
+            <span>💅</span>
+            <span>💺</span>
+            <span>🌸</span>
+            <span>✨</span>
+        </div>
+    </section>
 
-  <!-- Preview of the conversation -->
-  <div class="preview-box">
-    <h3>📋 Today's Conversation</h3>
-    <div class="preview-line">
-      <span class="who nt">NT</span>
-      <span class="said">"Hello! Do you have an appointment?"</span>
-    </div>
-    <div class="preview-line">
-      <span class="who cl">CL</span>
-      <span class="said">"No, I don't. Can I walk in?"</span>
-    </div>
-    <div class="preview-line">
-      <span class="who nt">NT</span>
-      <span class="said">"Yes, of course! Which service would you like?"</span>
-    </div>
-    <div class="preview-line">
-      <span class="who cl">CL</span>
-      <span class="said">"What do you have?"</span>
-    </div>
-    <div class="preview-line">
-      <span class="who nt">NT</span>
-      <span class="said">"We have a basic pedicure for 30 minutes..."</span>
-    </div>
-    <div class="preview-line">
-      <span class="who cl">CL</span>
-      <span class="said">"I would like the spa pedicure, please."</span>
-    </div>
-    <div class="preview-line">
-      <span class="who nt">NT</span>
-      <span class="said">"Perfect! Please go to chair number 2."</span>
-    </div>
-  </div>
+    <!-- ===== GAMES ===== -->
+    <section class="games-section">
+        <div class="section-title">🎮 Choose a Game</div>
+        <p class="section-subtitle">Play both games to master this conversation!</p>
 
-  <div class="mode-title">👇 Choose your mode</div>
+        <div class="games-grid">
 
-  <div class="mode-cards">
+            <!-- GAME 1 CARD -->
+            <div class="game-card">
+                <div class="card-header">
+                    <span class="game-number">Game 1</span>
+                    <span class="game-icon">🗣️</span>
+                    <h2>Greeting & Walk-In</h2>
+                    <p class="card-tagline">Learn to greet clients & check appointments</p>
+                </div>
+                <div class="card-body">
+                    <div class="skill-tags">
+                        <span class="skill-tag">Greeting</span>
+                        <span class="skill-tag">Appointments</span>
+                        <span class="skill-tag">Walk-ins</span>
+                        <span class="skill-tag">Vocabulary</span>
+                    </div>
+                    <div class="card-details">
+                        <div class="detail-row">
+                            <span class="detail-icon">📝</span>
+                            <span>Fill-in-the-blank, matching & more</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-icon">⏱️</span>
+                            <span>About 5-10 minutes</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-icon">📊</span>
+                            <span>Beginner (A1-A2)</span>
+                        </div>
+                    </div>
+                    <div class="card-buttons">
+                        <a href="game1/student.html" class="card-btn btn-play">▶ Play Game</a>
+                        <a href="game1/teacher.html" class="card-btn btn-teacher">👩‍🏫 Teacher</a>
+                    </div>
+                </div>
+            </div>
 
-    <!-- STUDENT MODE -->
-    <a href="student.html" class="mode-card student">
-      <div class="mode-icon">👨‍🎓</div>
-      <div class="mode-name">Student</div>
-      <div class="mode-desc">
-        Practice alone.<br>
-        Pick the right answer<br>
-        and get feedback.
-      </div>
-      <div class="mode-tag">Self Study</div>
-    </a>
+            <!-- GAME 2 CARD -->
+            <div class="game-card">
+                <div class="card-header">
+                    <span class="game-number">Game 2</span>
+                    <span class="game-icon">💆</span>
+                    <h2>Pedicure Services</h2>
+                    <p class="card-tagline">Explain services & direct clients to their chair</p>
+                </div>
+                <div class="card-body">
+                    <div class="skill-tags">
+                        <span class="skill-tag">Services</span>
+                        <span class="skill-tag">Pedicure Types</span>
+                        <span class="skill-tag">Directing</span>
+                        <span class="skill-tag">Polite English</span>
+                    </div>
+                    <div class="card-details">
+                        <div class="detail-row">
+                            <span class="detail-icon">📝</span>
+                            <span>Unscramble, multiple choice & matching</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-icon">⏱️</span>
+                            <span>About 5-10 minutes</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-icon">📊</span>
+                            <span>Beginner (A1-A2)</span>
+                        </div>
+                    </div>
+                    <div class="card-buttons">
+                        <a href="game2/student.html" class="card-btn btn-play">▶ Play Game</a>
+                        <a href="game2/teacher.html" class="card-btn btn-teacher">👩‍🏫 Teacher</a>
+                    </div>
+                </div>
+            </div>
 
-    <!-- TEACHER MODE -->
-    <a href="teacher.html" class="mode-card teacher">
-      <div class="mode-icon">👩‍🏫</div>
-      <div class="mode-name">Teacher</div>
-      <div class="mode-desc">
-        Role play with<br>
-        your teacher.<br>
-        Teacher plays client.
-      </div>
-      <div class="mode-tag">Role Play</div>
-    </a>
+        </div>
+    </section>
 
-  </div>
+    <!-- ===== DIALOG PREVIEW ===== -->
+    <section class="preview-section">
+        <div class="connector"><div class="connector-line"></div></div>
+
+        <div class="preview-box">
+            <h3>💬 Full Conversation Preview</h3>
+            <div class="preview-dialog">
+                <div class="preview-line tech">
+                    <div class="preview-avatar">💅</div>
+                    <div class="preview-bubble">
+                        <span class="preview-speaker">Nail Tech</span>
+                        Hello! Do you have an appointment?
+                    </div>
+                </div>
+                <div class="preview-line client">
+                    <div class="preview-avatar">👩</div>
+                    <div class="preview-bubble">
+                        <span class="preview-speaker">Client</span>
+                        No, I don't. Can I walk in?
+                    </div>
+                </div>
+                <div class="preview-line tech">
+                    <div class="preview-avatar">💅</div>
+                    <div class="preview-bubble">
+                        <span class="preview-speaker">Nail Tech</span>
+                        Yes, of course! Which service would you like?
+                    </div>
+                </div>
+                <div class="preview-line client">
+                    <div class="preview-avatar">👩</div>
+                    <div class="preview-bubble">
+                        <span class="preview-speaker">Client</span>
+                        What do you have?
+                    </div>
+                </div>
+                <div class="preview-line tech">
+                    <div class="preview-avatar">💅</div>
+                    <div class="preview-bubble">
+                        <span class="preview-speaker">Nail Tech</span>
+                        We have a basic pedicure for 30 minutes, a spa pedicure for 40 minutes, and a deluxe pedicure for 50 minutes.
+                    </div>
+                </div>
+                <div class="preview-line client">
+                    <div class="preview-avatar">👩</div>
+                    <div class="preview-bubble">
+                        <span class="preview-speaker">Client</span>
+                        I would like the spa pedicure, please.
+                    </div>
+                </div>
+                <div class="preview-line tech">
+                    <div class="preview-avatar">💅</div>
+                    <div class="preview-bubble">
+                        <span class="preview-speaker">Nail Tech</span>
+                        Perfect! Please go to chair number 2.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== FOOTER ===== -->
+    <footer>
+        <p>TeeTalkEnglish © 2024 | Pensauken, New Jersey | 
+            <a href="../index.html">Back to All Lessons</a>
+        </p>
+    </footer>
 
 </body>
 </html>

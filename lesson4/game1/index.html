@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Lesson 4 – Walk-In Client | TeeTalk English</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #1a1a2e;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      color: white;
+    }
+
+    .back-btn {
+      position: fixed;
+      top: 16px;
+      left: 16px;
+      color: #ff6b9d;
+      text-decoration: none;
+      font-size: 0.9em;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .back-btn:hover { opacity: 0.7; }
+
+    .lesson-badge {
+      background: rgba(255,107,157,0.15);
+      border: 1px solid rgba(255,107,157,0.3);
+      border-radius: 20px;
+      padding: 6px 16px;
+      font-size: 0.78em;
+      color: #ff6b9d;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 16px;
+    }
+
+    .scene-icon { font-size: 64px; margin-bottom: 16px; }
+
+    h1 {
+      font-size: 1.8em;
+      font-weight: 900;
+      margin-bottom: 8px;
+      text-align: center;
+    }
+
+    h1 span { color: #ff6b9d; }
+
+    .location {
+      font-size: 0.85em;
+      color: #8892b0;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Conversation preview */
+    .preview-box {
+      background: #16213e;
+      border: 1px solid #0f3460;
+      border-radius: 16px;
+      padding: 18px;
+      width: 100%;
+      max-width: 480px;
+      margin: 20px 0 28px;
+      text-align: left;
+    }
+
+    .preview-box h3 {
+      font-size: 0.75em;
+      color: #ff6b9d;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .preview-line {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 8px;
+      font-size: 0.85em;
+      align-items: flex-start;
+    }
+
+    .preview-line .who {
+      flex-shrink: 0;
+      font-weight: 700;
+      font-size: 0.78em;
+      text-transform: uppercase;
+      padding-top: 2px;
+    }
+
+    .preview-line .who.nt { color: #ff6b9d; }
+    .preview-line .who.cl { color: #64b5f6; }
+    .preview-line .said { color: #c8d3f5; line-height: 1.5; }
+
+    /* Mode cards */
+    .mode-title {
+      font-size: 0.8em;
+      color: #8892b0;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 14px;
+      font-weight: 700;
+    }
+
+    .mode-cards {
+      display: flex;
+      gap: 16px;
+      width: 100%;
+      max-width: 480px;
+      flex-wrap: wrap;
+    }
+
+    .mode-card {
+      flex: 1;
+      min-width: 180px;
+      background: #16213e;
+      border: 2px solid #0f3460;
+      border-radius: 20px;
+      padding: 24px 18px;
+      text-align: center;
+      text-decoration: none;
+      color: white;
+      cursor: pointer;
+      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .mode-card:hover {
+      transform: translateY(-4px);
+    }
+
+    .mode-card.student {
+      border-color: #ff6b9d;
+      background: linear-gradient(135deg, #1a1a3e, #2d1b4e);
+    }
+
+    .mode-card.student:hover {
+      box-shadow: 0 8px 25px rgba(255,107,157,0.3);
+      border-color: #ff6b9d;
+    }
+
+    .mode-card.teacher {
+      border-color: #64b5f6;
+      background: linear-gradient(135deg, #1a2a3e, #1b2d4e);
+    }
+
+    .mode-card.teacher:hover {
+      box-shadow: 0 8px 25px rgba(100,181,246,0.3);
+      border-color: #64b5f6;
+    }
+
+    .mode-card .mode-icon { font-size: 44px; }
+
+    .mode-card .mode-name {
+      font-size: 1em;
+      font-weight: 800;
+    }
+
+    .mode-card.student .mode-name { color: #ff6b9d; }
+    .mode-card.teacher .mode-name { color: #64b5f6; }
+
+    .mode-card .mode-desc {
+      font-size: 0.78em;
+      color: #8892b0;
+      line-height: 1.4;
+    }
+
+    .mode-card .mode-tag {
+      font-size: 0.7em;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .mode-card.student .mode-tag {
+      background: rgba(255,107,157,0.15);
+      color: #ff6b9d;
+    }
+
+    .mode-card.teacher .mode-tag {
+      background: rgba(100,181,246,0.15);
+      color: #64b5f6;
+    }
+
+    @media (max-width: 400px) {
+      .mode-cards { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+  <a href="../index.html" class="back-btn">← All Lessons</a>
+
+  <div class="lesson-badge">Lesson 4 · Walk-In Client</div>
+  <div class="scene-icon">💅</div>
+  <h1>Nail Service <span>Intro</span></h1>
+  <div class="location">📍 Star Nails · Pennsauken, NJ</div>
+
+  <!-- Preview of the conversation -->
+  <div class="preview-box">
+    <h3>📋 Today's Conversation</h3>
+    <div class="preview-line">
+      <span class="who nt">NT</span>
+      <span class="said">"Hello! Do you have an appointment?"</span>
+    </div>
+    <div class="preview-line">
+      <span class="who cl">CL</span>
+      <span class="said">"No, I don't. Can I walk in?"</span>
+    </div>
+    <div class="preview-line">
+      <span class="who nt">NT</span>
+      <span class="said">"Yes, of course! Which service would you like?"</span>
+    </div>
+    <div class="preview-line">
+      <span class="who cl">CL</span>
+      <span class="said">"What do you have?"</span>
+    </div>
+    <div class="preview-line">
+      <span class="who nt">NT</span>
+      <span class="said">"We have a basic pedicure for 30 minutes..."</span>
+    </div>
+    <div class="preview-line">
+      <span class="who cl">CL</span>
+      <span class="said">"I would like the spa pedicure, please."</span>
+    </div>
+    <div class="preview-line">
+      <span class="who nt">NT</span>
+      <span class="said">"Perfect! Please go to chair number 2."</span>
+    </div>
+  </div>
+
+  <div class="mode-title">👇 Choose your mode</div>
+
+  <div class="mode-cards">
+
+    <!-- STUDENT MODE -->
+    <a href="student.html" class="mode-card student">
+      <div class="mode-icon">👨‍🎓</div>
+      <div class="mode-name">Student</div>
+      <div class="mode-desc">
+        Practice alone.<br>
+        Pick the right answer<br>
+        and get feedback.
+      </div>
+      <div class="mode-tag">Self Study</div>
+    </a>
+
+    <!-- TEACHER MODE -->
+    <a href="teacher.html" class="mode-card teacher">
+      <div class="mode-icon">👩‍🏫</div>
+      <div class="mode-name">Teacher</div>
+      <div class="mode-desc">
+        Role play with<br>
+        your teacher.<br>
+        Teacher plays client.
+      </div>
+      <div class="mode-tag">Role Play</div>
+    </a>
+
+  </div>
+
+</body>
+</html>

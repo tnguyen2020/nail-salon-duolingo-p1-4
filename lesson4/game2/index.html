@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TeeTalkEnglish - Nail Salon Talk</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Landing Page -->
+        <div id="landing-page" class="page active">
+            <div class="hero">
+                <div class="nail-polish-icon">💅</div>
+                <h1>Nail Salon Talk</h1>
+                <p class="subtitle">Practice English for Your Nail Salon</p>
+                <p class="tagline">Learn how to talk to clients with confidence!</p>
+
+                <div class="role-selection">
+                    <h2>Choose Your Role:</h2>
+                    <div class="role-cards">
+                        <div class="role-card" onclick="startGame('student')">
+                            <div class="role-icon">💅</div>
+                            <h3>I'm a Nail Tech</h3>
+                            <p>Practice speaking to clients</p>
+                            <span class="hint">(Luyện nói với khách)</span>
+                        </div>
+                        <div class="role-card" onclick="window.location.href='teacher.html'">
+                            <div class="role-icon">👩‍🏫</div>
+                            <h3>I'm a Teacher</h3>
+                            <p>View lesson plan & answers</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-section">
+                    <h2>What You'll Learn:</h2>
+                    <div class="info-cards">
+                        <div class="info-card">
+                            <span class="info-icon">👋</span>
+                            <p>Greeting clients</p>
+                        </div>
+                        <div class="info-card">
+                            <span class="info-icon">📋</span>
+                            <p>Asking about appointments</p>
+                        </div>
+                        <div class="info-card">
+                            <span class="info-icon">💆</span>
+                            <p>Explaining services</p>
+                        </div>
+                        <div class="info-card">
+                            <span class="info-icon">💺</span>
+                            <p>Directing clients to seats</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="vocabulary-preview">
+                    <h2>📖 Key Words to Know</h2>
+                    <div class="vocab-grid">
+                        <div class="vocab-item">
+                            <strong>appointment</strong>
+                            <span class="pronunciation">/əˈpɔɪntmənt/</span>
+                            <span class="meaning">lịch hẹn</span>
+                        </div>
+                        <div class="vocab-item">
+                            <strong>walk in</strong>
+                            <span class="pronunciation">/wɑːk ɪn/</span>
+                            <span class="meaning">đến không cần hẹn</span>
+                        </div>
+                        <div class="vocab-item">
+                            <strong>service</strong>
+                            <span class="pronunciation">/ˈsɜːrvɪs/</span>
+                            <span class="meaning">dịch vụ</span>
+                        </div>
+                        <div class="vocab-item">
+                            <strong>basic pedicure</strong>
+                            <span class="pronunciation">/ˈbeɪsɪk ˈpɛdɪkjʊr/</span>
+                            <span class="meaning">pedicure cơ bản</span>
+                        </div>
+                        <div class="vocab-item">
+                            <strong>spa pedicure</strong>
+                            <span class="pronunciation">/spɑː ˈpɛdɪkjʊr/</span>
+                            <span class="meaning">pedicure spa</span>
+                        </div>
+                        <div class="vocab-item">
+                            <strong>deluxe pedicure</strong>
+                            <span class="pronunciation">/dɪˈlʌks ˈpɛdɪkjʊr/</span>
+                            <span class="meaning">pedicure cao cấp</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>TeeTalkEnglish © 2024 | Pensauken, New Jersey | Built for Nail Techs Learning English</p>
+    </footer>
+
+    <script src="student.js"></script>
+</body>
+</html>

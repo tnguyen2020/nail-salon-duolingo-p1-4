@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TeeTalkEnglish - Nail Salon Game 2</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Game Header -->
+        <div class="game-header">
+            <a href="../index.html" class="back-btn">← Lesson 4</a>
+            <h1>💅 Nail Salon Talk</h1>
+            <div class="score-display">
+                ⭐ Score: <span id="score">0</span> / <span id="total">6</span>
+            </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-container">
+            <div class="progress-bar" id="progress-bar"></div>
+            <span class="progress-text" id="progress-text">Step 1 of 6</span>
+        </div>
+
+        <!-- Salon Scene -->
+        <div class="salon-scene" id="salon-scene">
+            <div class="salon-background">
+                <div class="salon-items">
+                    <span class="salon-item chair">💺</span>
+                    <span class="salon-item polish">💅</span>
+                    <span class="salon-item flower">🌸</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat Window -->
+        <div class="chat-window" id="chat-window">
+            <div class="chat-placeholder">
+                <p>💬 The conversation will appear here as you play...</p>
+            </div>
+        </div>
+
+       
+
+        <!-- Game Area -->
+        <div class="game-area" id="game-area"></div>
+
+        <!-- Feedback Area -->
+        <div class="feedback" id="feedback" style="display:none;">
+            <div class="feedback-content" id="feedback-content"></div>
+        </div>
+
+         <!-- Word Help Panel -->
+        <div class="word-help" id="word-help" style="display:none;">
+            <div class="help-header">💡 Word Help</div>
+            <div class="help-content" id="help-content"></div>
+        </div>
+
+        <!-- Completion Screen -->
+        <div class="completion-screen" id="completion-screen" style="display:none;">
+            <div class="completion-content">
+                <div class="trophy">🏆</div>
+                <h2>Great Job!</h2>
+                <p class="final-score" id="final-score"></p>
+                <div class="stars" id="stars"></div>
+                <p class="completion-message" id="completion-message"></p>
+                <div class="completion-buttons">
+                    <button class="btn btn-primary" onclick="restartGame()">🔄 Play Again</button>
+                    <button class="btn btn-secondary" onclick="window.location.href='../index.html'">🏠 Lesson 4</button>
+                </div>
+                <div class="dialog-review">
+                    <h3>📖 Full Conversation</h3>
+                    <div class="review-dialog" id="review-dialog"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>TeeTalkEnglish © 2024 | Pensauken, New Jersey</p>
+    </footer>
+
+    <script>
+    // ==============================================
+    //  GAME DATA
+    // ==============================================
+    var gameRounds = [
+        {
+            type: "fill-blank",
+            roundNum: 1,
+            title: "✏️ Fill in the Blank",
+            instruction: "Choose the correct word to complete what the Nail Tech says when a client arrives.",
+            sentenceBefore: "Hello! Do you have an ",
+            sentenceAfter: "?",
+            answer: "appointment",
+            choices: ["appointment", "service", "pedicure", "chair"],
+            chatAfter: [
+                { speaker: "tech", text: "Hello! Do you have an appointment?" }
+            ],
+            helpWord: "appointment",
+            helpPronunciation: "/əˈpɔɪntmənt/",
+            helpHint: "(lịch hẹn) — When a client calls before they come in, they make an appointment."
+        },
+        {
+            type: "multiple-choice",
+            roundNum: 2,
+            title: "💬 Choose the Best Response",
+            instruction: "Listen to your teacher (the client). What should you say next?",            answer: "Yes, of course! Which service would you like?",
+            choices: [
+                "Sorry, we are closed.",
+                "Yes, of course! Which service would you like?",
+                "No, you need an appointment.",
+                "Please come back tomorrow."
+            ],
+            chatAfter: [
+                { speaker: "client", text: "No, I don't. Can I walk in?" },
+                { speaker: "tech", text: "Yes, of course! Which service would you like?" }
+            ],
+            helpWord: "walk in",
+            helpPronunciation: "/wɑːk ɪn/",
+            helpHint: "(đến không cần hẹn) — A walk-in client comes without calling first."
+        },
+        {
+            type: "unscramble",
+            roundNum: 3,
+            title: "🔀 Unscramble the Sentence",
+            instruction: "The client wants to know your services. Put the words in the correct order.",
+            words: ["What", "do", "you", "have?"],
+            answer: "What do you have?",
+            chatAfter: [
+                { speaker: "client", text: "What do you have?" }
+            ],
+            helpWord: "\"What do you have?\"",
+            helpPronunciation: "",
+            helpHint: "This is a common question. The client wants to know your service options."
+        },
+        {
+            type: "matching",
+            roundNum: 4,
+            title: "🔗 Match the Service to the Time",
+            instruction: "You need to explain your pedicure services. Match each type to the correct time.",
+            pairs: [
+                { left: "Basic Pedicure", right: "30 minutes" },
+                { left: "Spa Pedicure", right: "40 minutes" },
+                { left: "Deluxe Pedicure", right: "50 minutes" }
+            ],
+            chatAfter: [
+                { speaker: "tech", text: "We have a basic pedicure for 30 minutes, a spa pedicure for 40 minutes, and a deluxe pedicure for 50 minutes." }
+            ],
+            helpWord: "deluxe",
+            helpPronunciation: "/dɪˈlʌks/",
+            helpHint: "(cao cấp) — Deluxe means the best or most expensive option."
+        },
+        {
+            type: "fill-blank",
+            roundNum: 5,
+            title: "✏️ What Does the Client Want?",
+            instruction: "The client picks a service. Choose the correct word to complete the sentence.",
+            sentenceBefore: "I would like the ",
+            sentenceAfter: " pedicure, please.",
+            answer: "spa",
+            choices: ["basic", "spa", "deluxe", "quick"],
+            chatAfter: [
+                { speaker: "client", text: "I would like the spa pedicure, please." }
+            ],
+            helpWord: "I would like",
+            helpPronunciation: "/aɪ wʊd laɪk/",
+            helpHint: "A polite way to say \"I want.\" Clients say: \"I would like...\" or \"I'd like...\""
+        },
+        {
+            type: "unscramble",
+            roundNum: 6,
+            title: "🔀 Build Your Response",
+            instruction: "The client chose spa pedicure. Now direct her to the chair!",
+            words: ["Perfect!", "Please", "go", "to", "chair", "number", "2."],
+            answer: "Perfect! Please go to chair number 2.",
+            chatAfter: [
+                { speaker: "tech", text: "Perfect! Please go to chair number 2." }
+            ],
+            helpWord: "Perfect!",
+            helpPronunciation: "/ˈpɜːrfɪkt/",
+            helpHint: "A friendly word to say when something is good. Great to use with clients!"
+        }
+    ];
+
+    var fullDialog = [
+        { speaker: "tech", text: "Hello! Do you have an appointment?" },
+        { speaker: "client", text: "No, I don't. Can I walk in?" },
+        { speaker: "tech", text: "Yes, of course! Which service would you like?" },
+        { speaker: "client", text: "What do you have?" },
+        { speaker: "tech", text: "We have a basic pedicure for 30 minutes, a spa pedicure for 40 minutes, and a deluxe pedicure for 50 minutes." },
+        { speaker: "client", text: "I would like the spa pedicure, please." },
+        { speaker: "tech", text: "Perfect! Please go to chair number 2." }
+    ];
+
+    // ==============================================
+    //  GAME STATE
+    // ==============================================
+    var currentRound = 0;
+    var score = 0;
+    var totalRounds = gameRounds.length;
+    var chatHistory = [];
+
+    // Matching state
+    var matchSelectedLeft = null;
+    var matchSelectedRight = null;
+    var matchedCount = 0;
+    var matchCorrectPairs = {};
+
+    // Scramble state
+    var scrambleSelected = [];
+    var scrambleAllWords = [];
+
+    // ==============================================
+    //  INIT
+    // ==============================================
+    window.onload = function() {
+        console.log("Game starting...");
+        console.log("Total rounds:", totalRounds);
+        currentRound = 0;
+        score = 0;
+        chatHistory = [];
+        updateScoreDisplay();
+        loadCurrentRound();
+    };
+
+    function restartGame() {
+        currentRound = 0;
+        score = 0;
+        chatHistory = [];
+        document.getElementById("completion-screen").style.display = "none";
+        document.getElementById("game-area").style.display = "block";
+        document.getElementById("salon-scene").style.display = "block";
+        document.getElementById("chat-window").style.display = "block";
+        document.querySelector(".progress-container").style.display = "block";
+        updateScoreDisplay();
+        loadCurrentRound();
+    }
+
+    // ==============================================
+    //  SCORE & PROGRESS
+    // ==============================================
+    function updateScoreDisplay() {
+        document.getElementById("score").textContent = score;
+        document.getElementById("total").textContent = totalRounds;
+    }
+
+    function updateProgressBar() {
+        var percent = (currentRound / totalRounds) * 100;
+        document.getElementById("progress-bar").style.width = percent + "%";
+        document.getElementById("progress-text").textContent = "Step " + (currentRound + 1) + " of " + totalRounds;
+    }
+
+    // ==============================================
+    //  CHAT WINDOW
+    // ==============================================
+    function renderChatWindow() {
+        var chatDiv = document.getElementById("chat-window");
+
+        if (chatHistory.length === 0) {
+            chatDiv.innerHTML = '<div class="chat-placeholder"><p>💬 The conversation will appear here as you play...</p></div>';
+            return;
+        }
+
+        var html = "";
+        for (var i = 0; i < chatHistory.length; i++) {
+            var msg = chatHistory[i];
+            var isTech = msg.speaker === "tech";
+            var label = isTech ? "💅 Nail Tech" : "👩 Client";
+            html += '<div class="chat-bubble ' + msg.speaker + '">';
+            html += '<span class="chat-label">' + label + '</span>';
+            html += '<div class="chat-text">' + msg.text + '</div>';
+            html += '</div>';
+        }
+
+        chatDiv.innerHTML = html;
+        chatDiv.scrollTop = chatDiv.scrollHeight;
+    }
+
+       function addChatMessages(messages) {
+        for (var i = 0; i < messages.length; i++) {
+            var msg = messages[i];
+            // Only show Nail Tech lines in chat — skip client lines
+            if (msg.speaker === "client") continue;
+            var exists = false;
+            for (var j = 0; j < chatHistory.length; j++) {
+                if (chatHistory[j].text === msg.text && chatHistory[j].speaker === msg.speaker) {
+                    exists = true;
+                    break;
+                }
+            }
+            if (!exists) {
+                chatHistory.push(msg);
+            }
+        }
+        renderChatWindow();
+    }
+    // ==============================================
+    //  WORD HELP
+    // ==============================================
+    function showWordHelp(round) {
+        var helpPanel = document.getElementById("word-help");
+        var helpContent = document.getElementById("help-content");
+
+        if (!round.helpWord) {
+            helpPanel.style.display = "none";
+            return;
+        }
+
+        var html = '<span class="help-word">' + round.helpWord + '</span>';
+        if (round.helpPronunciation) {
+            html += ' <span style="color:#888; font-style:italic;">' + round.helpPronunciation + '</span>';
+        }
+        html += '<br><span class="help-translation">' + round.helpHint + '</span>';
+
+        helpContent.innerHTML = html;
+        helpPanel.style.display = "block";
+    }
+
+    // ==============================================
+    //  FEEDBACK
+    // ==============================================
+    function showFeedback(isCorrect, extraMessage) {
+        var feedback = document.getElementById("feedback");
+        var content = document.getElementById("feedback-content");
+
+        feedback.style.display = "block";
+        feedback.className = "feedback " + (isCorrect ? "correct" : "wrong");
+
+        if (isCorrect) {
+            content.innerHTML = '<span class="result-icon">✅</span> <strong>Correct!</strong> Great job!';
+        } else {
+            content.innerHTML = '<span class="result-icon">❌</span> <strong>Not quite.</strong><br>' + extraMessage;
+        }
+    }
+
+    function hideFeedback() {
+        document.getElementById("feedback").style.display = "none";
+    }
+
+    // ==============================================
+    //  LOAD ROUND
+    // ==============================================
+    function loadCurrentRound() {
+        console.log("Loading round:", currentRound);
+
+        if (currentRound >= totalRounds) {
+            showCompletionScreen();
+            return;
+        }
+
+        var round = gameRounds[currentRound];
+
+        updateProgressBar();
+        hideFeedback();
+        renderChatWindow();
+        showWordHelp(round);
+
+        var gameArea = document.getElementById("game-area");
+        gameArea.style.display = "block";
+
+        if (round.type === "fill-blank") {
+            renderFillBlank(round, gameArea);
+        } else if (round.type === "multiple-choice") {
+            renderMultipleChoice(round, gameArea);
+        } else if (round.type === "unscramble") {
+            renderUnscramble(round, gameArea);
+        } else if (round.type === "matching") {
+            renderMatching(round, gameArea);
+        }
+    }
+
+    function goNextRound() {
+        currentRound++;
+        loadCurrentRound();
+    }
+
+    // ==============================================
+    //  FILL IN THE BLANK
+    // ==============================================
+    function renderFillBlank(round, container) {
+        var html = '';
+        html += '<div class="round-title">' + round.title + '</div>';
+        html += '<div class="round-instruction">' + round.instruction + '</div>';
+        html += '<div class="blank-sentence">';
+        html += round.sentenceBefore;
+        html += '<span class="blank" id="blank-slot">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>';
+        html += round.sentenceAfter;
+        html += '</div>';
+        html += '<div class="word-choices" id="word-choices">';
+        for (var i = 0; i < round.choices.length; i++) {
+            html += '<div class="word-choice" data-word="' + round.choices[i] + '" onclick="clickFillBlank(this)">' + round.choices[i] + '</div>';
+        }
+        html += '</div>';
+        html += '<div class="next-btn-area" id="next-btn-area" style="display:none;">';
+        html += '<button class="btn btn-primary" onclick="goNextRound()">Next →</button>';
+        html += '</div>';
+
+        container.innerHTML = html;
+    }
+
+    function clickFillBlank(element) {
+        var round = gameRounds[currentRound];
+        var selected = element.getAttribute("data-word");
+        var answer = round.answer;
+        var isCorrect = (selected.toLowerCase() === answer.toLowerCase());
+
+        // Disable all choices
+        var choices = document.querySelectorAll(".word-choice");
+        for (var i = 0; i < choices.length; i++) {
+            choices[i].style.pointerEvents = "none";
+            choices[i].classList.add("disabled");
+            if (choices[i].getAttribute("data-word").toLowerCase() === answer.toLowerCase()) {
+                choices[i].classList.add("correct");
+            }
+            if (choices[i].getAttribute("data-word") === selected && !isCorrect) {
+                choices[i].classList.add("wrong");
+            }
+        }
+
+        // Fill the blank
+        var blankSlot = document.getElementById("blank-slot");
+        blankSlot.textContent = answer;
+        blankSlot.style.borderBottomStyle = "solid";
+        blankSlot.style.borderBottomColor = isCorrect ? "#4caf50" : "#ef5350";
+
+        if (isCorrect) {
+            score++;
+            updateScoreDisplay();
+            showFeedback(true, "");
+        } else {
+            showFeedback(false, "The correct word is: <strong>" + answer + "</strong>");
+        }
+
+        addChatMessages(round.chatAfter);
+        document.getElementById("next-btn-area").style.display = "block";
+    }
+
+    // ==============================================
+    //  MULTIPLE CHOICE
+    // ==============================================
+    function renderMultipleChoice(round, container) {
+        var html = '';
+        html += '<div class="round-title">' + round.title + '</div>';
+        html += '<div class="round-instruction">' + round.instruction + '</div>';
+        html += '<div class="choice-options" id="choice-options">';
+        for (var i = 0; i < round.choices.length; i++) {
+            html += '<div class="choice-option" data-index="' + i + '" onclick="clickMultipleChoice(this)">' + round.choices[i] + '</div>';
+        }
+        html += '</div>';
+        html += '<div class="next-btn-area" id="next-btn-area" style="display:none;">';
+        html += '<button class="btn btn-primary" onclick="goNextRound()">Next →</button>';
+        html += '</div>';
+
+        container.innerHTML = html;
+    }
+
+    function clickMultipleChoice(element) {
+        var round = gameRounds[currentRound];
+        var selected = element.textContent;
+        var answer = round.answer;
+        var isCorrect = (selected === answer);
+
+        // Disable all options
+        var options = document.querySelectorAll(".choice-option");
+        for (var i = 0; i < options.length; i++) {
+            options[i].style.pointerEvents = "none";
+            options[i].classList.add("disabled");
+            if (options[i].textContent === answer) {
+                options[i].classList.add("correct");
+            }
+        }
+
+        if (!isCorrect) {
+            element.classList.add("wrong");
+        }
+
+        if (isCorrect) {
+            score++;
+            updateScoreDisplay();
+            showFeedback(true, "");
+        } else {
+            showFeedback(false, 'The best response is:<br><strong>"' + answer + '"</strong>');
+        }
+
+        addChatMessages(round.chatAfter);
+        document.getElementById("next-btn-area").style.display = "block";
+    }
+
+    // ==============================================
+    //  UNSCRAMBLE
+    // ==============================================
+    function renderUnscramble(round, container) {
+        // Shuffle the words
+        var shuffled = round.words.slice();
+        for (var i = shuffled.length - 1; i > 0; i--) {
+            var j = Math.floor(Math.random() * (i + 1));
+            var temp = shuffled[i];
+            shuffled[i] = shuffled[j];
+            shuffled[j] = temp;
+        }
+
+        // Make sure it's actually shuffled
+        if (shuffled.join(" ") === round.words.join(" ")) {
+            var t = shuffled[0];
+            shuffled[0] = shuffled[shuffled.length - 1];
+            shuffled[shuffled.length - 1] = t;
+        }
+
+        scrambleSelected = [];
+        scrambleAllWords = shuffled.slice();
+
+        var html = '';
+        html += '<div class="round-title">' + round.title + '</div>';
+        html += '<div class="round-instruction">' + round.instruction + '</div>';
+        html += '<div class="scramble-area">';
+        html += '<div class="scramble-result" id="scramble-result">';
+        html += '<span style="color:#999; font-size:0.9em;">Click words below to build the sentence...</span>';
+        html += '</div>';
+        html += '<div class="word-bank" id="word-bank">';
+        for (var i = 0; i < shuffled.length; i++) {
+            html += '<div class="word-tag" id="scramble-word-' + i + '" data-index="' + i + '" data-word="' + shuffled[i] + '" onclick="clickScrambleWord(this)">' + shuffled[i] + '</div>';
+        }
+        html += '</div>';
+        html += '</div>';
+        html += '<div class="scramble-buttons">';
+        html += '<button class="btn btn-secondary btn-small" id="reset-scramble-btn" onclick="resetScramble()">🔄 Reset</button>';
+        html += '<button class="btn btn-primary btn-small" id="check-scramble-btn" onclick="checkScrambleAnswer()" style="display:none;">✓ Check Answer</button>';
+        html += '</div>';
+        html += '<div class="next-btn-area" id="next-btn-area" style="display:none;">';
+        html += '<button class="btn btn-primary" onclick="goNextRound()">Next →</button>';
+        html += '</div>';
+
+        container.innerHTML = html;
+    }
+
+    function clickScrambleWord(element) {
+        if (element.classList.contains("used")) return;
+
+        var idx = parseInt(element.getAttribute("data-index"));
+        var word = element.getAttribute("data-word");
+
+        element.classList.add("used");
+        scrambleSelected.push({ word: word, index: idx });
+
+        updateScrambleResult();
+
+        if (scrambleSelected.length === scrambleAllWords.length) {
+            document.getElementById("check-scramble-btn").style.display = "inline-flex";
+        }
+    }
+
+    function updateScrambleResult() {
+        var resultDiv = document.getElementById("scramble-result");
+
+        if (scrambleSelected.length === 0) {
+            resultDiv.innerHTML = '<span style="color:#999; font-size:0.9em;">Click words below to build the sentence...</span>';
+            return;
+        }
+
+        var html = "";
+        for (var i = 0; i < scrambleSelected.length; i++) {
+            var item = scrambleSelected[i];
+            html += '<div class="word-tag" style="background:#880e4f; color:white; border-color:#880e4f; cursor:pointer;" onclick="removeScrambleWord(' + item.index + ')">' + item.word + '</div>';
+        }
+        resultDiv.innerHTML = html;
+    }
+
+    function removeScrambleWord(idx) {
+        // Remove from selected
+        var newSelected = [];
+        for (var i = 0; i < scrambleSelected.length; i++) {
+            if (scrambleSelected[i].index !== idx) {
+                newSelected.push(scrambleSelected[i]);
+            }
+        }
+        scrambleSelected = newSelected;
+
+        // Un-dim the word
+        var wordEl = document.getElementById("scramble-word-" + idx);
+        if (wordEl) {
+            wordEl.classList.remove("used");
+        }
+
+        updateScrambleResult();
+        document.getElementById("check-scramble-btn").style.display = "none";
+    }
+
+    function resetScramble() {
+        scrambleSelected = [];
+
+        var allTags = document.querySelectorAll("#word-bank .word-tag");
+        for (var i = 0; i < allTags.length; i++) {
+            allTags[i].classList.remove("used");
+        }
+
+        updateScrambleResult();
+        document.getElementById("check-scramble-btn").style.display = "none";
+        hideFeedback();
+    }
+
+    function checkScrambleAnswer() {
+        var round = gameRounds[currentRound];
+
+        // Build user answer
+        var userWords = [];
+        for (var i = 0; i < scrambleSelected.length; i++) {
+            userWords.push(scrambleSelected[i].word);
+        }
+        var userAnswer = userWords.join(" ");
+        var correctAnswer = round.answer;
+
+        // Normalize
+        var normalizeStr = function(s) {
+            return s.replace(/\s+/g, " ").trim().toLowerCase();
+        };
+
+        var isCorrect = (normalizeStr(userAnswer) === normalizeStr(correctAnswer));
+
+        // Disable interaction
+        var wordBank = document.getElementById("word-bank");
+        wordBank.style.pointerEvents = "none";
+        wordBank.style.opacity = "0.5";
+
+        var resultDiv = document.getElementById("scramble-result");
+        resultDiv.style.pointerEvents = "none";
+
+        if (isCorrect) {
+            resultDiv.style.borderColor = "#4caf50";
+            resultDiv.style.background = "#e8f5e9";
+            score++;
+            updateScoreDisplay();
+            showFeedback(true, "");
+        } else {
+            resultDiv.style.borderColor = "#ef5350";
+            resultDiv.style.background = "#ffebee";
+            showFeedback(false, 'The correct sentence is:<br><strong>"' + correctAnswer + '"</strong>');
+        }
+
+        document.getElementById("check-scramble-btn").style.display = "none";
+        document.getElementById("reset-scramble-btn").style.display = "none";
+
+        addChatMessages(round.chatAfter);
+        document.getElementById("next-btn-area").style.display = "block";
+    }
+
+    // ==============================================
+    //  MATCHING
+    // ==============================================
+    function renderMatching(round, container) {
+        matchSelectedLeft = null;
+        matchSelectedRight = null;
+        matchedCount = 0;
+        matchCorrectPairs = {};
+
+        for (var i = 0; i < round.pairs.length; i++) {
+            matchCorrectPairs[round.pairs[i].left] = round.pairs[i].right;
+        }
+
+        // Shuffle right column
+        var rightItems = [];
+        for (var i = 0; i < round.pairs.length; i++) {
+            rightItems.push(round.pairs[i].right);
+        }
+        for (var i = rightItems.length - 1; i > 0; i--) {
+            var j = Math.floor(Math.random() * (i + 1));
+            var temp = rightItems[i];
+            rightItems[i] = rightItems[j];
+            rightItems[j] = temp;
+        }
+
+        var html = '';
+        html += '<div class="round-title">' + round.title + '</div>';
+        html += '<div class="round-instruction">' + round.instruction + '</div>';
+        html += '<div class="match-container">';
+
+        // Left column
+        html += '<div class="match-column"><h4>💅 Service</h4>';
+        for (var i = 0; i < round.pairs.length; i++) {
+            html += '<div class="match-item match-left" data-value="' + round.pairs[i].left + '" onclick="clickMatchLeft(this)">' + round.pairs[i].left + '</div>';
+        }
+        html += '</div>';
+
+        // Right column
+        html += '<div class="match-column"><h4>⏱️ Time</h4>';
+        for (var i = 0; i < rightItems.length; i++) {
+            html += '<div class="match-item match-right" data-value="' + rightItems[i] + '" onclick="clickMatchRight(this)">' + rightItems[i] + '</div>';
+        }
+        html += '</div>';
+
+        html += '</div>';
+        html += '<div class="next-btn-area" id="next-btn-area" style="display:none;">';
+        html += '<button class="btn btn-primary" onclick="goNextRound()">Next →</button>';
+        html += '</div>';
+
+        container.innerHTML = html;
+    }
+
+    function clickMatchLeft(element) {
+        if (element.classList.contains("matched")) return;
+
+        // Deselect all left
+        var allLeft = document.querySelectorAll(".match-left");
+        for (var i = 0; i < allLeft.length; i++) {
+            allLeft[i].classList.remove("selected");
+        }
+
+        element.classList.add("selected");
+        matchSelectedLeft = element.getAttribute("data-value");
+
+        if (matchSelectedRight) {
+            tryMatchPair();
+        }
+    }
+
+    function clickMatchRight(element) {
+        if (element.classList.contains("matched")) return;
+
+        // Deselect all right
+        var allRight = document.querySelectorAll(".match-right");
+        for (var i = 0; i < allRight.length; i++) {
+            allRight[i].classList.remove("selected");
+        }
+
+        element.classList.add("selected");
+        matchSelectedRight = element.getAttribute("data-value");
+
+        if (matchSelectedLeft) {
+            tryMatchPair();
+        }
+    }
+
+    function tryMatchPair() {
+        var round = gameRounds[currentRound];
+        var leftVal = matchSelectedLeft;
+        var rightVal = matchSelectedRight;
+
+        if (!leftVal || !rightVal) return;
+
+        var isCorrect = (matchCorrectPairs[leftVal] === rightVal);
+
+        var leftEl = document.querySelector('.match-left[data-value="' + leftVal + '"]');
+        var rightEl = document.querySelector('.match-right[data-value="' + rightVal + '"]');
+
+        if (isCorrect) {
+            leftEl.classList.remove("selected");
+            rightEl.classList.remove("selected");
+            leftEl.classList.add("matched");
+            rightEl.classList.add("matched");
+            leftEl.innerHTML = "✅ " + leftVal;
+            rightEl.innerHTML = "✅ " + rightVal;
+            leftEl.style.pointerEvents = "none";
+            rightEl.style.pointerEvents = "none";
+
+            matchedCount++;
+
+            // Check if all matched
+            if (matchedCount === round.pairs.length) {
+                score++;
+                updateScoreDisplay();
+                showFeedback(true, "You matched all services correctly!");
+                addChatMessages(round.chatAfter);
+                document.getElementById("next-btn-area").style.display = "block";
+            }
+        } else {
+            leftEl.classList.add("wrong-match");
+            rightEl.classList.add("wrong-match");
+
+            setTimeout(function() {
+                leftEl.classList.remove("selected", "wrong-match");
+                rightEl.classList.remove("selected", "wrong-match");
+            }, 600);
+        }
+
+        matchSelectedLeft = null;
+        matchSelectedRight = null;
+    }
+
+    // ==============================================
+    //  COMPLETION SCREEN
+    // ==============================================
+    function showCompletionScreen() {
+        document.getElementById("game-area").style.display = "none";
+        document.getElementById("salon-scene").style.display = "none";
+        document.getElementById("word-help").style.display = "none";
+        document.querySelector(".progress-container").style.display = "none";
+        document.getElementById("chat-window").style.display = "none";
+        hideFeedback();
+
+        var screen = document.getElementById("completion-screen");
+        screen.style.display = "block";
+
+        // Score text
+        document.getElementById("final-score").textContent = "You got " + score + " out of " + totalRounds + " correct!";
+
+        // Stars
+        var starsDiv = document.getElementById("stars");
+        var percentage = score / totalRounds;
+        var starCount = 0;
+        if (percentage === 1) starCount = 5;
+        else if (percentage >= 0.8) starCount = 4;
+        else if (percentage >= 0.6) starCount = 3;
+        else if (percentage >= 0.4) starCount = 2;
+        else if (percentage > 0) starCount = 1;
+
+        var starHTML = "";
+        for (var i = 0; i < starCount; i++) starHTML += "⭐";
+        for (var i = starCount; i < 5; i++) starHTML += "☆";
+        starsDiv.innerHTML = starHTML;
+
+        // Message
+        var msgEl = document.getElementById("completion-message");
+        if (percentage === 1) {
+            msgEl.textContent = "Perfect! You know this conversation very well! 🎉";
+        } else if (percentage >= 0.8) {
+            msgEl.textContent = "Excellent! Almost perfect — keep practicing! 💪";
+        } else if (percentage >= 0.5) {
+            msgEl.textContent = "Good work! Try again to get a higher score! 📚";
+        } else {
+            msgEl.textContent = "Keep practicing! You'll get better each time! 🌱";
+        }
+
+        // Dialog review
+        var reviewDiv = document.getElementById("review-dialog");
+        var reviewHTML = "";
+        for (var i = 0; i < fullDialog.length; i++) {
+            var line = fullDialog[i];
+            var speakerLabel = (line.speaker === "tech") ? "💅 Nail Tech:" : "👩 Client:";
+            reviewHTML += '<div class="review-line ' + line.speaker + '">';
+            reviewHTML += '<span class="review-speaker">' + speakerLabel + '</span> ';
+            reviewHTML += line.text;
+            reviewHTML += '</div>';
+        }
+        reviewDiv.innerHTML = reviewHTML;
+    }
+    </script>
+</body>
+</html>
