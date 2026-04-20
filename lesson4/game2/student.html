@@ -1,453 +1,144 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Lesson 4 Game 2 - Nail Tech Practice</title>
-  <style>
-    * { box-sizing: border-box; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Listening Practice - Levels</title>
+<link rel="stylesheet" href="style.css">
 
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(135deg, #fff0f8, #eef7ff);
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-    }
-
-    .app {
-      width: 100%;
-      max-width: 760px;
-      background: white;
-      border-radius: 24px;
-      box-shadow: 0 12px 35px rgba(0,0,0,0.12);
-      overflow: hidden;
-    }
-
-    .header {
-      background: linear-gradient(135deg, #20c997, #0ea5e9);
-      color: white;
-      padding: 24px 20px;
-      text-align: center;
-    }
-
-    .header h1 {
-      margin: 0;
-      font-size: 1.8rem;
-    }
-
-    .header p {
-      margin: 8px 0 0;
-      font-size: 1rem;
-      opacity: 0.95;
-    }
-
-    .content {
-      padding: 28px 22px 24px;
-    }
-
-    .progress-wrap {
-      margin-bottom: 22px;
-    }
-
-    .progress-text {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.92rem;
-      color: #666;
-      margin-bottom: 8px;
-    }
-
-    .progress-bar {
-      height: 12px;
-      background: #f1f1f1;
-      border-radius: 30px;
-      overflow: hidden;
-    }
-
-    .progress-fill {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(135deg, #20c997, #0ea5e9);
-      border-radius: 30px;
-      transition: width 0.3s ease;
-    }
-
-    .card {
-      background: #fcfcfc;
-      border: 2px solid #f1f1f1;
-      border-radius: 18px;
-      padding: 24px 18px;
-      margin-bottom: 20px;
-    }
-
-    .speaker-label {
-      display: inline-block;
-      background: #6f42c1;
-      color: white;
-      font-size: 0.8rem;
-      font-weight: bold;
-      padding: 5px 12px;
-      border-radius: 999px;
-      margin-bottom: 12px;
-    }
-
-    .question {
-      font-size: 1.35rem;
-      color: #333;
-      line-height: 1.45;
-      margin-bottom: 18px;
-    }
-
-    .choices {
-      display: grid;
-      gap: 12px;
-    }
-
-    .choice-btn {
-      width: 100%;
-      border: none;
-      border-radius: 14px;
-      padding: 15px 16px;
-      text-align: left;
-      font-size: 1rem;
-      background: #f7f7f9;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      border: 2px solid transparent;
-    }
-
-    .choice-btn:hover {
-      background: #eefcf8;
-      border-color: #20c997;
-    }
-
-    .choice-btn.correct {
-      background: #d1fae5;
-      border-color: #20c997;
-      color: #065f46;
-      font-weight: 600;
-    }
-
-    .choice-btn.wrong {
-      background: #ffe1e1;
-      border-color: #dc3545;
-      color: #842029;
-      font-weight: 600;
-    }
-
-    .feedback {
-      margin-top: 18px;
-      font-size: 1rem;
-      font-weight: 700;
-      min-height: 24px;
-    }
-
-    .feedback.correct { color: #198754; }
-    .feedback.wrong { color: #dc3545; }
-
-    .controls {
-      margin-top: 22px;
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-
-    .btn {
-      border: none;
-      border-radius: 999px;
-      padding: 13px 22px;
-      font-size: 0.96rem;
-      font-weight: 700;
-      cursor: pointer;
-      text-decoration: none;
-      display: inline-block;
-      transition: 0.2s ease;
-      text-align: center;
-    }
-
-    .btn-next {
-      background: linear-gradient(135deg, #20c997, #0ea5e9);
-      color: white;
-    }
-
-    .btn-back {
-      background: #6c757d;
-      color: white;
-    }
-
-    .btn-home {
-      background: #d63384;
-      color: white;
-    }
-
-    .hidden { display: none; }
-
-    .score-screen {
-      text-align: center;
-      padding: 10px 0 6px;
-    }
-
-    .score-screen h2 {
-      color: #198754;
-      font-size: 1.8rem;
-      margin-bottom: 10px;
-    }
-
-    .score-screen p {
-      color: #555;
-      font-size: 1.05rem;
-      margin-bottom: 20px;
-    }
-
-    .final-score {
-      font-size: 1.3rem;
-      font-weight: bold;
-      color: #333;
-      margin-bottom: 22px;
-    }
-
-    @media (max-width: 600px) {
-      .question { font-size: 1.15rem; }
-      .choice-btn { font-size: 0.96rem; }
-      .controls { flex-direction: column; }
-      .btn { width: 100%; }
-    }
-  </style>
 </head>
+
 <body>
-  <div class="app">
-    <div class="header">
-      <h1>💅 Nail Tech Practice</h1>
-      <p>Lesson 4 Game 2 — Direct the customer to the right place.</p>
-    </div>
 
-    <div class="content">
-      <div class="progress-wrap">
-        <div class="progress-text">
-          <span id="progressText">Question 1 of 10</span>
-          <span id="scoreText">Score: 0</span>
-        </div>
-        <div class="progress-bar">
-          <div class="progress-fill" id="progressFill"></div>
-        </div>
-      </div>
+<div class="container">
+    <button class="back-btn" onclick="goBack()">← Back</button>
 
-      <div id="quizScreen">
-        <div class="card">
-          <div class="speaker-label">CUSTOMER</div>
-          <div class="question" id="questionText"></div>
-          <div class="choices" id="choicesBox"></div>
-          <div id="feedback" class="feedback"></div>
 
-          <div class="controls">
-            <button id="nextBtn" class="btn btn-next hidden">Next</button>
-            <a href="index.html" class="btn btn-back">← Back to Game 2</a>
-            <a href="../../index.html" class="btn btn-home">🏠 All Lessons</a>
-          </div>
-        </div>
-      </div>
+<h2>🎧 Listening Training</h2>
+<p>Select level. Listen. Respond like a professional.</p>
 
-      <div id="resultScreen" class="score-screen hidden">
-        <h2>Great job! 🎉</h2>
-        <p>You finished Lesson 4 Game 2 role-play practice.</p>
-        <div class="final-score" id="finalScore"></div>
-        <div class="controls" style="justify-content:center;">
-          <button class="btn btn-next" onclick="restartGame()">Play Again</button>
-          <a href="index.html" class="btn btn-back">← Back to Game 2</a>
-          <a href="../../index.html" class="btn btn-home">🏠 All Lessons</a>
-        </div>
-      </div>
-    </div>
-  </div>
+<select id="levelSelect" onchange="changeLevel()">
+<option value="easy">Easy</option>
+<option value="real">Real Client</option>
+<option value="hard">Difficult Client</option>
+</select>
 
-  <script>
-    const questions = [
-      {
-        question: "Hi, where should I sit?",
-        choices: [
-          "Please have a seat here.",
-          "I am married.",
-          "Nice to meet you."
-        ],
-        answer: "Please have a seat here."
-      },
-      {
-        question: "Is this chair for me?",
-        choices: [
-          "Yes, this chair is for you.",
-          "Yes, I have two kids.",
-          "No, I am fine."
-        ],
-        answer: "Yes, this chair is for you."
-      },
-      {
-        question: "Where can I wash my hands?",
-        choices: [
-          "Please wash your hands over there.",
-          "This is my daughter.",
-          "I like pink nails."
-        ],
-        answer: "Please wash your hands over there."
-      },
-      {
-        question: "Can I sit here?",
-        choices: [
-          "Yes, please sit here.",
-          "Yes, I do.",
-          "She is 10 years old."
-        ],
-        answer: "Yes, please sit here."
-      },
-      {
-        question: "Where is the pedicure chair?",
-        choices: [
-          "The pedicure chair is over there.",
-          "My appointment is at 2:00.",
-          "I have one son."
-        ],
-        answer: "The pedicure chair is over there."
-      },
-      {
-        question: "Should I wait here?",
-        choices: [
-          "Yes, please wait here for a moment.",
-          "No, I don’t have kids.",
-          "Nice to meet you too."
-        ],
-        answer: "Yes, please wait here for a moment."
-      },
-      {
-        question: "Can you show me the color wall?",
-        choices: [
-          "Yes, the color wall is over here.",
-          "I am 35 years old.",
-          "Bless you!"
-        ],
-        answer: "Yes, the color wall is over here."
-      },
-      {
-        question: "Where do I put my bag?",
-        choices: [
-          "You can put your bag here.",
-          "I have an appointment.",
-          "This is my first time."
-        ],
-        answer: "You can put your bag here."
-      },
-      {
-        question: "Do I go to that table?",
-        choices: [
-          "Yes, please go to that table.",
-          "My son is 10.",
-          "No, she is not."
-        ],
-        answer: "Yes, please go to that table."
-      },
-      {
-        question: "Can you take me to my chair?",
-        choices: [
-          "Yes, please come with me.",
-          "I don’t go to school.",
-          "Welcome back!"
-        ],
-        answer: "Yes, please come with me."
-      }
-    ];
+<div id="answers"></div>
+<div id="notesBox"></div>
 
-    let currentQuestion = 0;
-    let score = 0;
-    let answeredCorrectly = false;
+<button class="next-btn" onclick="nextQuestion()">Next</button>
 
-    const questionText = document.getElementById("questionText");
-    const choicesBox = document.getElementById("choicesBox");
-    const feedback = document.getElementById("feedback");
-    const nextBtn = document.getElementById("nextBtn");
-    const progressText = document.getElementById("progressText");
-    const scoreText = document.getElementById("scoreText");
-    const progressFill = document.getElementById("progressFill");
-    const quizScreen = document.getElementById("quizScreen");
-    const resultScreen = document.getElementById("resultScreen");
-    const finalScore = document.getElementById("finalScore");
+</div>
+<script src="data.js"></script>
+<script src="app.js"></script>
 
-    function renderQuestion() {
-      answeredCorrectly = false;
-      const q = questions[currentQuestion];
-      questionText.textContent = q.question;
-      choicesBox.innerHTML = "";
-      feedback.textContent = "";
-      feedback.className = "feedback";
-      nextBtn.classList.add("hidden");
+<script>
 
-      progressText.textContent = `Question ${currentQuestion + 1} of ${questions.length}`;
-      scoreText.textContent = `Score: ${score}`;
-      progressFill.style.width = `${(currentQuestion / questions.length) * 100}%`;
+function goBack() {
+window.location.href = "index.html";
+}
 
-      q.choices.forEach(choice => {
-        const btn = document.createElement("button");
-        btn.className = "choice-btn";
-        btn.textContent = choice;
-        btn.onclick = () => checkAnswer(btn, choice, q.answer);
-        choicesBox.appendChild(btn);
-      });
-    }
+function loadQuestion() {
 
-    function checkAnswer(button, selected, correct) {
-      if (answeredCorrectly) return;
+let data = gameData[currentLevel][current];
 
-      const allButtons = document.querySelectorAll(".choice-btn");
+let answersDiv = document.getElementById("answers");
+let notesBox = document.getElementById("notesBox");
 
-      if (selected === correct) {
-        answeredCorrectly = true;
-        score++;
+answersDiv.innerHTML = "";
+notesBox.innerHTML = "";
 
-        allButtons.forEach(btn => {
-          btn.disabled = true;
-          if (btn.textContent === correct) {
-            btn.classList.add("correct");
-          }
-        });
+if (!data) {
+current = 0;
+return;
+}
 
-        feedback.textContent = "Correct!";
-        feedback.className = "feedback correct";
-        scoreText.textContent = `Score: ${score}`;
-        nextBtn.classList.remove("hidden");
-      } else {
-        button.classList.add("wrong");
-        button.disabled = true;
-        feedback.textContent = "Can you repeat it again?";
-        feedback.className = "feedback wrong";
-      }
-    }
+/* =========================
+   QUESTION NUMBER
+========================= */
 
-    nextBtn.addEventListener("click", () => {
-      currentQuestion++;
-      if (currentQuestion < questions.length) {
-        renderQuestion();
-      } else {
-        showResults();
-      }
-    });
+let qNumber = document.createElement("p");
+qNumber.innerText = "Question " + (current + 1);
+qNumber.style.fontWeight = "600";
+qNumber.style.marginBottom = "10px";
+answersDiv.appendChild(qNumber);
 
-    function showResults() {
-      quizScreen.classList.add("hidden");
-      resultScreen.classList.remove("hidden");
-      progressFill.style.width = "100%";
-      finalScore.textContent = `Your score: ${score} / ${questions.length}`;
-    }
+/* =========================
+   ANSWERS
+========================= */
 
-    function restartGame() {
-      currentQuestion = 0;
-      score = 0;
-      quizScreen.classList.remove("hidden");
-      resultScreen.classList.add("hidden");
-      renderQuestion();
-    }
+let shuffled = shuffle([...data.answers]);
+let labels = ["A", "B", "C", "D"];
 
-    renderQuestion();
-  </script>
+shuffled.forEach((ans, index) => {
+
+let btn = document.createElement("button");
+btn.innerText = labels[index] + ". " + ans.text;
+
+btn.onclick = function () {
+
+if (ans.correct) {
+
+btn.classList.add("correct");
+
+document.querySelectorAll("#answers button")
+.forEach(b => b.disabled = true);
+
+} else {
+btn.classList.add("wrong");
+btn.disabled = true;
+}
+
+};
+
+answersDiv.appendChild(btn);
+});
+
+/* =========================
+   NOTES (VIET TRANSLATION)
+========================= */
+
+if (data.notes && data.notes.length > 0) {
+
+let title = document.createElement("p");
+title.innerText = "💡 Key words:";
+title.style.marginTop = "15px";
+title.style.fontWeight = "600";
+title.style.color = "#d63384";
+
+notesBox.appendChild(title);
+
+data.notes.forEach(n => {
+
+let item = document.createElement("p");
+item.innerText = n.en + " = " + n.vi;
+item.style.fontSize = "13px";
+item.style.color = "#555";
+item.style.margin = "4px 0";
+
+notesBox.appendChild(item);
+
+});
+
+}
+
+}
+
+function nextQuestion() {
+current++;
+if (current >= gameData[currentLevel].length) current = 0;
+loadQuestion();
+}
+
+function changeLevel() {
+currentLevel = document.getElementById("levelSelect").value;
+current = 0;
+loadQuestion();
+}
+
+loadQuestion();
+
+</script>
+
 </body>
 </html>

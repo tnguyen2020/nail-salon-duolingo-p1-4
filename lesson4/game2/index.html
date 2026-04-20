@@ -1,248 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>💅 Lesson 3 — Game 2</title>
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pedicure Training</title>
 
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(135deg, #e8fff8, #fff0f8);
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-
-    .container {
-      text-align: center;
-      max-width: 650px;
-      width: 100%;
-    }
-
-    .emoji-header {
-      font-size: 4rem;
-      margin-bottom: 18px;
-    }
-
-    h1 {
-      font-size: 2rem;
-      color: #d63384;
-      margin-bottom: 6px;
-    }
-
-    .subtitle {
-      font-size: 1rem;
-      color: #777;
-      margin-bottom: 10px;
-    }
-
-    .topic-badge {
-      display: inline-block;
-      background: linear-gradient(135deg, #20c997, #12b886);
-      color: white;
-      padding: 7px 18px;
-      border-radius: 20px;
-      font-size: 0.85rem;
-      font-weight: bold;
-      margin-bottom: 32px;
-    }
-
-    .role-cards {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-      align-items: center;
-    }
-
-    .role-card {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-      background: white;
-      border-radius: 20px;
-      padding: 25px 30px;
-      width: 100%;
-      max-width: 480px;
-      text-decoration: none;
-      color: inherit;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
-      transition: transform 0.25s ease, box-shadow 0.25s ease;
-      border: 3px solid transparent;
-    }
-
-    .role-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 12px 30px rgba(0,0,0,0.14);
-    }
-
-    .role-card.student {
-      border-color: #20c997;
-    }
-
-    .role-card.student:hover {
-      background: linear-gradient(135deg, #f0fffb, #e6fff7);
-    }
-
-    .role-card.teacher {
-      border-color: #6f42c1;
-    }
-
-    .role-card.teacher:hover {
-      background: linear-gradient(135deg, #f3e8ff, #ede0ff);
-    }
-
-    .role-icon {
-      font-size: 3.4rem;
-      flex-shrink: 0;
-    }
-
-    .role-info {
-      text-align: left;
-    }
-
-    .role-info h2 {
-      font-size: 1.35rem;
-      margin-bottom: 5px;
-    }
-
-    .role-card.student .role-info h2 {
-      color: #198754;
-    }
-
-    .role-card.teacher .role-info h2 {
-      color: #6f42c1;
-    }
-
-    .role-info p {
-      font-size: 0.95rem;
-      color: #777;
-      line-height: 1.4;
-    }
-
-    .role-badge {
-      display: inline-block;
-      font-size: 0.75rem;
-      font-weight: bold;
-      padding: 3px 10px;
-      border-radius: 20px;
-      margin-bottom: 6px;
-      color: white;
-    }
-
-    .role-card.student .role-badge {
-      background: #20c997;
-    }
-
-    .role-card.teacher .role-badge {
-      background: #6f42c1;
-    }
-
-    .btn-row {
-      margin-top: 28px;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 14px;
-    }
-
-    .back-btn {
-      display: inline-block;
-      background: linear-gradient(135deg, #ff6b9d, #c44569);
-      color: white;
-      padding: 13px 24px;
-      border-radius: 30px;
-      text-decoration: none;
-      font-weight: 700;
-      font-size: 0.95rem;
-    }
-
-    .back-btn.secondary {
-      background: linear-gradient(135deg, #6c757d, #495057);
-    }
-
-    .footer {
-      margin-top: 35px;
-      font-size: 0.85rem;
-      color: #999;
-    }
-
-    @media (max-width: 600px) {
-      .role-card {
-        padding: 20px;
-        gap: 14px;
-      }
-
-      .role-icon {
-        font-size: 2.8rem;
-      }
-
-      .role-info h2 {
-        font-size: 1.15rem;
-      }
-
-      .role-info p {
-        font-size: 0.9rem;
-      }
-
-      .btn-row {
-        flex-direction: column;
-        align-items: center;
-      }
-
-      .back-btn {
-        width: 100%;
-        max-width: 320px;
-      }
-    }
-  </style>
+<link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-  <div class="container">
-    <div class="emoji-header">🗣️</div>
-    <h1>Nail Salon English</h1>
-    <p class="subtitle">Lesson 3 — Game 2</p>
-    <div class="topic-badge">EXTRA CONVERSATION PRACTICE</div>
 
-    <div class="role-cards">
-      <a href="student.html" class="role-card student">
-        <div class="role-icon">💁‍♀️</div>
-        <div class="role-info">
-          <span class="role-badge">STUDENT</span>
-          <h2>Nail Technician Practice</h2>
-          <p>
-            Practice answering customer questions about family, children,
-            and small talk in the salon. 🎧
-          </p>
-        </div>
-      </a>
+<div class="container">
+  <button class="back-btn" onclick="goBack()">← Back</button>
 
-      <a href="teacher.html" class="role-card teacher">
-        <div class="role-icon">👩</div>
-        <div class="role-info">
-          <span class="role-badge">TEACHER</span>
-          <h2>Conversation Script</h2>
-          <p>
-            Read the customer lines, guide the student, and check answers
-            during conversation role-play. 📋
-          </p>
-        </div>
-      </a>
+
+
+    <h1>💅 Nail Technician Training</h1>
+    <p class="subtitle">Pedicure Service • Pennsauken, New Jersey</p>
+
+    <div class="menu">
+
+        <button onclick="location.href='teacher.html'">
+            🗣 Teacher Mode  
+            <span>Act as client</span>
+        </button>
+
+        <button onclick="location.href='student.html'">
+            🎧 Student Mode  
+            <span>Listen & respond</span>
+        </button>
+
     </div>
 
-    <div class="btn-row">
-      <a href="../index.html" class="back-btn secondary">← Back to Lesson 3</a>
-      <a href="../../index.html" class="back-btn">🏠 Back to All Lessons</a>
-    </div>
+</div>
 
-    <p class="footer">TeeTalk English — Learn English through Real-Life Scenarios</p>
-  </div>
 </body>
+<script>
+  function goBack() {
+window.location.href = "../index.html";
+}
+
+</script>
 </html>
